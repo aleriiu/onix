@@ -93,7 +93,7 @@ a {
 /***** hero *****/
 
 .hero-background-image-one {
-    background-image: url("./images/hero1.jpg");
+    background-image: url("images/hero1.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -102,7 +102,7 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 281px;
+    justify-content: space-between;
     height: 100vh;
 }
 
@@ -465,6 +465,8 @@ body {
     display: flex;
     gap: 2.25rem;
     padding: 5.5rem 0 7.5rem 0;
+    overflow: hidden;
+    overflow-x: scroll;
 }
 
 .cards-section-header {
