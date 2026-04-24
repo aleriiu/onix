@@ -40,15 +40,20 @@ a {
 
 /***** header *****/
 
-header {
+.header {
     position: fixed;
-    z-index: 10;
     width: 100%;
-    background-color: #FFFFFF33;
-    backdrop-filter: blur(10px);
+    /* background-color: #FFFFFF33; */
+    /* backdrop-filter: blur(10px); */
 }
 
-.header {
+.header.fixed {
+    position: fixed;
+    /* transform: translateY(100px); */
+    z-index: 10;
+}
+
+.header-container{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -73,6 +78,14 @@ header {
     line-height: 100%;
     letter-spacing: 0%;
     color: #232323;
+}
+
+.horizontal-line {
+    border: none;
+    background-color: #00000066;
+    height: 1px;
+    width: 95%; 
+    margin: 0 auto; 
 }
 
 /***** end header *****/
@@ -292,14 +305,14 @@ header {
 
 /***** gallery *****/
 
-:root {
+/* :root {
     --bg: #1a1a1a;
     --text: #ffffff;
-}
+} */
 
 body {
     margin: 0;
-    background: var(--bg);
+    /* background: var(--bg); */
     font-family: sans-serif;
     overflow-x: hidden;
 }

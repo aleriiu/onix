@@ -1,3 +1,40 @@
+'use strict';
+
+//header fixed 
+
+const header = document.querySelector('.header-fixed');
+const headerH = document.querySelector('.header-fixed').clientHeight;
+const height = document.querySelector('.modal_menu-container');
+
+document.onscroll = function () {
+
+    let scroll = window.scrollY;
+
+    if (scroll > headerH) {
+        header.classList.add('fixed');
+        // document.body.style.paddingTop = headerH + 'px';
+        header.style.backgroundColor = '#FFFFFF33;';
+        header.style.backdropFilter = 'blur(10px)';
+        // height.style.height = '100vh'
+    }
+
+    else {
+        header.classList.remove('fixed');
+        document.body.removeAttribute('style');
+        header.removeAttribute('style');
+    }
+} 
+
+window.addEventListener('scroll', function() {
+    const element = document.querySelector('.horizontal-line');
+    if (window.scrollY > 50) {
+      element.style.display = 'none'; // Скрыть
+    } else {
+      element.style.display = 'block'; // Показать обратно, если скролл вернулся
+    }
+  });
+
+
 /***** gallery *****/
 
         // 1. Инициализация плавного скролла Lenis
