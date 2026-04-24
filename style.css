@@ -531,3 +531,128 @@ body {
 
 
 /***** end description text *****/
+
+
+/***** feedback *****/
+
+.feedback {
+    background-color: #4F6270;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5rem;
+}
+
+.feedback-header {
+    font-weight: 500;
+    font-size: 2.5rem;
+    line-height: 120%;
+    letter-spacing: 0%;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+form {
+    display: flex;
+    gap: 1.875rem;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-container-group {
+    display: flex;
+    gap: 1.875rem;
+}
+
+.form-container {
+    display: flex;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.875rem;
+    width: 280px;
+}
+
+input {
+    background-color: inherit;
+    border: 0 solid #FFFFFF33;
+    border-bottom: 1px solid #FFFFFF33;
+    padding: 10px 0;
+}
+
+input::placeholder {
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #FFFFFF;
+}
+
+.btn-form {
+    background-color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    padding: 1.625rem;
+    border-radius: 6px;
+    display: flex;
+    width: 280px;
+}
+
+.btn-form-text {
+    font-weight: 400;
+    font-size: 1.125rem;
+    line-height: 140%;
+    letter-spacing: 0%;
+    color: #232323;
+    width: 64%;
+}
+
+.btn-form-img {
+    width: 83px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    justify-content: center;
+}
+
+.checkbox {
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 125%;
+    letter-spacing: 0%;
+    color: #FFFFFF;
+    width: 39%;
+}
+
+.checkbox-hidden {
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+input[type="checkbox"] {
+    border: 0.5px solid #FFFFFF;
+    width: 22px;
+    height: 22px;
+    background-color: inherit;
+    appearance: none;
+}
+
+.checkbox-link {
+    font-weight: 400;
+    font-size: 0.75rem;
+    line-height: 125%;
+    letter-spacing: 0%;
+    text-decoration: underline;
+    text-decoration-style: solid;
+    text-decoration-offset: 0%;
+    text-decoration-thickness: 0%;
+    color: #FFFFFF;
+}
+
+/***** end feedback *****/
