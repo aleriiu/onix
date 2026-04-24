@@ -660,3 +660,99 @@ input[type="checkbox"] {
 }
 
 /***** end feedback *****/
+
+
+/***** footer *****/
+
+.logo-footer {
+    width: 160px;
+}
+
+.footer {
+    display: flex;
+    padding: 3.813rem 0 3.25rem 3.25rem;
+    gap: 4.5rem;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4.5rem;
+}
+
+.footer-list {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.footer-list-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.875rem;
+}
+
+.footer-list-group {
+    display: flex;
+    gap: 1.875rem;
+}
+
+.footer-list-group-name {
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #FFFFFF;
+}
+
+ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+li {
+    list-style: none;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #FFFFFF;
+}
+
+.footer-contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    width: 62%;
+}
+
+.footer-contacts-text {
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-decoration: underline;
+    text-decoration-style: solid;
+    color: #FFFFFF;
+}
+
+.footer-contacts-policy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.footer-contacts-policy-text-underline,
+.footer-contacts-policy-text {
+    font-weight: 400;
+    font-size: 0.75rem;
+    line-height: 150%;
+    letter-spacing: 0%;
+    text-decoration: underline;
+    text-decoration-style: solid;
+    color: #FFFFFF;
+}
+
+.footer-contacts-policy-text {
+    text-decoration: none;
+}
