@@ -53,15 +53,21 @@ a {
     z-index: 10;
 }
 
-.header-container{
+.header-container {
+    position: relative;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    /* тексты по краям */
     padding: 2.188rem 2.625rem 1.938rem 2.625rem;
 }
 
 .header-logo {
     width: 150px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    /* точный центр страницы */
 }
 
 .header-text {
@@ -84,8 +90,8 @@ a {
     border: none;
     background-color: #00000066;
     height: 1px;
-    width: 95%; 
-    margin: 0 auto; 
+    width: 95%;
+    margin: 0 auto;
 }
 
 /***** end header *****/
