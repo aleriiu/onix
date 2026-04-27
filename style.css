@@ -238,6 +238,7 @@ a {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    height: 440px;
 }
 
 .boat-info-desc-number {
@@ -294,7 +295,7 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2.5rem;
+    justify-content: space-between;
 }
 
 .img-boat-info {
@@ -342,6 +343,53 @@ a {
     line-height: 1.563rem;
     letter-spacing: 0%;
     color: #121212;
+}
+
+.boat-models-switch {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.boat-model-btn {
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  color: #b2b2b2;
+  font-size: 2.5rem;
+  line-height: 1;
+  font-weight: 500;
+  transition: color .2s ease;
+  padding: 0;
+}
+
+.boat-model-btn.active {
+  color: #121212;
+}
+
+.boat-info-img-container {
+  position: relative;
+}
+
+.boat-info-watermark {
+  position: absolute;
+  top: 21%;
+  right: 0;
+  font-size: 220px;
+  line-height: 1;
+  font-weight: 600;
+  color: #f0efeb;
+  z-index: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.img-boat-info,
+.boat-information-card-group {
+  position: relative;
+  z-index: 1;
+  padding-top: 44px;
 }
 
 /***** gallery *****/

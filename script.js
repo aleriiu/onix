@@ -80,3 +80,67 @@ window.addEventListener('scroll', function() {
           }, "-=0.5");
 
 /***** end gallery *****/
+
+
+
+
+//// boat 
+
+const boatData = {
+    cabin: {
+      watermark: "850",
+      description: "Комфортная каютная лодка для семейных путешествий и продолжительных маршрутов",
+      image: "./images/лодка 8Х.png",
+      imageAlt: "ONIX 850 Cabin",
+      length: "8,5",
+      capacity: "8",
+      speed: "95"
+    },
+    day: {
+      watermark: "850",
+      description: "Открытый, стильный катер для истинных ценителей скорости и ощущений на воде. Его цель — максимум внимания и драйва.",
+      image: "./images/boat850.png",
+      imageAlt: "ONIX 850 Day Cruiser",
+      length: "8,43",
+      capacity: "2",
+      speed: "95"
+    },
+    x12: {
+      watermark: "12X",
+      description: "Представляем абсолютно новый флагман ONIX 12X — воплощение передовых технологий, элегантного дизайна и непревзойдённого комфорта.",
+      image: "./images/boat12x.png",
+      imageAlt: "ONIX 12X",
+      length: "11,9",
+      capacity: "12",
+      speed: "120"
+    }
+  };
+  
+  const modelButtons = document.querySelectorAll(".boat-model-btn");
+  const boatDescription = document.getElementById("boatDescription");
+  const boatImage = document.getElementById("boatImage");
+  const boatWatermark = document.getElementById("boatWatermark");
+  const boatLength = document.getElementById("boatLength");
+  const boatCapacity = document.getElementById("boatCapacity");
+  const boatSpeed = document.getElementById("boatSpeed");
+  
+  function renderBoat(modelKey) {
+    const model = boatData[modelKey];
+    if (!model) return;
+  
+    boatDescription.textContent = model.description;
+    boatImage.src = model.image;
+    boatImage.alt = model.imageAlt;
+    boatWatermark.textContent = model.watermark;
+    boatLength.textContent = model.length;
+    boatCapacity.textContent = model.capacity;
+    boatSpeed.textContent = model.speed;
+  }
+  
+  modelButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      modelButtons.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderBoat(btn.dataset.model);
+    });
+  });
