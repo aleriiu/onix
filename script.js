@@ -166,8 +166,7 @@ galleryTl
 
 
 
-/***** boat  *****/
-
+/***** boat *****/
 const boatData = {
     cabin: {
         watermark: "850",
@@ -198,36 +197,114 @@ const boatData = {
     }
 };
 
+const modelOrder = ["cabin", "day", "x12"];
+let activeModelKey = "cabin";
+let isBoatAnimating = false;
+
 const modelButtons = document.querySelectorAll(".boat-model-btn");
 const boatDescription = document.getElementById("boatDescription");
-const boatImage = document.getElementById("boatImage");
 const boatWatermark = document.getElementById("boatWatermark");
 const boatLength = document.getElementById("boatLength");
 const boatCapacity = document.getElementById("boatCapacity");
 const boatSpeed = document.getElementById("boatSpeed");
 
-function renderBoat(modelKey) {
+const boatImageCurrent = document.getElementById("boatImageCurrent");
+const boatImageNext = document.getElementById("boatImageNext");
+
+let currentLayer = boatImageCurrent;
+let nextLayer = boatImageNext;
+
+function preload(src) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = src;
+    });
+}
+
+function applyBoatContent(modelKey) {
     const model = boatData[modelKey];
     if (!model) return;
 
     boatDescription.textContent = model.description;
-    boatImage.src = model.image;
-    boatImage.alt = model.imageAlt;
     boatWatermark.textContent = model.watermark;
     boatLength.textContent = model.length;
     boatCapacity.textContent = model.capacity;
     boatSpeed.textContent = model.speed;
 }
 
+function getDirection(fromKey, toKey) {
+    const fromIndex = modelOrder.indexOf(fromKey);
+    const toIndex = modelOrder.indexOf(toKey);
+    return toIndex > fromIndex ? -1 : 1;
+}
+
+async function renderBoat(modelKey) {
+    if (isBoatAnimating || modelKey === activeModelKey) return;
+    const model = boatData[modelKey];
+    if (!model) return;
+
+    isBoatAnimating = true;
+    const dir = getDirection(activeModelKey, modelKey);
+
+    await preload(model.image);
+
+    nextLayer.src = model.image;
+    nextLayer.alt = model.imageAlt || "лодка";
+
+    gsap.set(currentLayer, { x: 0, autoAlpha: 1, zIndex: 2 });
+    gsap.set(nextLayer, { x: dir * 220, autoAlpha: 1, zIndex: 3 });
+
+    gsap.timeline({
+        defaults: { ease: "power3.inOut" },
+        onComplete: () => {
+            applyBoatContent(modelKey);
+
+            const old = currentLayer;
+            currentLayer = nextLayer;
+            nextLayer = old;
+
+            gsap.set(nextLayer, { x: 0, autoAlpha: 0, zIndex: 1 });
+            gsap.set(currentLayer, { x: 0, autoAlpha: 1, zIndex: 2 });
+
+            activeModelKey = modelKey;
+            isBoatAnimating = false;
+        }
+    })
+        .to(currentLayer, {
+            x: dir * -220,
+            autoAlpha: 0,      // старая уходит в прозрачность
+            duration: 0.62,
+            ease: "power2.in"
+        }, 0)
+        .to(nextLayer, {
+            x: 0,
+            autoAlpha: 1,
+            duration: 0.72,
+            ease: "power3.out"
+        }, 0.08)
+        
+        .fromTo(
+            [boatDescription, boatWatermark, boatLength, boatCapacity, boatSpeed],
+            { autoAlpha: 0.82, y: 6 },
+            { autoAlpha: 1, y: 0, duration: 0.36, stagger: 0.02, ease: "power2.out" },
+            0.66
+        );
+}
+
 modelButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
+        if (isBoatAnimating) return;
+
         modelButtons.forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         renderBoat(btn.dataset.model);
     });
 });
 
-/***** end boat  *****/
+gsap.set(nextLayer, { autoAlpha: 0, x: 0, zIndex: 1 });
+/***** end boat *****/
 
 
 /***** hero auto gallery *****/
@@ -238,6 +315,8 @@ const heroSlides = gsap.utils.toArray([
 ]);
 const heroDots = gsap.utils.toArray(".hero-dot");
 const heroDotProgresses = gsap.utils.toArray(".hero-dot-progress");
+const HOLD_TIME = 4.6;
+const TRANSITION = 1.45;
 
 if (heroSlides.length) {
     let currentIndex = 0;
@@ -245,31 +324,40 @@ if (heroSlides.length) {
     let progressTween = null;
     let isAnimating = false;
 
-    const HOLD_TIME = 3.2;      // сколько слайд стоит
-    const TRANSITION = 1.0;     // длительность смены
+    const HOLD_TIME = 3.8;
+    const TRANSITION = 1.0;
 
-    gsap.set(heroSlides, { autoAlpha: 0, scale: 1.02 });
-    gsap.set(heroSlides[0], { autoAlpha: 1, scale: 1 });
-
-    if (heroDotProgresses.length) {
-        gsap.set(heroDotProgresses, { scaleY: 0, transformOrigin: "top center" });
-        gsap.set(heroDotProgresses[0], { scaleY: 1 });
+    function getSlideContent(slide) {
+        return slide.querySelectorAll(".hero-header, .hero-header-text, .hero-header-btn");
     }
+
+    gsap.set(heroSlides, { autoAlpha: 0, scale: 1.08 });
+    gsap.set(heroSlides[0], { autoAlpha: 1, scale: 1.02 });
+    gsap.set(".hero-header-text-container", { autoAlpha: 1, y: 0 });
+    gsap.set(heroDotProgresses, { scaleY: 0, transformOrigin: "top center" });
+
+    // начальное состояние контента
+    heroSlides.forEach((slide, i) => {
+        const content = getSlideContent(slide);
+        if (i === 0) {
+            gsap.set(content, { autoAlpha: 1, y: 0 });
+        } else {
+            gsap.set(content, { autoAlpha: 0, y: 24 });
+        }
+    });
 
     function setActiveDot(index) {
         heroDots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
     }
 
-    function startProgress(index) {
-        if (!heroDotProgresses.length) return;
+    function runProgress(index) {
         if (progressTween) progressTween.kill();
-
         gsap.set(heroDotProgresses, { scaleY: 0 });
-        progressTween = gsap.fromTo(
-            heroDotProgresses[index],
-            { scaleY: 0 },
-            { scaleY: 1, duration: HOLD_TIME, ease: "none" }
-        );
+        progressTween = gsap.to(heroDotProgresses[index], {
+            scaleY: 1,
+            duration: HOLD_TIME,
+            ease: "none"
+        });
     }
 
     function scheduleNext() {
@@ -277,6 +365,50 @@ if (heroSlides.length) {
         autoCall = gsap.delayedCall(HOLD_TIME, () => {
             goToSlide((currentIndex + 1) % heroSlides.length);
         });
+    }
+
+    function animateInContent(slide, at = 0) {
+        const title = slide.querySelector(".hero-header");
+        const text = slide.querySelector(".hero-header-text");
+        const btn = slide.querySelector(".hero-header-btn");
+
+        return gsap.timeline()
+            .fromTo(
+                title,
+                { autoAlpha: 0, y: 70 },
+                { autoAlpha: 1, y: 0, duration: 1.25, ease: "power3.out" },
+                at
+            )
+            .fromTo(
+                text,
+                { autoAlpha: 0, y: 52 },
+                { autoAlpha: 1, y: 0, duration: 1.05, ease: "power3.out" },
+                at + 0.28
+            )
+            .fromTo(
+                btn,
+                { autoAlpha: 0, y: 40 },
+                { autoAlpha: 1, y: 0, duration: 0.95, ease: "power2.out" },
+                at + 0.46
+            );
+    }
+
+    function animateOutContent(slide, at = 0) {
+        const title = slide.querySelector(".hero-header");
+        const text = slide.querySelector(".hero-header-text");
+        const btn = slide.querySelector(".hero-header-btn");
+
+        return gsap.timeline().to(
+            [btn, text, title],
+            {
+                autoAlpha: 0,
+                y: -12,
+                duration: 0.3,
+                ease: "power2.in",
+                stagger: 0.04
+            },
+            at
+        );
     }
 
     function goToSlide(nextIndex) {
@@ -291,30 +423,39 @@ if (heroSlides.length) {
             onComplete: () => {
                 currentIndex = nextIndex;
                 setActiveDot(currentIndex);
-                startProgress(currentIndex);
+                runProgress(currentIndex);
                 scheduleNext();
                 isAnimating = false;
             }
         })
-            .to(current, { autoAlpha: 0, scale: 1.03, duration: TRANSITION }, 0)
+            // сначала мягко уводим текущий текст
+            .add(() => animateOutContent(current, 0), 0)
+
+            // фоновый переход с zoom
+            .to(current, { autoAlpha: 0, scale: 1.11, duration: TRANSITION }, 0)
             .fromTo(
                 next,
-                { autoAlpha: 0, scale: 1.02 },
-                { autoAlpha: 1, scale: 1, duration: TRANSITION },
+                { autoAlpha: 0, scale: 1.07 },
+                { autoAlpha: 1, scale: 1.02, duration: TRANSITION },
                 0
-            );
+            )
+
+            // затем заводим текст нового слайда снизу
+            .add(() => animateInContent(next, 0), 1.05);
     }
 
     heroDots.forEach((dot) => {
         dot.addEventListener("click", () => {
             const index = Number(dot.dataset.slide);
             if (autoCall) autoCall.kill();
+            if (progressTween) progressTween.kill();
             goToSlide(index);
         });
     });
 
     setActiveDot(0);
-    startProgress(0);
+    runProgress(0);
+    animateInContent(heroSlides[0], 0);
     scheduleNext();
 }
 /***** end hero auto gallery *****/
@@ -397,3 +538,119 @@ descriptionTl
     );
 
 /***** end text change color *****/
+
+/***** tech cards slider (gsap) *****/
+const techSection = document.querySelector("#tech-cards");
+if (techSection) {
+    const track = techSection.querySelector(".tech-cards-track");
+    const sliderViewport = techSection.querySelector(".tech-slider");
+    const cards = gsap.utils.toArray(".tech-card", track);
+    const prevBtn = techSection.querySelector(".tech-nav-prev");
+    const nextBtn = techSection.querySelector(".tech-nav-next");
+
+    let currentIndex = 0;
+    let step = 0;
+    let maxOffset = 0;
+    let maxIndex = 0;
+
+    let isPointerDown = false;
+    let startX = 0;
+    let startY = 0;
+    let startTrackX = 0;
+    let moved = false;
+    const SWIPE_THRESHOLD = 60;
+
+    function getTrackX() {
+        return Number(gsap.getProperty(track, "x")) || 0;
+    }
+
+    function recalcStep() {
+        if (!cards.length || !sliderViewport) return;
+
+        const gap = parseFloat(getComputedStyle(track).gap) || 0;
+        step = cards[0].getBoundingClientRect().width + gap;
+
+        maxOffset = Math.max(0, track.scrollWidth - sliderViewport.clientWidth);
+        maxIndex = step > 0 ? Math.ceil(maxOffset / step) : 0;
+    }
+
+    function goTo(index, animated = true) {
+        currentIndex = gsap.utils.clamp(0, maxIndex, index);
+        const x = -Math.min(currentIndex * step, maxOffset);
+
+        gsap.to(track, {
+            x,
+            duration: animated ? 0.65 : 0,
+            ease: "power3.out"
+        });
+    }
+
+    function onPointerDown(e) {
+        if (!sliderViewport) return;
+        isPointerDown = true;
+        moved = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        startTrackX = getTrackX();
+
+        gsap.killTweensOf(track);
+        sliderViewport.classList.add("is-dragging");
+        sliderViewport.setPointerCapture?.(e.pointerId);
+    }
+
+    function onPointerMove(e) {
+        if (!isPointerDown) return;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        // не мешаем вертикальному скроллу страницы
+        if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 8) return;
+
+        if (Math.abs(dx) > 4) moved = true;
+
+        const minX = -maxOffset;
+        const maxX = 0;
+        const nextX = gsap.utils.clamp(minX, maxX, startTrackX + dx);
+
+        gsap.set(track, { x: nextX });
+    }
+
+    function onPointerUp(e) {
+        if (!isPointerDown) return;
+        isPointerDown = false;
+
+        sliderViewport.classList.remove("is-dragging");
+        sliderViewport.releasePointerCapture?.(e.pointerId);
+
+        const dx = e.clientX - startX;
+
+        if (!moved) return;
+
+        if (dx <= -SWIPE_THRESHOLD) {
+            goTo(currentIndex + 1);
+        } else if (dx >= SWIPE_THRESHOLD) {
+            goTo(currentIndex - 1);
+        } else {
+            goTo(currentIndex);
+        }
+    }
+
+    recalcStep();
+    goTo(0, false);
+
+    nextBtn?.addEventListener("click", () => goTo(currentIndex + 1));
+    prevBtn?.addEventListener("click", () => goTo(currentIndex - 1));
+
+    sliderViewport?.addEventListener("pointerdown", onPointerDown);
+    sliderViewport?.addEventListener("pointermove", onPointerMove);
+    sliderViewport?.addEventListener("pointerup", onPointerUp);
+    sliderViewport?.addEventListener("pointercancel", onPointerUp);
+    sliderViewport?.addEventListener("pointerleave", onPointerUp);
+
+    window.addEventListener("resize", () => {
+        recalcStep();
+        goTo(currentIndex, false);
+    });
+}
+/***** end tech cards slider *****/
