@@ -260,10 +260,9 @@ a {
     overflow-wrap: break-word;
 }
 
-.welcome-char {
+.text-char {
     display: inline;
-    /* чтобы текст переносился нормально, не по буквам */
-}
+  }
 
 /***** boat *****/
 

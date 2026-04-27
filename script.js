@@ -166,7 +166,7 @@ galleryTl
 
 
 
-//// boat 
+/***** boat  *****/
 
 const boatData = {
     cabin: {
@@ -226,6 +226,8 @@ modelButtons.forEach((btn) => {
         renderBoat(btn.dataset.model);
     });
 });
+
+/***** end boat  *****/
 
 
 /***** hero auto gallery *****/
@@ -323,41 +325,75 @@ if (heroSlides.length) {
 function splitTextToChars(selector) {
     const el = document.querySelector(selector);
     if (!el) return null;
-  
+
     // чтобы не разбивать повторно
     if (el.dataset.splitted === "true") return el;
-  
+
     const text = el.textContent.replace(/\s+/g, " ").trim();
     const fragment = document.createDocumentFragment();
-  
+
     for (const char of text) {
-      const span = document.createElement("span");
-      span.className = "welcome-char";
-      span.textContent = char; // обычные пробелы, чтобы работал перенос строк
-      fragment.appendChild(span);
+        const span = document.createElement("span");
+        span.className = "text-char";
+        span.textContent = char; // обычные пробелы, чтобы работал перенос строк
+        fragment.appendChild(span);
     }
-  
+
     el.textContent = "";
     el.appendChild(fragment);
     el.dataset.splitted = "true";
     return el;
-  }
-  
-  splitTextToChars(".welcome-text");
-  
-  gsap.fromTo(
-    ".welcome-text .welcome-char",
+}
+
+splitTextToChars(".welcome-text");
+
+gsap.fromTo(
+    ".welcome-text .text-char",
     { color: "#B2B2B2" },
     {
-      color: "#121212",
-      stagger: 0.018,         // задержка между буквами
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".welcome",
+        color: "#121212",
+        stagger: 0.018,         // задержка между буквами
+        ease: "power2.out",
+        scrollTrigger: {
+            trigger: ".welcome",
+            start: "top 70%",
+            toggleActions: "play none none reverse"
+        }
+    }
+);
+
+splitTextToChars(".description-text");
+splitTextToChars(".description-text-italic");
+
+const descriptionTl = gsap.timeline({
+    scrollTrigger: {
+        trigger: ".description",
         start: "top 70%",
         toggleActions: "play none none reverse"
-      }
     }
-  );
+});
+
+descriptionTl
+    .fromTo(
+        ".description-text .text-char",
+        { color: "#B2B2B2" },
+        {
+            color: "#121212",
+            stagger: 0.018,
+            ease: "power2.out",
+            duration: 0.6
+        }
+    )
+    .fromTo(
+        ".description-text-italic .text-char",
+        { color: "#B2B2B2" },
+        {
+            color: "#121212",
+            stagger: 0.018,
+            ease: "power2.out",
+            duration: 0.6
+        },
+        "+=0.15" // пауза после первой анимации
+    );
 
 /***** end text change color *****/
