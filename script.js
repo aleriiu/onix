@@ -13,15 +13,15 @@ document.onscroll = function () {
     if (scroll > headerH) {
         header.classList.add('fixed');
         // document.body.style.paddingTop = headerH + 'px';
-        header.style.backgroundColor = '#FFFFFF33;';
+        header.style.backgroundColor = '#FFFFFF33';
         header.style.backdropFilter = 'blur(10px)';
         // height.style.height = '100vh'
     }
 
     else {
         header.classList.remove('fixed');
-        document.body.removeAttribute('style');
-        header.removeAttribute('style');
+        header.style.backgroundColor = "";
+        header.style.backdropFilter = "";
     }
 }
 
@@ -226,3 +226,138 @@ modelButtons.forEach((btn) => {
         renderBoat(btn.dataset.model);
     });
 });
+
+
+/***** hero auto gallery *****/
+const heroSlides = gsap.utils.toArray([
+    ".hero-background-image-one",
+    ".hero-background-image-two",
+    ".hero-background-image-three"
+]);
+const heroDots = gsap.utils.toArray(".hero-dot");
+const heroDotProgresses = gsap.utils.toArray(".hero-dot-progress");
+
+if (heroSlides.length) {
+    let currentIndex = 0;
+    let autoCall = null;
+    let progressTween = null;
+    let isAnimating = false;
+
+    const HOLD_TIME = 3.2;      // сколько слайд стоит
+    const TRANSITION = 1.0;     // длительность смены
+
+    gsap.set(heroSlides, { autoAlpha: 0, scale: 1.02 });
+    gsap.set(heroSlides[0], { autoAlpha: 1, scale: 1 });
+
+    if (heroDotProgresses.length) {
+        gsap.set(heroDotProgresses, { scaleY: 0, transformOrigin: "top center" });
+        gsap.set(heroDotProgresses[0], { scaleY: 1 });
+    }
+
+    function setActiveDot(index) {
+        heroDots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
+    }
+
+    function startProgress(index) {
+        if (!heroDotProgresses.length) return;
+        if (progressTween) progressTween.kill();
+
+        gsap.set(heroDotProgresses, { scaleY: 0 });
+        progressTween = gsap.fromTo(
+            heroDotProgresses[index],
+            { scaleY: 0 },
+            { scaleY: 1, duration: HOLD_TIME, ease: "none" }
+        );
+    }
+
+    function scheduleNext() {
+        if (autoCall) autoCall.kill();
+        autoCall = gsap.delayedCall(HOLD_TIME, () => {
+            goToSlide((currentIndex + 1) % heroSlides.length);
+        });
+    }
+
+    function goToSlide(nextIndex) {
+        if (isAnimating || nextIndex === currentIndex) return;
+        isAnimating = true;
+
+        const current = heroSlides[currentIndex];
+        const next = heroSlides[nextIndex];
+
+        gsap.timeline({
+            defaults: { ease: "power2.inOut" },
+            onComplete: () => {
+                currentIndex = nextIndex;
+                setActiveDot(currentIndex);
+                startProgress(currentIndex);
+                scheduleNext();
+                isAnimating = false;
+            }
+        })
+            .to(current, { autoAlpha: 0, scale: 1.03, duration: TRANSITION }, 0)
+            .fromTo(
+                next,
+                { autoAlpha: 0, scale: 1.02 },
+                { autoAlpha: 1, scale: 1, duration: TRANSITION },
+                0
+            );
+    }
+
+    heroDots.forEach((dot) => {
+        dot.addEventListener("click", () => {
+            const index = Number(dot.dataset.slide);
+            if (autoCall) autoCall.kill();
+            goToSlide(index);
+        });
+    });
+
+    setActiveDot(0);
+    startProgress(0);
+    scheduleNext();
+}
+/***** end hero auto gallery *****/
+
+
+/***** text change color *****/
+
+function splitTextToChars(selector) {
+    const el = document.querySelector(selector);
+    if (!el) return null;
+  
+    // чтобы не разбивать повторно
+    if (el.dataset.splitted === "true") return el;
+  
+    const text = el.textContent.replace(/\s+/g, " ").trim();
+    const fragment = document.createDocumentFragment();
+  
+    for (const char of text) {
+      const span = document.createElement("span");
+      span.className = "welcome-char";
+      span.textContent = char; // обычные пробелы, чтобы работал перенос строк
+      fragment.appendChild(span);
+    }
+  
+    el.textContent = "";
+    el.appendChild(fragment);
+    el.dataset.splitted = "true";
+    return el;
+  }
+  
+  splitTextToChars(".welcome-text");
+  
+  gsap.fromTo(
+    ".welcome-text .welcome-char",
+    { color: "#B2B2B2" },
+    {
+      color: "#121212",
+      stagger: 0.018,         // задержка между буквами
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".welcome",
+        start: "top 70%",
+        toggleActions: "play none none reverse"
+      }
+    }
+  );
+
+/***** end text change color *****/

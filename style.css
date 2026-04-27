@@ -42,15 +42,15 @@ a {
 
 .header {
     position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    /* background-color: #FFFFFF33; */
-    /* backdrop-filter: blur(10px); */
+    z-index: 1000;
+    /* всегда поверх hero */
 }
 
 .header.fixed {
-    position: fixed;
-    /* transform: translateY(100px); */
-    z-index: 10;
+    z-index: 1000;
 }
 
 .header-container {
@@ -98,57 +98,60 @@ a {
 
 /***** hero *****/
 
-.hero-background-image-one {
-    background-image: url("images/hero1.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+.hero {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Общие правила для всех 3 слайдов */
+.hero-background-image-one,
+.hero-background-image-two,
+.hero-background-image-three {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    padding: 200px 0 64px 0;
+    height: 100%;
+    padding: 162px 0 64px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 1;
+    will-change: opacity, transform;
+}
+
+.hero-background-image-one {
+    background-image: url("images/hero1.png");
 }
 
 .hero-background-image-two {
     background-image: url("images/hero2.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 100%;
-    padding: 162px 0 64px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2.375rem;
-    justify-content: center;
-    height: 100vh;
 }
 
 .hero-background-image-three {
     background-image: url("images/hero3.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 100%;
-    padding: 162px 0 64px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2.375rem;
-    justify-content: center;
-    height: 100vh;
+}
+
+/* Первый кадр виден до запуска GSAP */
+.hero-background-image-one {
+    opacity: 1;
+    visibility: visible;
+    z-index: 2;
 }
 
 .hero-header {
     font-weight: 600;
     font-size: 4rem;
     line-height: 100%;
-    letter-spacing: 0%;
     text-transform: uppercase;
-    color: #FFFFFF;
+    color: #fff;
+    text-align: center;
 }
 
 .hero-header-text-container {
@@ -162,9 +165,8 @@ a {
     font-weight: 400;
     font-size: 1rem;
     line-height: 135%;
-    letter-spacing: 0%;
     text-align: center;
-    color: #FFFFFF;
+    color: #fff;
     width: 62%;
 }
 
@@ -172,17 +174,49 @@ a {
     font-size: 1.5rem;
 }
 
-
 .hero-header-btn {
     font-weight: 400;
     font-size: 1rem;
     line-height: 100%;
-    letter-spacing: 0%;
     color: #232323;
     padding: 0.875rem 2rem;
     border-radius: 6px;
-    background-color: #F3F2EF;
-    border: 0 solid #F3F2EF;
+    background-color: #f3f2ef;
+    border: 0;
+}
+
+.hero-pagination {
+    position: absolute;
+    right: 26px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hero-dot {
+    position: relative;
+    width: 2px;
+    height: 34px;
+    border: 0;
+    background: rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+    padding: 0;
+    overflow: hidden;
+}
+
+.hero-dot-progress {
+    position: absolute;
+    inset: 0;
+    background: #0e3a61;
+    transform: scaleY(0);
+    transform-origin: top center;
+}
+
+.hero-dot.is-active {
+    background: rgba(255, 255, 255, 0.35);
 }
 
 /***** end hero *****/
@@ -222,8 +256,14 @@ a {
     text-align: center;
     color: #B2B2B2;
     width: 80%;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
+.welcome-char {
+    display: inline;
+    /* чтобы текст переносился нормально, не по буквам */
+}
 
 /***** boat *****/
 
@@ -518,7 +558,7 @@ body {
 .scroll-section {
     position: relative;
     height: 420vh;
-    background: #000;
+    background: #FFFFFF;
 }
 
 .sticky-wrapper {
@@ -592,7 +632,7 @@ body {
     opacity: 0;
     transform: scale(1.04);
     z-index: 1;
-  }
+}
 
 /* затемнение для 4-го состояния */
 .hero-overlay {
@@ -905,6 +945,7 @@ input[type="checkbox"] {
     display: flex;
     padding: 3.813rem 0 3.25rem 3.25rem;
     gap: 4.5rem;
+    background-color: #121212;
 }
 
 .footer-container {
