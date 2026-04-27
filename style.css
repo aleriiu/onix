@@ -910,7 +910,7 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    min-height: 610px;
+    min-height: 576px;
 }
 
 .tech-card-content {
@@ -929,6 +929,7 @@ body {
     margin-top: auto;
     object-fit: cover;
     object-position: center;
+    min-height: 320px;
 }
 
 .tech-card-plus {
@@ -991,6 +992,51 @@ body {
 
 
 /***** end description text *****/
+
+/***** news *****/
+
+.cards-news-title {
+    font-weight: 500;
+    font-size: 1.625rem;
+    line-height: 120%;
+    letter-spacing: 0%;
+    color: #121212;
+}
+
+.cards-news-text {
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 135%;
+    letter-spacing: 0%;
+    color: #121212;
+}
+
+.tech-card-news {
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #121212;
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    width: 131.1px;
+    height: 40px;
+    border: 0;
+    border-radius: 6px;
+    background: #fff;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.tech-card-news-plis {
+    width: 44px;
+    height: 44px;
+    opacity: 1;
+    color: #000000;
+}
+
+/***** end news *****/
 
 
 /***** feedback *****/
