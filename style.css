@@ -46,8 +46,14 @@ a {
     left: 0;
     width: 100%;
     z-index: 1000;
+    height: 82px;
+    transition: height 0.3s ease;
     /* всегда поверх hero */
 }
+
+.header.scrolled {
+    height: 54px; /* Уменьшенная высота */
+  }
 
 .header.fixed {
     z-index: 1000;
@@ -60,6 +66,12 @@ a {
     justify-content: space-between;
     /* тексты по краям */
     padding: 2.188rem 2.625rem 1.938rem 2.625rem;
+    transition: padding 0.3s ease;
+}
+
+.header-container.padding {
+    padding: 1.188rem 2.625rem 1.188rem 2.625rem;
+    transition: padding 0.3s ease;
 }
 
 .header-logo {

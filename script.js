@@ -5,6 +5,7 @@
 const header = document.querySelector('.header-fixed');
 const headerH = document.querySelector('.header-fixed').clientHeight;
 const height = document.querySelector('.modal_menu-container');
+const headerContainer = document.querySelector('.header-container');
 
 document.onscroll = function () {
 
@@ -12,14 +13,17 @@ document.onscroll = function () {
 
     if (scroll > headerH) {
         header.classList.add('fixed');
+        header.classList.add('scrolled');
+        headerContainer.classList.add('padding');
         // document.body.style.paddingTop = headerH + 'px';
         header.style.backgroundColor = '#FFFFFF33';
-        header.style.backdropFilter = 'blur(10px)';
-        // height.style.height = '100vh'
+        header.style.backdropFilter = 'blur(10px)'
     }
 
     else {
         header.classList.remove('fixed');
+        header.classList.remove('scrolled');
+        headerContainer.classList.remove('padding');
         header.style.backgroundColor = "";
         header.style.backdropFilter = "";
     }
@@ -284,7 +288,7 @@ async function renderBoat(modelKey) {
             duration: 0.72,
             ease: "power3.out"
         }, 0.08)
-        
+
         .fromTo(
             [boatDescription, boatWatermark, boatLength, boatCapacity, boatSpeed],
             { autoAlpha: 0.82, y: 6 },
