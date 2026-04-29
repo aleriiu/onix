@@ -1245,6 +1245,9 @@ input[type="checkbox"] {
     padding: 3.813rem 0 3.25rem 3.25rem;
     gap: 4.5rem;
     background-color: #121212;
+    position: relative;
+    height: auto;
+    width: 100%;
 }
 
 .footer-container {
@@ -1339,6 +1342,10 @@ li {
 .vertical-line {
     border-left: 1px solid #FFFFFF33;
     height: 448px;
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
     /* Высота линии */
 }
 
@@ -1389,6 +1396,7 @@ li {
     display: flex;
     flex-direction: column;
     gap: 192px;
+    padding: 10px 171px 148px 171px;
 }
 
 .footer-form-news-socity-img {
