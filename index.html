@@ -29,14 +29,14 @@
                 <hr class="horizontal-line">
                 <div class="modal-menu-group">
                     <div class="modal-window-choose-boat-container">
-                        <button class="modal-window-choose-boat" type="button" data-boat="x12">
+                        <button class="modal-window-choose-boat is-active" type="button" data-boat="x12">
                             <img class="modal-window-choose-boat-img" src="./images/12x_modal.png" alt="12X Cruiser">
                             <div class="modal-window-choose-boat-text">
                                 <p class="modal-window-choose-boat-name">12X Cruiser</p>
                                 <p class="modal-window-choose-boat-name-about">Морской класс</p>
                             </div>
                         </button>
-                        <button class="modal-window-choose-boat is-active" type="button" data-boat="cabin850">
+                        <button class="modal-window-choose-boat" type="button" data-boat="cabin850">
                             <img class="modal-window-choose-boat-img" src="./images/850cabin-modal.png" alt="850 Cabin">
                             <div class="modal-window-choose-boat-text">
                                 <p class="modal-window-choose-boat-name">850 Cabin</p>
@@ -423,43 +423,49 @@
                     <p class="footer-list-group-name">Модели</p>
                     <div class="footer-list-group-row">
                         <ul>
-                            <li>600S Aero</li>
-                            <li>600S Aero Cabin</li>
-                            <li>680 Cabin</li>
-                            <li>800 Aero Cabin</li>
-                            <li>850 Cruiser</li>
-                            <li>850 Day Cruiser</li>
+                            <li><a href="#" class="footer-link">600S Aero</a></li>
+                            <li><a href="#" class="footer-link">600S Aero Cabin</a></li>
+                            <li><a href="#" class="footer-link">680 Cabin</a></li>
+                            <li><a href="#" class="footer-link">800 Aero Cabin</a></li>
+                            <li><a href="#" class="footer-link">850 Cruiser</a></li>
+                            <li><a href="#" class="footer-link">850 Day Cruiser</a></li>
                         </ul>
                         <ul>
-                            <li>850 Cross Cabin</li>
-                            <li>850 Day Cruiser</li>
-                            <li>850 Cabin</li>
-                            <li>12X Cruiser</li>
+                            <li><a href="#" class="footer-link">850 Cross Cabin</a></li>
+                            <li><a href="#" class="footer-link">850 Day Cruiser</a></li>
+                            <li><a href="#" class="footer-link">850 Cabin</a></li>
+                            <li><a href="#" class="footer-link">12X Cruiser</a></li>
                         </ul>
                     </div>
                 </div>
+
                 <div class="footer-list-group">
                     <p class="footer-list-group-name">Страницы</p>
                     <div class="footer-list-group">
                         <ul>
-                            <li>600S Aero</li>
-                            <li>600S Aero Cabin</li>
-                            <li>680 Cabin</li>
-                            <li>800 Aero Cabin</li>
-                            <li>850 Cruiser</li>
-                            <li>850 Day Cruiser</li>
+                            <li><a href="#" class="footer-link">600S Aero</a></li>
+                            <li><a href="#" class="footer-link">600S Aero Cabin</a></li>
+                            <li><a href="#" class="footer-link">680 Cabin</a></li>
+                            <li><a href="#" class="footer-link">800 Aero Cabin</a></li>
+                            <li><a href="#" class="footer-link">850 Cruiser</a></li>
+                            <li><a href="#" class="footer-link">850 Day Cruiser</a></li>
                         </ul>
-
                     </div>
                 </div>
             </div>
             <div class="footer-contacts">
-                <p class="footer-contacts-text">+7 (999) 000-00-00</p>
-                <p class="footer-contacts-text">Россия, г. Самара, Московское шоссе, 18-й километр, лит. А корп. 3</p>
+                <a class="footer-contacts-text" href="tel:+79990000000">+7 (999) 000-00-00</a>
+                <a class="footer-contacts-text"
+                    href="https://maps.google.com/?q=Россия,+г.+Самара,+Московское+шоссе,+18-й+километр,+лит.+А+корп.+3"
+                    target="_blank" rel="noopener noreferrer">
+                    Россия, г. Самара, Московское шоссе, 18-й километр, лит. А корп. 3
+                </a>
             </div>
             <div class="footer-contacts-policy">
-                <p class="footer-contacts-policy-text-underline">Политика конфиденциальности</p>
-                <p class="footer-contacts-policy-text-underline">Согласие на обработку персональных данных</p>
+                <a class="footer-contacts-policy-text-underline" href="/privacy-policy.html">Политика
+                    конфиденциальности</a>
+                <a class="footer-contacts-policy-text-underline" href="/personal-data-consent.html">Согласие на
+                    обработку персональных данных</a>
                 <p class="footer-contacts-policy-text">© 2025 Все права защищены.</p>
             </div>
         </div>
@@ -476,8 +482,12 @@
                 </form>
             </div>
             <div class="footer-form-news-socity">
-                <img class="footer-form-news-socity-img" src="images/tg-icon.png" alt="телеграм">
-                <img class="footer-form-news-socity-img" src="images/vk-icon.png" alt="vk">
+                <a href="https://t.me/your_channel" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+                    <img class="footer-form-news-socity-img" src="images/tg-icon.png" alt="Telegram">
+                </a>
+                <a href="https://vk.com/your_page" target="_blank" rel="noopener noreferrer" aria-label="VK">
+                    <img class="footer-form-news-socity-img" src="images/vk-icon.png" alt="VK">
+                </a>
             </div>
         </div>
     </footer>

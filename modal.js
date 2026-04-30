@@ -13,7 +13,7 @@ closeBtn?.addEventListener('click', () => {
 });
 
 /***** modal boat switcher *****/
-const OVERLAY_DELAY = 1000; // 1000 = 1 секунда
+const OVERLAY_DELAY = 300; // 1000 = 1 секунда
 
 const modalBoatButtons = document.querySelectorAll('.modal-window-choose-boat');
 const modalBoatTitle = document.getElementById('modalBoatTitle');
@@ -88,11 +88,13 @@ function setActiveBoat(key) {
 }
 
 modalBoatButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-        setActiveBoat(btn.dataset.boat);
-    });
+    const activate = () => setActiveBoat(btn.dataset.boat);
+
+    btn.addEventListener('mouseenter', activate); // desktop hover
+    btn.addEventListener('focus', activate);      // клавиатура/доступность
+    btn.addEventListener('click', activate);
 });
 
 // стартовое состояние
-setActiveBoat('cabin850');
+setActiveBoat('x12');
 /***** end modal boat switcher *****/

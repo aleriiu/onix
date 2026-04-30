@@ -515,6 +515,7 @@ techSections.forEach((techSection) => {
     let startY = 0;
     let startTrackX = 0;
     let moved = false;
+    let suppressClick = false;
     const SWIPE_THRESHOLD = 60;
 
     const WHEEL_SENSITIVITY = 1.6;
@@ -550,6 +551,7 @@ techSections.forEach((techSection) => {
         startX = e.clientX;
         startY = e.clientY;
         startTrackX = getTrackX();
+        suppressClick = false;
 
         gsap.killTweensOf(track);
         sliderViewport.classList.add("is-dragging");
@@ -566,6 +568,10 @@ techSections.forEach((techSection) => {
         if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 8) return;
 
         if (Math.abs(dx) > 4) moved = true;
+        if (Math.abs(dx) > 4) {
+            moved = true;
+            suppressClick = true;
+        }
 
         const minX = -maxOffset;
         const maxX = 0;
@@ -591,7 +597,25 @@ techSections.forEach((techSection) => {
         } else {
             goTo(currentIndex);
         }
+
+        setTimeout(() => {
+            suppressClick = false;
+        }, 0);
     }
+
+    track.addEventListener("click", (e) => {
+        const card = e.target.closest(".tech-card");
+        if (!card) return;
+
+        if (suppressClick) {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+        }
+
+        // тут твое действие по клику карточки
+        // например открыть модалку / перейти по ссылке
+    });
 
     function onWheel(e) {
         if (isPointerDown || maxOffset <= 0) return;
