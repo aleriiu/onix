@@ -29,41 +29,41 @@
                 <hr class="horizontal-line">
                 <div class="modal-menu-group">
                     <div class="modal-window-choose-boat-container">
-                        <div class="modal-window-choose-boat">
+                        <button class="modal-window-choose-boat" type="button" data-boat="x12">
                             <img class="modal-window-choose-boat-img" src="./images/12x_modal.png" alt="12X Cruiser">
                             <div class="modal-window-choose-boat-text">
                                 <p class="modal-window-choose-boat-name">12X Cruiser</p>
                                 <p class="modal-window-choose-boat-name-about">Морской класс</p>
                             </div>
-                        </div>
-                        <div class="modal-window-choose-boat">
+                        </button>
+                        <button class="modal-window-choose-boat is-active" type="button" data-boat="cabin850">
                             <img class="modal-window-choose-boat-img" src="./images/850cabin-modal.png" alt="850 Cabin">
                             <div class="modal-window-choose-boat-text">
                                 <p class="modal-window-choose-boat-name">850 Cabin</p>
                                 <p class="modal-window-choose-boat-name-about">Универсальный размер</p>
                             </div>
-                        </div>
-                        <div class="modal-window-choose-boat">
+                        </button>
+                        <button class="modal-window-choose-boat" type="button" data-boat="aero800">
                             <img class="modal-window-choose-boat-img" src="./images/800aero-modal.png"
                                 alt="800 Aero Cabin">
                             <div class="modal-window-choose-boat-text">
                                 <p class="modal-window-choose-boat-name">800 Aero Cabin</p>
                             </div>
-                        </div>
-                        <div class="modal-window-choose-boat">
+                        </button>
+                        <button class="modal-window-choose-boat" type="button" data-boat="day850">
                             <img class="modal-window-choose-boat-img" src="./images/850day-modal.png"
                                 alt="850 Day Cruiser">
                             <div class="modal-window-choose-boat-text">
                                 <p class="modal-window-choose-boat-name">850 Day Cruiser</p>
                             </div>
-                        </div>
+                        </button>
                     </div>
                     <div class="vertical-line-modal"></div>
                     <div class="modal-window-description">
                         <div class="modal-window-description-container">
-                            <p class="modal-window-description-title">850 Сabin</p>
+                            <p class="modal-window-description-title" id="modalBoatTitle">850 Сabin</p>
                             <div class="modal-window-description-group">
-                                <p class="modal-window-description-text">Комфортная каютная лодка для семейных
+                                <p class="modal-window-description-text" id="modalBoatText">Комфортная каютная лодка для семейных
                                     путешествий и
                                     продолжительных маршрутов</p>
                                 <button class="modal-window-description-btn">Подробнее</button>
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                         </div>
-                        <img class="modal-main-img" src="./images/modal-img1.png" alt="850 Сabin">
+                        <img class="modal-main-img" id="modalBoatImage" src="./images/modal-img1.png" alt="850 Сabin">
                     </div>
                 </div>
             </div>
