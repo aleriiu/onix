@@ -215,12 +215,12 @@ async function renderBoat(modelKey) {
         duration: 0.28,
         ease: "power2.in"
     }, 0)
-      .to(textTargets, {
-        autoAlpha: 0,
-        y: 6,
-        duration: 0.2,
-        stagger: 0.015
-    }, 0);
+        .to(textTargets, {
+            autoAlpha: 0,
+            y: 6,
+            duration: 0.2,
+            stagger: 0.015
+        }, 0);
 
     // 2) обновляем контент в точке, когда старая уже ушла
     tl.add(() => {
@@ -240,11 +240,11 @@ async function renderBoat(modelKey) {
         duration: 0.45,
         ease: "power3.out"
     })
-      .to(textTargets, {
-        autoAlpha: 1,
-        duration: 0.28,
-        stagger: 0.02
-    }, "<+0.05");
+        .to(textTargets, {
+            autoAlpha: 1,
+            duration: 0.28,
+            stagger: 0.02
+        }, "<+0.05");
 }
 
 modelButtons.forEach((btn) => {
@@ -517,6 +517,8 @@ techSections.forEach((techSection) => {
     let moved = false;
     const SWIPE_THRESHOLD = 60;
 
+    const WHEEL_SENSITIVITY = 1.6;
+
     function getTrackX() {
         return Number(gsap.getProperty(track, "x")) || 0;
     }
@@ -591,6 +593,44 @@ techSections.forEach((techSection) => {
         }
     }
 
+    function onWheel(e) {
+        if (isPointerDown || maxOffset <= 0) return;
+
+        const absX = Math.abs(e.deltaX);
+        const absY = Math.abs(e.deltaY);
+        const dominant = absX > absY ? e.deltaX : e.deltaY;
+
+        // игнорируем микро-шумы
+        if (Math.abs(dominant) < 2) return;
+
+        e.preventDefault();
+
+        gsap.killTweensOf(track);
+
+        const currentX = getTrackX();
+        const minX = -maxOffset;
+        const maxX = 0;
+
+        // колесо вниз / свайп влево -> двигаем трек влево
+        const nextX = gsap.utils.clamp(
+            minX,
+            maxX,
+            currentX - dominant * WHEEL_SENSITIVITY
+        );
+
+        gsap.to(track, {
+            x: nextX,
+            duration: 0.28,
+            ease: "power2.out",
+            overwrite: true,
+            onUpdate: () => {
+                const x = Math.abs(getTrackX());
+                currentIndex = step > 0 ? Math.round(x / step) : 0;
+                currentIndex = gsap.utils.clamp(0, maxIndex, currentIndex);
+            }
+        });
+    }
+
     recalcStep();
     goTo(0, false);
 
@@ -602,6 +642,7 @@ techSections.forEach((techSection) => {
     sliderViewport.addEventListener("pointerup", onPointerUp);
     sliderViewport.addEventListener("pointercancel", onPointerUp);
     sliderViewport.addEventListener("pointerleave", onPointerUp);
+    sliderViewport.addEventListener("wheel", onWheel, { passive: false });
 
     window.addEventListener("resize", () => {
         recalcStep();
