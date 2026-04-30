@@ -896,7 +896,6 @@ body {
 .tech-slider {
     overflow: hidden;
     width: 100%;
-    padding-right: 40px;
     touch-action: pan-y;
     /* вертикальный скролл страницы сохраняется */
     cursor: grab;
@@ -912,14 +911,12 @@ body {
     gap: 2.25rem;
     will-change: transform;
     transform: translate3d(0, 0, 0);
-    padding-right: 16px;
-    /* дополнительный зазор справа */
+    padding-right: 0;
 }
 
 .tech-cards-track::after {
     content: "";
-    flex: 0 0 16px;
-    /* размер отступа справа */
+    flex: 0 0 calc(2.625rem - 2.25rem); /* = 0.375rem */
 }
 
 .tech-card {
@@ -934,6 +931,11 @@ body {
 }
 
 .tech-card:hover .tech-card-content .cards-section-text {
+    color: #A6A6A6
+        /* Новый цвет текста */
+}
+
+.tech-card:hover .tech-card-content .cards-news-text {
     color: #A6A6A6
         /* Новый цвет текста */
 }
@@ -970,24 +972,24 @@ body {
     height: 40px;
     border: 0;
     border-radius: 6px;
-    color: #121212;
-    font-size: 36px;
-    line-height: 1;
     cursor: pointer;
-    background: url('images/img-plus-icon.png');
+    background: url("images/img-plus-icon.png") center / contain no-repeat;
+}
+
+.tech-card:hover .tech-card-plus {
+    background: url("images/img-arrow-icon.png") center / contain no-repeat;
+}
+
+.tech-card-plus .tech-card-img {
+    opacity: 0;
+    width: 40px;
+    height: 40px;
+    display: block;
 }
 
 .tech-card-img {
     width: 40px;
     height: 40px;
-}
-
-.tech-card:hover .tech-card-plus .tech-card-img {
-    background: url('images/img-arrow-icon.png');
-    width: 40px;
-    height: 40px;
-    font-size: 36px;
-    /* Фото при наведении */
 }
 
 .tech-card-plus .tech-card-img {
@@ -996,9 +998,15 @@ body {
     transition: opacity 0.3s;
 }
 
-.tech-card:hover .tech-card-plus .tech-card-img {
-    opacity: 0;
-    /* Прячем старое фото, показывая фон */
+.tech-slider .tech-card,
+.tech-slider .tech-card * {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+}
+
+.tech-slider .cards-section-img {
+    pointer-events: none;
 }
 
 /***** end cards *****/
@@ -1068,8 +1076,7 @@ body {
 .tech-card-news {
     font-weight: 500;
     font-size: 1rem;
-    line-height: 100%;
-    letter-spacing: 0%;
+    line-height: 1;
     color: #121212;
     position: absolute;
     right: 16px;
@@ -1079,15 +1086,43 @@ body {
     border: 0;
     border-radius: 6px;
     background: #fff;
-    line-height: 1;
     cursor: pointer;
+    /* важно для стабильного текста */
+    position: absolute;
+    text-align: center;
+    padding: 0 28px 0 10px; /* место под иконку справа */
 }
 
-.tech-card-news-plis {
-    width: 44px;
-    height: 44px;
+.tech-card-news-img {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 11px;
+    height: 11px;
     opacity: 1;
-    color: #000000;
+    transition: opacity 0.2s ease;
+}
+
+.tech-card:hover .tech-card-news-img {
+    opacity: 0;
+}
+
+.tech-card-news::after {
+    content: "";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 11px;
+    height: 11px;
+    background: url("images/arrow-icon.png") center / contain no-repeat;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.tech-card:hover .tech-card-news::after {
+    opacity: 1;
 }
 
 /***** end news *****/

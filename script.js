@@ -499,13 +499,18 @@ descriptionTl
 /***** end text change color *****/
 
 /***** tech cards slider (gsap) *****/
-const techSection = document.querySelector("#tech-cards");
-if (techSection) {
+const techSections = document.querySelectorAll(".js-tech-cards");
+
+techSections.forEach((techSection) => {
     const track = techSection.querySelector(".tech-cards-track");
     const sliderViewport = techSection.querySelector(".tech-slider");
     const cards = gsap.utils.toArray(".tech-card", track);
     const prevBtn = techSection.querySelector(".tech-nav-prev");
     const nextBtn = techSection.querySelector(".tech-nav-next");
+
+    if (!track || !sliderViewport || !cards.length) return;
+
+    track.addEventListener("dragstart", (e) => e.preventDefault());
 
     let currentIndex = 0;
     let step = 0;
@@ -524,8 +529,6 @@ if (techSection) {
     }
 
     function recalcStep() {
-        if (!cards.length || !sliderViewport) return;
-
         const gap = parseFloat(getComputedStyle(track).gap) || 0;
         step = cards[0].getBoundingClientRect().width + gap;
 
@@ -545,7 +548,8 @@ if (techSection) {
     }
 
     function onPointerDown(e) {
-        if (!sliderViewport) return;
+        if (e.pointerType === "mouse") e.preventDefault();
+    
         isPointerDown = true;
         moved = false;
         startX = e.clientX;
@@ -583,7 +587,6 @@ if (techSection) {
         sliderViewport.releasePointerCapture?.(e.pointerId);
 
         const dx = e.clientX - startX;
-
         if (!moved) return;
 
         if (dx <= -SWIPE_THRESHOLD) {
@@ -601,15 +604,15 @@ if (techSection) {
     nextBtn?.addEventListener("click", () => goTo(currentIndex + 1));
     prevBtn?.addEventListener("click", () => goTo(currentIndex - 1));
 
-    sliderViewport?.addEventListener("pointerdown", onPointerDown);
-    sliderViewport?.addEventListener("pointermove", onPointerMove);
-    sliderViewport?.addEventListener("pointerup", onPointerUp);
-    sliderViewport?.addEventListener("pointercancel", onPointerUp);
-    sliderViewport?.addEventListener("pointerleave", onPointerUp);
+    sliderViewport.addEventListener("pointerdown", onPointerDown);
+    sliderViewport.addEventListener("pointermove", onPointerMove);
+    sliderViewport.addEventListener("pointerup", onPointerUp);
+    sliderViewport.addEventListener("pointercancel", onPointerUp);
+    sliderViewport.addEventListener("pointerleave", onPointerUp);
 
     window.addEventListener("resize", () => {
         recalcStep();
         goTo(currentIndex, false);
     });
-}
+});
 /***** end tech cards slider *****/
