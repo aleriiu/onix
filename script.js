@@ -123,8 +123,6 @@ galleryTl
 /***** end gallery *****/
 
 
-
-
 /***** boat *****/
 const boatData = {
     cabin: {
@@ -156,7 +154,6 @@ const boatData = {
     }
 };
 
-const modelOrder = ["cabin", "day", "x12"];
 let activeModelKey = "cabin";
 let isBoatAnimating = false;
 
@@ -166,12 +163,7 @@ const boatWatermark = document.getElementById("boatWatermark");
 const boatLength = document.getElementById("boatLength");
 const boatCapacity = document.getElementById("boatCapacity");
 const boatSpeed = document.getElementById("boatSpeed");
-
 const boatImageCurrent = document.getElementById("boatImageCurrent");
-const boatImageNext = document.getElementById("boatImageNext");
-
-let currentLayer = boatImageCurrent;
-let nextLayer = boatImageNext;
 
 function preload(src) {
     return new Promise((resolve) => {
@@ -193,63 +185,66 @@ function applyBoatContent(modelKey) {
     boatSpeed.textContent = model.speed;
 }
 
-function getDirection(fromKey, toKey) {
-    const fromIndex = modelOrder.indexOf(fromKey);
-    const toIndex = modelOrder.indexOf(toKey);
-    return toIndex > fromIndex ? -1 : 1;
-}
-
 async function renderBoat(modelKey) {
     if (isBoatAnimating || modelKey === activeModelKey) return;
+
     const model = boatData[modelKey];
-    if (!model) return;
+    if (!model || !boatImageCurrent) return;
 
     isBoatAnimating = true;
-    const dir = getDirection(activeModelKey, modelKey);
+
+    const textTargets = [boatDescription, boatWatermark, boatLength, boatCapacity, boatSpeed];
+
+    // чтобы не наслаивались анимации при быстрых кликах
+    gsap.killTweensOf([boatImageCurrent, ...textTargets]);
 
     await preload(model.image);
 
-    nextLayer.src = model.image;
-    nextLayer.alt = model.imageAlt || "лодка";
-
-    gsap.set(currentLayer, { x: 0, autoAlpha: 1, zIndex: 2 });
-    gsap.set(nextLayer, { x: dir * 220, autoAlpha: 1, zIndex: 3 });
-
-    gsap.timeline({
-        defaults: { ease: "power3.inOut" },
+    const tl = gsap.timeline({
+        defaults: { ease: "power2.out" },
         onComplete: () => {
-            applyBoatContent(modelKey);
-
-            const old = currentLayer;
-            currentLayer = nextLayer;
-            nextLayer = old;
-
-            gsap.set(nextLayer, { x: 0, autoAlpha: 0, zIndex: 1 });
-            gsap.set(currentLayer, { x: 0, autoAlpha: 1, zIndex: 2 });
-
             activeModelKey = modelKey;
             isBoatAnimating = false;
         }
-    })
-        .to(currentLayer, {
-            x: dir * -220,
-            autoAlpha: 0,      // старая уходит в прозрачность
-            duration: 0.62,
-            ease: "power2.in"
-        }, 0)
-        .to(nextLayer, {
-            x: 0,
-            autoAlpha: 1,
-            duration: 0.72,
-            ease: "power3.out"
-        }, 0.08)
+    });
 
-        .fromTo(
-            [boatDescription, boatWatermark, boatLength, boatCapacity, boatSpeed],
-            { autoAlpha: 0.82, y: 6 },
-            { autoAlpha: 1, y: 0, duration: 0.36, stagger: 0.02, ease: "power2.out" },
-            0.66
-        );
+    // 1) старая лодка уезжает вправо, текст плавно исчезает
+    tl.to(boatImageCurrent, {
+        x: 120,
+        autoAlpha: 0,
+        duration: 0.28,
+        ease: "power2.in"
+    }, 0)
+      .to(textTargets, {
+        autoAlpha: 0,
+        y: 6,
+        duration: 0.2,
+        stagger: 0.015
+    }, 0);
+
+    // 2) обновляем контент в точке, когда старая уже ушла
+    tl.add(() => {
+        boatImageCurrent.src = model.image;
+        boatImageCurrent.alt = model.imageAlt || "лодка";
+        applyBoatContent(modelKey);
+
+        // стартовые позиции для въезда/появления
+        gsap.set(boatImageCurrent, { x: -120, autoAlpha: 0 });
+        gsap.set(textTargets, { y: 0, autoAlpha: 0 });
+    });
+
+    // 3) новая лодка въезжает слева направо, текст плавно появляется
+    tl.to(boatImageCurrent, {
+        x: 0,
+        autoAlpha: 1,
+        duration: 0.45,
+        ease: "power3.out"
+    })
+      .to(textTargets, {
+        autoAlpha: 1,
+        duration: 0.28,
+        stagger: 0.02
+    }, "<+0.05");
 }
 
 modelButtons.forEach((btn) => {
@@ -261,8 +256,6 @@ modelButtons.forEach((btn) => {
         renderBoat(btn.dataset.model);
     });
 });
-
-gsap.set(nextLayer, { autoAlpha: 0, x: 0, zIndex: 1 });
 /***** end boat *****/
 
 
