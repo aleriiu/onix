@@ -617,96 +617,43 @@ techSections.forEach((techSection) => {
 });
 /***** end tech cards slider *****/
 
-/***** section snap scroll (desktop only + safe zones) *****/
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, Observer);
+/***** section snap scroll (desktop, soft) *****/
+if (window.matchMedia("(min-width: 1024px)").matches) {
+    const sections = gsap.utils.toArray("main > section");
 
-const isDesktop = window.matchMedia("(min-width: 1024px)");
+    // исключаем секции, где свой сложный скролл/горизонтальные взаимодействия
+    const snapTargets = sections.filter((section) => {
+        return !section.matches(".scroll-section") && !section.querySelector(".tech-slider");
+    });
 
-if (isDesktop.matches) {
-    const snapSections = gsap.utils.toArray("main > section");
-    let sectionIndex = 0;
-    let isSnapping = false;
+    if (snapTargets.length > 1) {
+        ScrollTrigger.create({
+            trigger: "main",
+            start: "top top",
+            end: "bottom bottom",
+            snap: {
+                snapTo: (progress) => {
+                    const scrollStart = ScrollTrigger.maxScroll(window) * progress;
+                    const offsets = snapTargets.map((s) => s.offsetTop);
 
-    // зоны, где нельзя перехватывать wheel/touch для вертикального snap
-    const noSnapSelectors = [
-        ".tech-slider",
-        ".tech-slider *",
-        ".scroll-section",
-        ".scroll-section *"
-    ];
+                    let nearest = offsets[0];
+                    let minDist = Math.abs(offsets[0] - scrollStart);
 
-    function isInsideNoSnapZone(target) {
-        return noSnapSelectors.some((selector) => target.closest(selector));
-    }
+                    for (let i = 1; i < offsets.length; i++) {
+                        const d = Math.abs(offsets[i] - scrollStart);
+                        if (d < minDist) {
+                            minDist = d;
+                            nearest = offsets[i];
+                        }
+                    }
 
-    function getNearestSectionIndex() {
-        const y = window.scrollY;
-        let nearest = 0;
-        let minDist = Infinity;
-
-        snapSections.forEach((section, i) => {
-            const dist = Math.abs(section.offsetTop - y);
-            if (dist < minDist) {
-                minDist = dist;
-                nearest = i;
-            }
-        });
-
-        return nearest;
-    }
-
-    sectionIndex = getNearestSectionIndex();
-
-    function goToSection(index) {
-        const next = gsap.utils.clamp(0, snapSections.length - 1, index);
-        if (next === sectionIndex || isSnapping) return;
-
-        isSnapping = true;
-        sectionIndex = next;
-
-        gsap.to(window, {
-            duration: 0.9,
-            ease: "power2.out",
-            scrollTo: { y: snapSections[sectionIndex], autoKill: false },
-            onComplete: () => {
-                isSnapping = false;
+                    return nearest / ScrollTrigger.maxScroll(window);
+                },
+                duration: { min: 0.2, max: 0.6 },
+                ease: "power1.inOut",
+                delay: 0.08
             }
         });
     }
-
-    Observer.create({
-        target: window,
-        type: "wheel,touch,pointer",
-        tolerance: 12,
-        preventDefault: false,
-
-        onDown(self) {
-            const t = self.event?.target;
-            if (t && isInsideNoSnapZone(t)) return; // внутри scroll-section и tech-slider ничего не перехватываем
-            self.event?.preventDefault?.();
-            goToSection(sectionIndex + 1);
-        },
-        
-        onUp(self) {
-            const t = self.event?.target;
-            if (t && isInsideNoSnapZone(t)) return;
-            self.event?.preventDefault?.();
-            goToSection(sectionIndex - 1);
-        }
-    });
-
-    window.addEventListener("keydown", (e) => {
-        if (isSnapping) return;
-        if (e.key === "ArrowDown" || e.key === "PageDown") goToSection(sectionIndex + 1);
-        if (e.key === "ArrowUp" || e.key === "PageUp") goToSection(sectionIndex - 1);
-    });
-
-    window.addEventListener(
-        "scroll",
-        () => {
-            if (!isSnapping) sectionIndex = getNearestSectionIndex();
-        },
-        { passive: true }
-    );
 }
-/***** end section snap scroll *****/
+/***** end section snap scroll (desktop, soft) *****/
