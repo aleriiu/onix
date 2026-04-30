@@ -549,7 +549,7 @@ techSections.forEach((techSection) => {
 
     function onPointerDown(e) {
         if (e.pointerType === "mouse") e.preventDefault();
-    
+
         isPointerDown = true;
         moved = false;
         startX = e.clientX;
@@ -616,3 +616,97 @@ techSections.forEach((techSection) => {
     });
 });
 /***** end tech cards slider *****/
+
+/***** section snap scroll (desktop only + safe zones) *****/
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, Observer);
+
+const isDesktop = window.matchMedia("(min-width: 1024px)");
+
+if (isDesktop.matches) {
+    const snapSections = gsap.utils.toArray("main > section");
+    let sectionIndex = 0;
+    let isSnapping = false;
+
+    // зоны, где нельзя перехватывать wheel/touch для вертикального snap
+    const noSnapSelectors = [
+        ".tech-slider",
+        ".tech-slider *",
+        ".scroll-section",
+        ".scroll-section *"
+    ];
+
+    function isInsideNoSnapZone(target) {
+        return noSnapSelectors.some((selector) => target.closest(selector));
+    }
+
+    function getNearestSectionIndex() {
+        const y = window.scrollY;
+        let nearest = 0;
+        let minDist = Infinity;
+
+        snapSections.forEach((section, i) => {
+            const dist = Math.abs(section.offsetTop - y);
+            if (dist < minDist) {
+                minDist = dist;
+                nearest = i;
+            }
+        });
+
+        return nearest;
+    }
+
+    sectionIndex = getNearestSectionIndex();
+
+    function goToSection(index) {
+        const next = gsap.utils.clamp(0, snapSections.length - 1, index);
+        if (next === sectionIndex || isSnapping) return;
+
+        isSnapping = true;
+        sectionIndex = next;
+
+        gsap.to(window, {
+            duration: 0.9,
+            ease: "power2.out",
+            scrollTo: { y: snapSections[sectionIndex], autoKill: false },
+            onComplete: () => {
+                isSnapping = false;
+            }
+        });
+    }
+
+    Observer.create({
+        target: window,
+        type: "wheel,touch,pointer",
+        tolerance: 12,
+        preventDefault: false,
+
+        onDown(self) {
+            const t = self.event?.target;
+            if (t && isInsideNoSnapZone(t)) return; // внутри scroll-section и tech-slider ничего не перехватываем
+            self.event?.preventDefault?.();
+            goToSection(sectionIndex + 1);
+        },
+        
+        onUp(self) {
+            const t = self.event?.target;
+            if (t && isInsideNoSnapZone(t)) return;
+            self.event?.preventDefault?.();
+            goToSection(sectionIndex - 1);
+        }
+    });
+
+    window.addEventListener("keydown", (e) => {
+        if (isSnapping) return;
+        if (e.key === "ArrowDown" || e.key === "PageDown") goToSection(sectionIndex + 1);
+        if (e.key === "ArrowUp" || e.key === "PageUp") goToSection(sectionIndex - 1);
+    });
+
+    window.addEventListener(
+        "scroll",
+        () => {
+            if (!isSnapping) sectionIndex = getNearestSectionIndex();
+        },
+        { passive: true }
+    );
+}
+/***** end section snap scroll *****/
