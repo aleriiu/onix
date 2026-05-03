@@ -1,0 +1,491 @@
+/* ——— Страница модели (дополнение к style.css) ——— */
+
+/* HERO-MODEL */
+
+.hero-model {
+    background-image: url("../images/hero-model.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    align-items: flex-end;
+}
+
+.hero-model__inner {
+    padding: 0 0 56px 40px;
+}
+
+.hero-model__title {
+    font-weight: 600;
+    font-size: 4rem;
+    line-height: 100%;
+    letter-spacing: -1%;
+    text-transform: uppercase;
+    color: #FFFFFF;
+}
+
+.horizontal-line-hero-model {
+    width: 612px;
+    height: 1px;
+    background-color: #FFFFFF66;
+}
+
+.hero-model__text-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding-top: 18px;
+}
+
+.hero-model__text {
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 135%;
+    letter-spacing: 0%;
+    color: #FFFFFF;
+    max-width: 340px;
+}
+
+.hero-model__cta {
+    width: 252px;
+    border-radius: 6px;
+    backdrop-filter: blur(4px);
+    background-color: #F3F2EF66;
+    padding: 14px 32px;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #232323;
+    border: none;
+    cursor: pointer;
+}
+
+/* END HERO-MODEL */
+
+
+
+/* Полоска характеристик */
+/* .model-specs {
+    background-color: #FFFFFF;
+}
+
+.model-specs__grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.75rem 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+.model-specs__label {
+    margin: 0 0 0.35rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(14, 58, 97, 0.55);
+}
+
+.model-specs__value {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #0e3a61;
+} */
+
+
+.model-specs {
+    background-color: #FFFFFF;
+    padding: 120px 90px;
+    display: flex;
+}
+
+.model-specs__group {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.model-specs__item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.model-specs__label {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #000000;
+}
+
+.model-specs__value {
+    font-weight: 600;
+    font-size: 2.25rem;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #000000;
+}
+
+/* Галерея 2 колонки */
+.model-gallery {
+    padding: 3rem 1.5rem;
+}
+
+.model-gallery__grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.model-gallery__figure {
+    margin: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #e8ecf0;
+}
+
+.model-gallery__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    vertical-align: middle;
+}
+
+/* Видео-блок */
+.model-video {
+    padding: 0 1.5rem 3rem;
+}
+
+.model-video__inner {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #0e3a61;
+}
+
+.model-video__poster {
+    width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0.92;
+}
+
+.model-video__inner.is-playing .model-video__poster {
+    opacity: 0.55;
+}
+
+.model-video__play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.92);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.model-video__play:hover,
+.model-video__play:focus-visible {
+    transform: translate(-50%, -50%) scale(1.05);
+    background: #fff;
+    outline: none;
+}
+
+.model-video__play-icon {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 0 10px 16px;
+    border-color: transparent transparent transparent #0e3a61;
+    margin-left: 4px;
+}
+
+/* Технический блок */
+.model-tech {
+    padding: 3rem 1.5rem;
+    background: #fff;
+}
+
+.model-tech__title {
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: #0e3a61;
+}
+
+.model-tech__grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1.2fr);
+    gap: 2rem;
+    align-items: start;
+}
+
+.model-tech__img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    display: block;
+}
+
+.model-tech__list {
+    margin: 0;
+    padding-left: 1.15rem;
+    color: #333;
+    line-height: 1.55;
+}
+
+.model-tech__list li+li {
+    margin-top: 0.5rem;
+}
+
+.model-tech__text {
+    margin: 0;
+    line-height: 1.65;
+    color: #444;
+}
+
+/* План палубы */
+.model-deck-plan {
+    padding: 2rem 1.5rem 4rem;
+    background: #f8f9fb;
+}
+
+.model-deck-plan__title {
+    max-width: 1200px;
+    margin: 0 auto 1.25rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: #0e3a61;
+}
+
+.model-deck-plan__img {
+    display: block;
+    max-width: 1000px;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 8px;
+}
+
+/* Аккордеоны */
+.model-accordion-equipment,
+.model-accordion-engines,
+.model-faq {
+    padding: 2.5rem 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.model-accordion__heading,
+.model-faq__title {
+    margin: 0 0 1.25rem;
+    font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+    color: #0e3a61;
+}
+
+.model-accordion__item {
+    border-bottom: 1px solid rgba(14, 58, 97, 0.15);
+}
+
+.model-accordion__trigger {
+    width: 100%;
+    text-align: left;
+    padding: 1rem 0;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #0e3a61;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.model-accordion__trigger::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid #0e3a61;
+    border-bottom: 2px solid #0e3a61;
+    transform: rotate(45deg);
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+}
+
+.model-accordion__item.is-open .model-accordion__trigger::after {
+    transform: rotate(-135deg);
+}
+
+.model-accordion__panel {
+    padding: 0 0 1rem;
+    color: #444;
+    line-height: 1.6;
+}
+
+.model-accordion__panel[hidden] {
+    display: none;
+}
+
+/* Цена */
+.model-price {
+    padding: 3rem 1.5rem;
+    background: #f4f6f8;
+}
+
+.model-price__title {
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: #0e3a61;
+}
+
+.model-price__hint {
+    margin: 0 0 1.75rem;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.model-price__control {
+    max-width: 560px;
+}
+
+.model-price__label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+    color: #0e3a61;
+}
+
+.model-price__range {
+    width: 100%;
+    accent-color: #0e3a61;
+}
+
+.model-price__value {
+    margin: 0.75rem 0 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0e3a61;
+}
+
+/* Другие модели */
+.model-other-models {
+    padding: 3rem 1.5rem;
+}
+
+.model-other-models__title {
+    margin: 0 0 1.5rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: #0e3a61;
+    text-align: center;
+}
+
+.model-other-models__grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.model-other-models__card {
+    position: relative;
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+    color: #fff;
+    text-decoration: none;
+    min-height: 220px;
+}
+
+.model-other-models__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+}
+
+.model-other-models__card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(14, 58, 97, 0.75));
+    pointer-events: none;
+}
+
+.model-other-models__card:hover .model-other-models__img {
+    transform: scale(1.04);
+}
+
+.model-other-models__name {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 1;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+/* Бренд-блок */
+.model-brand {
+    padding: 4rem 1.5rem 5rem;
+    text-align: center;
+    background: #0e3a61;
+    color: #fff;
+}
+
+.model-brand__line {
+    margin: 0;
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    font-weight: 700;
+    letter-spacing: 0.35em;
+}
+
+.model-brand__tagline {
+    margin: 1rem 0 0;
+    font-size: 1rem;
+    opacity: 0.88;
+    letter-spacing: 0.04em;
+}
+
+@media (max-width: 900px) {
+    .model-specs__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .model-tech__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .model-gallery__grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .model-specs__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .model-other-models__grid {
+        grid-template-columns: 1fr;
+    }
+}
