@@ -22,6 +22,7 @@ const modalBoatImage = document.getElementById('modalBoatImage');
 const modalBoatOverlay = document.getElementById('modalBoatOverlay');
 
 let overlayTimer = null;
+let activeBoatKey = 'x12';
 
 const modalBoatData = {
     x12: {
@@ -55,6 +56,7 @@ const modalBoatData = {
 };
 
 function setActiveBoat(key) {
+    activeBoatKey = key;
     const boat = modalBoatData[key];
     if (!boat) return;
 
@@ -97,6 +99,13 @@ modalBoatButtons.forEach((btn) => {
 
 // стартовое состояние
 setActiveBoat('x12');
+
+const modalDetailBtn = document.querySelector('.modal-window-description-btn');
+modalDetailBtn?.addEventListener('click', () => {
+    if (activeBoatKey === 'x12') {
+        window.location.assign('model.html');
+    }
+});
 /***** end modal boat switcher *****/
 
 
