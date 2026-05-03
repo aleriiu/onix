@@ -67,34 +67,6 @@
 
 
 /* Полоска характеристик */
-/* .model-specs {
-    background-color: #FFFFFF;
-}
-
-.model-specs__grid {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1.75rem 1.5rem;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.5rem;
-}
-
-.model-specs__label {
-    margin: 0 0 0.35rem;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgba(14, 58, 97, 0.55);
-}
-
-.model-specs__value {
-    margin: 0;
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: #0e3a61;
-} */
-
 
 .model-specs {
     background-color: #FFFFFF;
@@ -131,89 +103,19 @@
 }
 
 /* Галерея 2 колонки */
+
 .model-gallery {
-    padding: 3rem 1.5rem;
-}
-
-.model-gallery__grid {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-}
-
-.model-gallery__figure {
-    margin: 0;
-    border-radius: 6px;
-    overflow: hidden;
-    background: #e8ecf0;
+    display: flex;
 }
 
 .model-gallery__img {
-    width: 100%;
-    height: auto;
-    display: block;
-    vertical-align: middle;
+    max-width: 720px;
 }
 
 /* Видео-блок */
-.model-video {
-    padding: 0 1.5rem 3rem;
-}
 
-.model-video__inner {
-    position: relative;
-    max-width: 1200px;
-    margin: 0 auto;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #0e3a61;
-}
-
-.model-video__poster {
+.model-video__img {
     width: 100%;
-    height: auto;
-    display: block;
-    opacity: 0.92;
-}
-
-.model-video__inner.is-playing .model-video__poster {
-    opacity: 0.55;
-}
-
-.model-video__play {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(255, 255, 255, 0.92);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
-    transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.model-video__play:hover,
-.model-video__play:focus-visible {
-    transform: translate(-50%, -50%) scale(1.05);
-    background: #fff;
-    outline: none;
-}
-
-.model-video__play-icon {
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 10px 0 10px 16px;
-    border-color: transparent transparent transparent #0e3a61;
-    margin-left: 4px;
 }
 
 /* Технический блок */
@@ -283,27 +185,271 @@
     border-radius: 8px;
 }
 
-/* Аккордеоны */
-.model-accordion-equipment,
-.model-accordion-engines,
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Блок «Комплектация»: табы слева + аккордеон справа (макет) */
+.model-equipment,
 .model-faq {
-    padding: 2.5rem 1.5rem;
-    max-width: 900px;
-    margin: 0 auto;
+    background: #EFEEEA;
+    padding: 120px 40px;
 }
 
-.model-accordion__heading,
+.model-equipment__inner,
+.model-faq__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: clamp(2rem, 5vw, 5rem);
+    width: 100%;
+}
+
+.model-equipment__tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 501px;
+}
+
+/* Как у .model-engines .model-accordion--engines: ограничение 662px + корректное поведение во flex */
+.model-equipment__panels,
+.model-faq__col {
+    flex: 0 1 662px;
+    align-self: flex-start;
+    max-width: 662px;
+    width: 100%;
+}
+
+.model-equipment__tab,
 .model-faq__title {
-    margin: 0 0 1.25rem;
-    font-size: clamp(1.35rem, 2.5vw, 1.75rem);
-    color: #0e3a61;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 100%;
+    letter-spacing: 0%;
 }
 
-.model-accordion__item {
+.model-equipment__tab {
+    color: rgba(0, 0, 0, 0.38);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.model-faq__title {
+    max-width: 501px;
+    margin: 0;
+    color: #000000;
+}
+
+.model-equipment__tab:hover,
+.model-equipment__tab:focus-visible {
+    color: rgba(0, 0, 0, 0.65);
+    outline: none;
+}
+
+.model-equipment__tab.is-active {
+    color: #000000;
+}
+
+.model-accordion--equipment {
+    border-bottom: 1px solid #FFFFFF;
+}
+
+.model-accordion--equipment .model-accordion__item {
+    border-bottom: 1px solid #FFFFFF;
+}
+
+.model-accordion--equipment .model-accordion__item:last-child {
+    border-bottom: none;
+}
+
+.model-accordion--equipment .model-accordion__trigger {
+    width: 100%;
+    text-align: left;
+    padding: 1rem 0;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    font-weight: 400;
+    color: #000000;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    font-size: 20px;
+    leading-trim: NONE;
+    letter-spacing: 0%;
+
+}
+
+.model-accordion--equipment .model-accordion__trigger::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid #eac84b;
+    border-bottom: 2px solid #eac84b;
+    transform: rotate(45deg);
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+}
+
+.model-accordion--equipment .model-accordion__item.is-open .model-accordion__trigger::after {
+    transform: rotate(-135deg);
+}
+
+@media (max-width: 768px) {
+    .model-equipment__panels,
+    .model-faq__col {
+        margin-left: 0;
+        flex: 1 1 100%;
+    }
+
+    .model-equipment__tabs {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem 1.5rem;
+        max-width: none;
+    }
+
+    .model-faq__title {
+        max-width: none;
+    }
+}
+
+/* Блок «Двигатели»: фон и заголовок как у model-equipment, строка на flex + скачивание */
+.model-accordion-engines {
+    background: #FFFFFF;
+    padding: 120px 40px;
+}
+
+.model-engines {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: clamp(2rem, 5vw, 5rem);
+    width: 100%;
+}
+
+.model-engines__heading {
+    text-align: left;
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #000000;
+}
+
+/* Ограничение ширины: у flex-ребёнка нужны flex + min-width, иначе max-width игнорируется */
+.model-engines .model-accordion--engines {
+    flex: 0 1 662px;
+    align-self: flex-start;
+    max-width: 662px;
+    width: 100%;
+    border-bottom: 1px solid #EFEEEA;
+}
+
+.model-accordion--engines .model-accordion__item {
+    border-bottom: 1px solid #EFEEEA;
+}
+
+.model-accordion--engines .model-accordion__item:last-child {
+    border-bottom: none;
+}
+
+.model-engines__row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    min-height: 3.25rem;
+    padding: 0.25rem 0;
+}
+
+.model-engines__trigger {
+    min-width: 0;
+    width: auto;
+    margin: 0;
+    text-align: left;
+    padding: 1.125rem 0;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #000000;
+    cursor: pointer;
+}
+
+/* без шеврона — раскрытие по клику на название */
+.model-accordion--engines .model-engines__trigger::after {
+    display: none;
+}
+
+.model-engines__download {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem;
+    margin: 0;
+    line-height: 0;
+    border-radius: 4px;
+    color: inherit;
+    transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.model-engines__download:hover,
+.model-engines__download:focus-visible {
+    background: rgba(0, 0, 0, 0.06);
+    outline: none;
+    opacity: 1;
+}
+
+.model-engines__download-icon {
+    display: block;
+}
+
+.model-engines__panel {
+    padding: 0 0 1.25rem;
+    color: rgba(0, 0, 0, 0.65);
+    line-height: 1.65;
+}
+
+.model-engines__panel p {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .model-engines .model-accordion--engines {
+        margin-left: 0;
+        flex: 1 1 100%;
+    }
+}
+
+/* Fallback — любые старые аккордеоны без модификаторов (если появятся) */
+.model-accordion:not(.model-accordion--equipment):not(.model-accordion--engines) .model-accordion__item {
     border-bottom: 1px solid rgba(14, 58, 97, 0.15);
 }
 
-.model-accordion__trigger {
+.model-accordion:not(.model-accordion--equipment):not(.model-accordion--engines) .model-accordion__trigger {
     width: 100%;
     text-align: left;
     padding: 1rem 0;
@@ -319,7 +465,7 @@
     gap: 1rem;
 }
 
-.model-accordion__trigger::after {
+.model-accordion:not(.model-accordion--equipment):not(.model-accordion--engines) .model-accordion__trigger::after {
     content: "";
     width: 10px;
     height: 10px;
@@ -330,7 +476,7 @@
     flex-shrink: 0;
 }
 
-.model-accordion__item.is-open .model-accordion__trigger::after {
+.model-accordion:not(.model-accordion--equipment):not(.model-accordion--engines) .model-accordion__item.is-open .model-accordion__trigger::after {
     transform: rotate(-135deg);
 }
 

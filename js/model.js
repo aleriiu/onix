@@ -273,6 +273,35 @@ function initTechCardSliders() {
     });
 }
 
+/** Табы «Базовая / Дополнительные» в блоке комплектации */
+function initEquipmentTabs() {
+    const section = document.querySelector('.model-equipment');
+    if (!section) return;
+
+    const tabs = section.querySelectorAll('.model-equipment__tab');
+    const panels = section.querySelectorAll('.model-equipment__panel');
+
+    tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+            const panelId = tab.getAttribute('aria-controls');
+            const targetPanel = panelId ? document.getElementById(panelId) : null;
+            if (!targetPanel) return;
+
+            tabs.forEach((t) => {
+                const on = t === tab;
+                t.classList.toggle('is-active', on);
+                t.setAttribute('aria-selected', on ? 'true' : 'false');
+                t.setAttribute('tabindex', on ? '0' : '-1');
+            });
+
+            panels.forEach((p) => {
+                const show = p === targetPanel;
+                p.hidden = !show;
+            });
+        });
+    });
+}
+
 /** Аккордеоны на странице модели */
 function initModelAccordions() {
     document.querySelectorAll('.model-accordion').forEach((root) => {
@@ -322,6 +351,7 @@ function initModelVideoPlay() {
 
 initDescriptionTextAnimation();
 initTechCardSliders();
+initEquipmentTabs();
 initModelAccordions();
 initModelPriceRange();
 initModelVideoPlay();

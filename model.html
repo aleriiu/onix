@@ -105,7 +105,8 @@
                 <hr class="horizontal-line-hero-model">
                 </hr>
                 <div class="hero-model__text-container">
-                    <p class="hero-model__text">Когда хочется почувствовать себя владельцем собственного мира на воде.</p>
+                    <p class="hero-model__text">Когда хочется почувствовать себя владельцем собственного мира на воде.
+                    </p>
                     <button class="hero-model__cta" type="button">Получить консультацию</button>
                 </div>
             </div>
@@ -131,32 +132,18 @@
                 </div>
             </div>
         </section>
-
-        <section class="model-gallery" aria-label="Галерея модели">
-            <div class="model-gallery__grid">
-                <figure class="model-gallery__figure">
-                    <img class="model-gallery__img" src="./images/img-card1.png" alt="Интерьер 12X Cruiser">
-                </figure>
-                <figure class="model-gallery__figure">
-                    <img class="model-gallery__img" src="./images/img-card2.png" alt="Палуба 12X Cruiser">
-                </figure>
-            </div>
+        <section class="model-gallery">
+            <img class="model-gallery__img" src="./images/model-img1-card.png" alt="Интерьер 12X Cruiser">
+            <img class="model-gallery__img" src="./images/model-img2-card.png" alt="Палуба 12X Cruiser">
         </section>
         <section class="description">
-            <p class="description-text-yellow">Основа нашего подхода</p>
+            <p class="description-text-yellow">12X Cruixer</p>
             <p class="description-text">ONIX 12X — пространство для жизни на воде.
                 Три каюты, четыре спальных места и два гальюна создают комфорт для длительных маршрутов. Стабильный ход,
                 автономность и продуманная планировка позволяют не спешить и оставаться там, где хочется дольше.</p>
-            <p class="description-text description-text-italic">&laquo;Каждая деталь на борту подчинена идее свободы
-                передвижения и уверенности в лодке&raquo;.</p>
         </section>
         <section class="model-video" aria-label="Видео о модели">
-            <div class="model-video__inner">
-                <img class="model-video__poster" src="./images/img-card3.png" alt="" width="1200" height="675">
-                <button class="model-video__play" type="button" aria-label="Смотреть видео">
-                    <span class="model-video__play-icon" aria-hidden="true"></span>
-                </button>
-            </div>
+            <img class="model-video__img" src="./images/video-model1.png" alt="Видео о модели">
         </section>
         <section class="cards-section cards-section--tech js-tech-cards">
             <div class="cards-section-description">
@@ -184,7 +171,7 @@
                                 ощущалось свободным, а пребывание на борту — естественным и спокойным.
                             </p>
                         </div>
-                        <img class="cards-section-img" src="./images/img-card1.png" alt="Алюминиевый корпус">
+                        <img class="cards-section-img" src="./images/card-12x-img1.png" alt="Комфорт и интерьер">
                         <button class="tech-card-plus" type="button" aria-label="Подробнее"><img class="tech-card-img"
                                 src="./images/img-plus-icon.png" alt="plus"></button>
                     </article>
@@ -195,7 +182,7 @@
                             <p class="cards-section-text">Системы и оснащение лодки позволяют планировать маршруты без
                                 привязки к береговой инфраструктуре, сохраняя комфорт и безопасность.</p>
                         </div>
-                        <img class="cards-section-img" src="./images/img-card2.png" alt="Продуманная автономность">
+                        <img class="cards-section-img" src="./images/model-card-img2.png" alt="Автономность маршрутов">
                         <button class="tech-card-plus" type="button" aria-label="Подробнее"><img class="tech-card-img"
                                 src="./images/img-plus-icon.png" alt="plus"></button>
                     </article>
@@ -249,62 +236,161 @@
             <h2 class="model-deck-plan__title">План палубы</h2>
             <img class="model-deck-plan__img" src="./images/img-card1.png" alt="Схема палубы ONIX 12X Cruiser">
         </section>
-        <section class="model-accordion-equipment">
-            <h2 class="model-accordion__heading">Оборудование и опции</h2>
-            <div class="model-accordion">
-                <div class="model-accordion__item">
-                    <button class="model-accordion__trigger" type="button" aria-expanded="false" id="acc-eq-1">Навигация
-                        и электроника</button>
-                    <div class="model-accordion__panel" id="acc-eq-panel-1" role="region" aria-labelledby="acc-eq-1"
-                        hidden>
-                        <p>Комплекс навигационного оборудования, дисплеи и датчики — подбираются под сценарии
-                            эксплуатации и регион плавания.</p>
-                    </div>
+        <section class="model-equipment" aria-labelledby="equipment-tabs-label">
+            <div class="model-equipment__inner">
+                <div class="model-equipment__tabs" role="tablist" aria-label="Тип комплектации">
+                    <button class="model-equipment__tab is-active" type="button" role="tab" id="equipment-tab-base"
+                        aria-selected="true" aria-controls="equipment-panel-base" tabindex="0">Базовая
+                        комплектация</button>
+                    <button class="model-equipment__tab" type="button" role="tab" id="equipment-tab-options"
+                        aria-selected="false" aria-controls="equipment-panel-options" tabindex="-1">Дополнительные
+                        опции</button>
                 </div>
-                <div class="model-accordion__item">
-                    <button class="model-accordion__trigger" type="button" aria-expanded="false" id="acc-eq-2">Комфорт и
-                        интерьер</button>
-                    <div class="model-accordion__panel" id="acc-eq-panel-2" role="region" aria-labelledby="acc-eq-2"
-                        hidden>
-                        <p>Отделки, текстиль, освещение и мебельные решения доступны в нескольких линейках —
-                            от лаконичного минимализма до премиальной отделки.</p>
+                <div class="model-equipment__panels">
+                    <div class="model-equipment__panel" role="tabpanel" id="equipment-panel-base"
+                        aria-labelledby="equipment-tab-base">
+                        <div class="model-accordion model-accordion--equipment">
+                            <div class="model-accordion__item">
+                                <button class="model-accordion__trigger" type="button" aria-expanded="false"
+                                    id="acc-base-1">Экстерьер</button>
+                                <div class="model-accordion__panel" id="acc-base-panel-1" role="region"
+                                    aria-labelledby="acc-base-1" hidden>
+                                    <p>Бортовое ограждение, палубные трапы и оснащение под ваш сценарий эксплуатации.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="model-accordion__item">
+                                <button class="model-accordion__trigger" type="button" aria-expanded="false"
+                                    id="acc-base-2">Интерьер</button>
+                                <div class="model-accordion__panel" id="acc-base-panel-2" role="region"
+                                    aria-labelledby="acc-base-2" hidden>
+                                    <p>Комплектация салона и кают в базовой линейке отделок и освещения.</p>
+                                </div>
+                            </div>
+                            <div class="model-accordion__item">
+                                <button class="model-accordion__trigger" type="button" aria-expanded="false"
+                                    id="acc-base-3">Топливная система</button>
+                                <div class="model-accordion__panel" id="acc-base-panel-3" role="region"
+                                    aria-labelledby="acc-base-3" hidden>
+                                    <p>Стандартная топливная система и запас по регламенту безопасности.</p>
+                                </div>
+                            </div>
+                            <div class="model-accordion__item">
+                                <button class="model-accordion__trigger" type="button" aria-expanded="false"
+                                    id="acc-base-4">Электрика</button>
+                                <div class="model-accordion__panel" id="acc-base-panel-4" role="region"
+                                    aria-labelledby="acc-base-4" hidden>
+                                    <p>Бортовая электрика и минимально необходимый набор потребителей.</p>
+                                </div>
+                            </div>
+                            <div class="model-accordion__item">
+                                <button class="model-accordion__trigger" type="button" aria-expanded="false"
+                                    id="acc-base-5">Безопасность</button>
+                                <div class="model-accordion__panel" id="acc-base-panel-5" role="region"
+                                    aria-labelledby="acc-base-5" hidden>
+                                    <p>Средства безопасности и спасательное оснащение по базовой спецификации.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="model-accordion__item">
-                    <button class="model-accordion__trigger" type="button" aria-expanded="false" id="acc-eq-3">Аудио и
-                        мультимедиа</button>
-                    <div class="model-accordion__panel" id="acc-eq-panel-3" role="region" aria-labelledby="acc-eq-3"
-                        hidden>
-                        <p>Интеграция аудиосистемы и зонального звука на палубе и в салоне по запросу.</p>
+                    <div class="model-equipment__panel" role="tabpanel" id="equipment-panel-options" hidden
+                        aria-labelledby="equipment-tab-options">
+                        <div class="model-accordion model-accordion--equipment">
+                            <div class="model-accordion__item">
+                                <button class="model-accordion__trigger" type="button" aria-expanded="false"
+                                    id="acc-opt-1">Экстерьер</button>
+                                <div class="model-accordion__panel" id="acc-opt-panel-1" role="region"
+                                    aria-labelledby="acc-opt-1" hidden>
+                                    <p>Дополнительные элементы экстерьера: релинги, навесное оборудование, окраска.</p>
+                                </div>
+                            </div>
+                            <div class="model-accordion__item">
+                                <button class="model-accordion__trigger" type="button" aria-expanded="false"
+                                    id="acc-opt-2">Интерьер</button>
+                                <div class="model-accordion__panel" id="acc-opt-panel-2" role="region"
+                                    aria-labelledby="acc-opt-2" hidden>
+                                    <p>Премиальные материалы, индивидуальная планировка и опции комфорта.</p>
+                                </div>
+                            </div>
+                            <div class="model-accordion__item">
+                                <button class="model-accordion__trigger" type="button" aria-expanded="false"
+                                    id="acc-opt-3">Топливная система</button>
+                                <div class="model-accordion__panel" id="acc-opt-panel-3" role="region"
+                                    aria-labelledby="acc-opt-3" hidden>
+                                    <p>Расширенный объём, фильтрация и дополнительные отсечки по запросу.</p>
+                                </div>
+                            </div>
+                            <div class="model-accordion__item">
+                                <button class="model-accordion__trigger" type="button" aria-expanded="false"
+                                    id="acc-opt-4">Электрика</button>
+                                <div class="model-accordion__panel" id="acc-opt-panel-4" role="region"
+                                    aria-labelledby="acc-opt-4" hidden>
+                                    <p>Усиление бортсети, мультимедиа, климат и интеллектуальное управление.</p>
+                                </div>
+                            </div>
+                            <div class="model-accordion__item">
+                                <button class="model-accordion__trigger" type="button" aria-expanded="false"
+                                    id="acc-opt-5">Безопасность</button>
+                                <div class="model-accordion__panel" id="acc-opt-panel-5" role="region"
+                                    aria-labelledby="acc-opt-5" hidden>
+                                    <p>Дополнительные системы контроля, сигнализации и спасательные пакеты.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-        <section class="model-accordion-engines">
-            <h2 class="model-accordion__heading">Двигатели и системы</h2>
-            <div class="model-accordion">
-                <div class="model-accordion__item">
-                    <button class="model-accordion__trigger" type="button" aria-expanded="false" id="acc-en-1">Силовая
-                        установка</button>
-                    <div class="model-accordion__panel" id="acc-en-panel-1" role="region" aria-labelledby="acc-en-1"
-                        hidden>
-                        <p>Подбор мощности и типа двигателя под регламенты эксплуатации и желаемую динамику.</p>
+        <section class="model-accordion-engines" aria-labelledby="engines-heading">
+            <div class="model-engines">
+                <h2 id="engines-heading" class="model-engines__heading">Документация</h2>
+                <div class="model-accordion model-accordion--engines">
+                    <div class="model-accordion__item">
+                        <div class="model-engines__row">
+                            <button class="model-accordion__trigger model-engines__trigger" type="button"
+                                aria-expanded="false" id="acc-en-1">Мануалы</button>
+                            <a class="model-engines__download" href="./documents/silovaya-ustanovka.pdf"
+                                download="silovaya-ustanovka.pdf"
+                                aria-label="Скачать документ: Мануалы">
+                                <img class="model-engines__download-icon" src="./images/icon-download.png"
+                                    alt="" width="24" height="24" decoding="async" aria-hidden="true">
+                            </a>
+                        </div>
+                        <div class="model-accordion__panel model-engines__panel" id="acc-en-panel-1" role="region"
+                            aria-labelledby="acc-en-1" hidden>
+                            <p>Подбор мощности и типа двигателя под регламенты эксплуатации и желаемую динамику.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="model-accordion__item">
-                    <button class="model-accordion__trigger" type="button" aria-expanded="false" id="acc-en-2">Топливная
-                        система</button>
-                    <div class="model-accordion__panel" id="acc-en-panel-2" role="region" aria-labelledby="acc-en-2"
-                        hidden>
-                        <p>Резервуары и магистрали рассчитаны на длительные переходы с запасом по безопасности.</p>
+                    <div class="model-accordion__item">
+                        <div class="model-engines__row">
+                            <button class="model-accordion__trigger model-engines__trigger" type="button"
+                                aria-expanded="false" id="acc-en-2">Презентация</button>
+                            <a class="model-engines__download" href="./documents/toplivnaya-sistema.pdf"
+                                download="toplivnaya-sistema.pdf" aria-label="Скачать документ: Презентация">
+                                <img class="model-engines__download-icon" src="./images/icon-download.png"
+                                    alt="" width="24" height="24" decoding="async" aria-hidden="true">
+                            </a>
+                        </div>
+                        <div class="model-accordion__panel model-engines__panel" id="acc-en-panel-2" role="region"
+                            aria-labelledby="acc-en-2" hidden>
+                            <p>Резервуары и магистрали рассчитаны на длительные переходы с запасом по безопасности.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="model-accordion__item">
-                    <button class="model-accordion__trigger" type="button" aria-expanded="false"
-                        id="acc-en-3">Электрооборудование</button>
-                    <div class="model-accordion__panel" id="acc-en-panel-3" role="region" aria-labelledby="acc-en-3"
-                        hidden>
-                        <p>Бортовая сеть, генерация и резервирование критичных потребителей.</p>
+                    <div class="model-accordion__item">
+                        <div class="model-engines__row">
+                            <button class="model-accordion__trigger model-engines__trigger" type="button"
+                                aria-expanded="false" id="acc-en-3">Каталог моделей</button>
+                            <a class="model-engines__download" href="./documents/elektrooborudovanie.pdf"
+                                download="elektrooborudovanie.pdf"
+                                aria-label="Скачать документ: Каталог моделей">
+                                <img class="model-engines__download-icon" src="./images/icon-download.png"
+                                    alt="" width="24" height="24" decoding="async" aria-hidden="true">
+                            </a>
+                        </div>
+                        <div class="model-accordion__panel model-engines__panel" id="acc-en-panel-3" role="region"
+                            aria-labelledby="acc-en-3" hidden>
+                            <p>Бортовая сеть, генерация и резервирование критичных потребителей.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -389,30 +475,56 @@
                 </div>
             </div>
         </section>
-        <section class="model-faq">
-            <h2 class="model-faq__title">Частые вопросы</h2>
-            <div class="model-accordion">
-                <div class="model-accordion__item">
-                    <button class="model-accordion__trigger" type="button" aria-expanded="false" id="faq-1">Какой срок
-                        изготовления?</button>
-                    <div class="model-accordion__panel" id="faq-panel-1" role="region" aria-labelledby="faq-1" hidden>
-                        <p>Срок зависит от комплектации и очереди производства. Актуальные вилки озвучит менеджер после
-                            согласования спецификации.</p>
-                    </div>
-                </div>
-                <div class="model-accordion__item">
-                    <button class="model-accordion__trigger" type="button" aria-expanded="false" id="faq-2">Можно ли
-                        изменить планировку?</button>
-                    <div class="model-accordion__panel" id="faq-panel-2" role="region" aria-labelledby="faq-2" hidden>
-                        <p>Да, предусмотрены опции по внутренней планировке, отделкам и оснащению в рамках
-                            инженерных допусков.</p>
-                    </div>
-                </div>
-                <div class="model-accordion__item">
-                    <button class="model-accordion__trigger" type="button" aria-expanded="false" id="faq-3">Где
-                        проходит приёмка?</button>
-                    <div class="model-accordion__panel" id="faq-panel-3" role="region" aria-labelledby="faq-3" hidden>
-                        <p>Порядок приёмки и передачи лодки фиксируется в договоре; возможна поддержка на воде.</p>
+        <section class="model-faq" aria-labelledby="model-faq-heading">
+            <div class="model-faq__inner">
+                <h2 id="model-faq-heading" class="model-faq__title">Вопросы и ответы</h2>
+                <div class="model-faq__col">
+                    <div class="model-accordion model-accordion--equipment">
+                        <div class="model-accordion__item">
+                            <button class="model-accordion__trigger" type="button" aria-expanded="false" id="faq-1"
+                                aria-label="Срок изготовления — развернуть ответ">Вопрос-ответ</button>
+                            <div class="model-accordion__panel" id="faq-panel-1" role="region" aria-labelledby="faq-1"
+                                hidden>
+                                <p>Срок зависит от комплектации и очереди производства. Точные сроки после согласования
+                                    спецификации сообщит менеджер.</p>
+                            </div>
+                        </div>
+                        <div class="model-accordion__item">
+                            <button class="model-accordion__trigger" type="button" aria-expanded="false" id="faq-2"
+                                aria-label="Изменение планировки — развернуть ответ">Вопрос-ответ</button>
+                            <div class="model-accordion__panel" id="faq-panel-2" role="region" aria-labelledby="faq-2"
+                                hidden>
+                                <p>Да, доступны варианты планировки и отделки в рамках инженерных допусков корпуса и
+                                    систем.</p>
+                            </div>
+                        </div>
+                        <div class="model-accordion__item">
+                            <button class="model-accordion__trigger" type="button" aria-expanded="false" id="faq-3"
+                                aria-label="Приёмка лодки — развернуть ответ">Вопрос-ответ</button>
+                            <div class="model-accordion__panel" id="faq-panel-3" role="region" aria-labelledby="faq-3"
+                                hidden>
+                                <p>Приёмка и передача лодки регламентируются договором; при необходимости возможно
+                                    сопровождение на воде.</p>
+                            </div>
+                        </div>
+                        <div class="model-accordion__item">
+                            <button class="model-accordion__trigger" type="button" aria-expanded="false" id="faq-4"
+                                aria-label="Гарантия — развернуть ответ">Вопрос-ответ</button>
+                            <div class="model-accordion__panel" id="faq-panel-4" role="region" aria-labelledby="faq-4"
+                                hidden>
+                                <p>Гарантийные обязательства и регламент сервисного обслуживания фиксируются в
+                                    документации к заказу.</p>
+                            </div>
+                        </div>
+                        <div class="model-accordion__item">
+                            <button class="model-accordion__trigger" type="button" aria-expanded="false" id="faq-5"
+                                aria-label="Оплата — развернуть ответ">Вопрос-ответ</button>
+                            <div class="model-accordion__panel" id="faq-panel-5" role="region" aria-labelledby="faq-5"
+                                hidden>
+                                <p>Оплата по этапам и финансовые инструменты обсуждаются индивидуально с отделом
+                                    продаж.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
