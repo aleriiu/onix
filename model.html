@@ -236,9 +236,32 @@
                 </div>
             </div>
         </section>
-        <section class="model-deck-plan" aria-label="План палубы">
-            <h2 class="model-deck-plan__title">План палубы</h2>
-            <img class="model-deck-plan__img" src="./images/img-card1.png" alt="Схема палубы ONIX 12X Cruiser">
+        <section class="model-deck-plan" aria-labelledby="deck-plan-title">
+            <h2 id="deck-plan-title" class="model-deck-plan__title visually-hidden">Планировка</h2>
+            <div class="model-deck-plan__inner" data-deck-plan>
+                <div class="model-deck-plan__tabs" role="tablist" aria-label="Вариант отображения">
+                    <button class="model-deck-plan__tab is-active" type="button" role="tab" aria-selected="true"
+                        data-deck-tab data-index="0" data-src="./images/Блок 7 - Планировка.png"
+                        data-alt="Планировка: интерьер"><span class="model-deck-plan__tab-label">Интерьер</span></button>
+                    <button class="model-deck-plan__tab" type="button" role="tab" aria-selected="false" data-deck-tab
+                        data-index="1" data-src="./images/img-card1.png" data-alt="Планировка: каюты"><span
+                            class="model-deck-plan__tab-label">Каюты</span></button>
+                    <button class="model-deck-plan__tab" type="button" role="tab" aria-selected="false" data-deck-tab
+                        data-index="2" data-src="./images/boat12x.png" data-alt="Планировка: вид сбоку"><span
+                            class="model-deck-plan__tab-label">Вид&nbsp;сбоку</span></button>
+                </div>
+
+                <div class="model-deck-plan__canvas">
+                    <img class="model-deck-plan__img" src="./images/Блок 7 - Планировка.png"
+                        alt="Планировка: интерьер" data-deck-image>
+                </div>
+
+                <div class="model-deck-plan__indicator" aria-hidden="true">
+                    <span class="model-deck-plan__indicator-item is-active" data-deck-indicator="0"></span>
+                    <span class="model-deck-plan__indicator-item" data-deck-indicator="1"></span>
+                    <span class="model-deck-plan__indicator-item" data-deck-indicator="2"></span>
+                </div>
+            </div>
         </section>
         <section class="model-equipment" aria-labelledby="equipment-tabs-label">
             <div class="model-equipment__inner">
@@ -345,66 +368,82 @@
                 </div>
             </div>
         </section>
-        <section class="model-accordion-engines" aria-labelledby="engines-heading">
-            <div class="model-engines">
-                <h2 id="engines-heading" class="model-engines__heading">Документация</h2>
-                <div class="model-accordion model-accordion--engines">
-                    <div class="model-accordion__item">
-                        <div class="model-engines__row">
-                            <button class="model-accordion__trigger model-engines__trigger" type="button"
-                                aria-expanded="false" id="acc-en-1">Мануалы</button>
-                            <a class="model-engines__download" href="./documents/silovaya-ustanovka.pdf"
-                                download="silovaya-ustanovka.pdf" aria-label="Скачать документ: Мануалы">
-                                <img class="model-engines__download-icon" src="./images/icon-download.png" alt=""
-                                    width="24" height="24" decoding="async" aria-hidden="true">
-                            </a>
+        <section class="model-documentation" aria-labelledby="documentation-heading">
+            <div class="model-faq__inner">
+                <h2 id="documentation-heading" class="model-faq__title">Варианты отделки</h2>
+                <div class="model-faq__col">
+                    <div class="model-accordion model-accordion--equipment">
+                        <div class="model-accordion__item">
+                            <button class="model-accordion__trigger" type="button" aria-expanded="false" id="acc-en-1"
+                                aria-label="Мануалы — развернуть">“Карбон” пакет</button>
+                            <div class="model-accordion__panel" id="acc-en-panel-1" role="region"
+                                aria-labelledby="acc-en-1" hidden>
+                                <p>Подбор мощности и типа двигателя под регламенты эксплуатации и желаемую динамику.</p>
+                            </div>
                         </div>
-                        <div class="model-accordion__panel model-engines__panel" id="acc-en-panel-1" role="region"
-                            aria-labelledby="acc-en-1" hidden>
-                            <p>Подбор мощности и типа двигателя под регламенты эксплуатации и желаемую динамику.</p>
+                        <div class="model-accordion__item">
+                            <button class="model-accordion__trigger" type="button" aria-expanded="false" id="acc-en-2"
+                                aria-label="Презентация — развернуть">“Шпон” пакет</button>
+                            <div class="model-accordion__panel" id="acc-en-panel-2" role="region"
+                                aria-labelledby="acc-en-2" hidden>
+                                <p>Резервуары и магистрали рассчитаны на длительные переходы с запасом по безопасности.</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="model-accordion__item">
-                        <div class="model-engines__row">
-                            <button class="model-accordion__trigger model-engines__trigger" type="button"
-                                aria-expanded="false" id="acc-en-2">Презентация</button>
-                            <a class="model-engines__download" href="./documents/toplivnaya-sistema.pdf"
-                                download="toplivnaya-sistema.pdf" aria-label="Скачать документ: Презентация">
-                                <img class="model-engines__download-icon" src="./images/icon-download.png" alt=""
-                                    width="24" height="24" decoding="async" aria-hidden="true">
-                            </a>
-                        </div>
-                        <div class="model-accordion__panel model-engines__panel" id="acc-en-panel-2" role="region"
-                            aria-labelledby="acc-en-2" hidden>
-                            <p>Резервуары и магистрали рассчитаны на длительные переходы с запасом по безопасности.</p>
-                        </div>
-                    </div>
-                    <div class="model-accordion__item">
-                        <div class="model-engines__row">
-                            <button class="model-accordion__trigger model-engines__trigger" type="button"
-                                aria-expanded="false" id="acc-en-3">Каталог моделей</button>
-                            <a class="model-engines__download" href="./documents/elektrooborudovanie.pdf"
-                                download="elektrooborudovanie.pdf" aria-label="Скачать документ: Каталог моделей">
-                                <img class="model-engines__download-icon" src="./images/icon-download.png" alt=""
-                                    width="24" height="24" decoding="async" aria-hidden="true">
-                            </a>
-                        </div>
-                        <div class="model-accordion__panel model-engines__panel" id="acc-en-panel-3" role="region"
-                            aria-labelledby="acc-en-3" hidden>
-                            <p>Бортовая сеть, генерация и резервирование критичных потребителей.</p>
+                        <div class="model-accordion__item">
+                            <button class="model-accordion__trigger" type="button" aria-expanded="false" id="acc-en-3"
+                                aria-label="Каталог моделей — развернуть">Палубное покрытие</button>
+                            <div class="model-accordion__panel" id="acc-en-panel-3" role="region"
+                                aria-labelledby="acc-en-3" hidden>
+                                <p>Бортовая сеть, генерация и резервирование критичных потребителей.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <section class="model-price">
-            <h2 class="model-price__title">Стоимость и комплектация</h2>
-            <p class="model-price__hint">Ориентировочная конфигурация — уточняйте у менеджера.</p>
-            <div class="model-price__control">
-                <label class="model-price__label" for="modelPriceRange">Бюджет проекта</label>
-                <input class="model-price__range" id="modelPriceRange" type="range" min="15000000" max="45000000"
-                    step="500000" value="28000000">
-                <p class="model-price__value" aria-live="polite">—</p>
+        <section class="model-price model-road" aria-labelledby="model-road-title">
+            <div class="model-road__inner">
+                <h2 id="model-road-title" class="model-road__title">ПУТЬ К ВАШЕЙ ЛОДКЕ</h2>
+                <div class="model-road__timeline" data-road-timeline>
+                    <div class="model-road__line" aria-hidden="true"></div>
+                    <div class="model-road__track">
+                        <article class="model-road__item model-road__item--top" data-road-step>
+                            <img class="model-road__dot" src="./images/curcle-icon.png" alt="" aria-hidden="true">
+                            <div class="model-road__content">
+                                <h3 class="model-road__step-title">Диалог</h3>
+                                <p class="model-road__step-text">Обсуждаем задачи, сценарии и маршрут использования</p>
+                            </div>
+                        </article>
+                        <article class="model-road__item model-road__item--bottom" data-road-step>
+                            <img class="model-road__dot" src="./images/curcle-icon.png" alt="" aria-hidden="true">
+                            <div class="model-road__content">
+                                <h3 class="model-road__step-title">Конфигурация</h3>
+                                <p class="model-road__step-text">Формируем планировку и подбираем оснащение</p>
+                            </div>
+                        </article>
+                        <article class="model-road__item model-road__item--top" data-road-step>
+                            <img class="model-road__dot" src="./images/curcle-icon.png" alt="" aria-hidden="true">
+                            <div class="model-road__content">
+                                <h3 class="model-road__step-title">Производство</h3>
+                                <p class="model-road__step-text">Сборка и контроль на каждом этапе</p>
+                            </div>
+                        </article>
+                        <article class="model-road__item model-road__item--bottom" data-road-step>
+                            <img class="model-road__dot" src="./images/curcle-icon.png" alt="" aria-hidden="true">
+                            <div class="model-road__content">
+                                <h3 class="model-road__step-title">Передача</h3>
+                                <p class="model-road__step-text">Подготовка лодки и передача владельцу</p>
+                            </div>
+                        </article>
+                        <article class="model-road__item model-road__item--top" data-road-step>
+                            <img class="model-road__dot" src="./images/curcle-icon.png" alt="" aria-hidden="true">
+                            <div class="model-road__content">
+                                <h3 class="model-road__step-title">Сопровождение</h3>
+                                <p class="model-road__step-text">Поддержка и сервис после выхода на воду</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
             </div>
         </section>
         <section class="cards-section cards-section--tech js-tech-cards">
@@ -532,16 +571,79 @@
             </div>
         </section>
         <section class="model-other-models" aria-labelledby="other-models-title">
-            <h2 id="other-models-title" class="model-other-models__title">Другие модели</h2>
-            <div class="model-other-models__grid">
-                <a class="model-other-models__card" href="model.html">
-                    <img class="model-other-models__img" src="./images/boat850.png" alt="850 Day Cruiser">
-                    <span class="model-other-models__name">850 Day Cruiser</span>
-                </a>
-                <a class="model-other-models__card" href="model.html">
-                    <img class="model-other-models__img" src="./images/лодка 8Х.png" alt="850 Cabin">
-                    <span class="model-other-models__name">850 Cabin</span>
-                </a>
+            <div class="model-other-models__horizontal" data-other-models-scroll>
+                <div class="model-other-models__track">
+                    <div class="model-other-models__slide">
+                        <article class="model-other-models__card">
+                            <div class="model-other-models__body">
+
+                                <div class="model-other-models__card-title-container">
+                                    <h3 class="model-other-models__card-title">850 Cabin</h3>
+                                    <p class="model-other-models__desc">Комфортная каютная лодка для семейных
+                                        путешествий
+                                        и&nbsp;продолжительных маршрутов</p>
+                                </div>
+                                <div class="model-other-models__specs-container">
+                                    <div class="model-other-models__specs-row">
+                                        <div class="model-other-models__spec-row">
+                                            <p class="model-other-models__specs-text">Длина</p>
+                                            <p class="model-other-models__specs-value">8,5 м</p>
+                                        </div>
+                                        <div class="model-other-models__spec-row">
+                                            <p class="model-other-models__specs-text">Вместительность</p>
+                                            <p class="model-other-models__specs-value">до 8 человек</p>
+                                        </div>
+                                        <div class="model-other-models__spec-row">
+                                            <p class="model-other-models__specs-text">Макс. скорость</p>
+                                            <p class="model-other-models__specs-value">82–95 км/ч</p>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="model-other-models__cta" data-href="model.html">
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="model-other-models__visual">
+                                <span class="model-other-models__watermark" aria-hidden="true">850</span>
+                                <img class="model-other-models__img" src="./images/850-cruzer.png" alt="boat">
+                            </div>
+                        </article>
+                    </div>
+                    <div class="model-other-models__slide">
+                        <article class="model-other-models__card">
+                            <div class="model-other-models__body">
+                                <div class="model-other-models__card-title-container">
+                                    <h3 class="model-other-models__card-title">850 Day Cruiser</h3>
+                                    <p class="model-other-models__desc">Открытая палуба и&nbsp;динамика для дневных
+                                        поездок и&nbsp;активного отдыха на воде</p>
+                                </div>
+                                <div class="model-other-models__specs-container">
+                                    <div class="model-other-models__specs-row">
+                                        <div class="model-other-models__spec-row">
+                                            <p class="model-other-models__specs-text">Длина</p>
+                                            <p class="model-other-models__specs-value">8,5 м</p>
+                                        </div>
+                                        <div class="model-other-models__spec-row">
+                                            <p class="model-other-models__specs-text">Вместительность</p>
+                                            <p class="model-other-models__specs-value">до 8 человек</p>
+                                        </div>
+                                        <div class="model-other-models__spec-row">
+                                            <p class="model-other-models__specs-text">Макс. скорость</p>
+                                            <p class="model-other-models__specs-value">82–95 км/ч</p>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="model-other-models__cta" data-href="model.html">
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="model-other-models__visual">
+                                <span class="model-other-models__watermark" aria-hidden="true">850</span>
+                                <img class="model-other-models__img" src="./images/850-cruzer.png" alt="boat">
+                            </div>
+                        </article>
+                    </div>
+                </div>
             </div>
         </section>
         <section class="feedback">

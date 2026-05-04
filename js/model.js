@@ -34,6 +34,20 @@ if (header && headerContainer) {
 /** Анимация абзаца в .description (из script.js) */
 gsap.registerPlugin(ScrollTrigger);
 
+/** Плавный скролл Lenis + синхронизация с ScrollTrigger (как на главной) */
+const lenis =
+    typeof Lenis !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? new Lenis()
+        : null;
+
+if (lenis) {
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+}
+
 function splitTextToChars(selector) {
     const el = document.querySelector(selector);
     if (!el) return null;
@@ -319,21 +333,107 @@ function initModelAccordions() {
     });
 }
 
-/** Слайдер цены (range) */
-function initModelPriceRange() {
-    const input = document.querySelector('.model-price__range');
-    const out = document.querySelector('.model-price__value');
-    if (!input || !out) return;
+/** Пошаговая анимация блока «Путь к вашей лодке» */
+function initRoadTimeline() {
+    const root = document.querySelector('[data-road-timeline]');
+    if (!root) return;
 
-    const format = (v) =>
-        new Intl.NumberFormat('ru-RU').format(Number(v)) + ' ₽';
+    const line = root.querySelector('.model-road__line');
+    const steps = Array.from(root.querySelectorAll('[data-road-step]'));
+    if (!line || steps.length === 0) return;
 
-    const sync = () => {
-        out.textContent = format(input.value);
+    const dots = steps.map((step) => step.querySelector('.model-road__dot')).filter(Boolean);
+    const contents = steps.map((step) => step.querySelector('.model-road__content')).filter(Boolean);
+
+    gsap.set(line, { scaleX: 0 });
+    gsap.set(dots, { autoAlpha: 0, scale: 0.85 });
+    gsap.set(contents, { autoAlpha: 0, y: 12 });
+
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: root,
+            start: 'top 75%',
+            toggleActions: 'play none none reverse'
+        }
+    });
+
+    tl.to(line, { scaleX: 1, duration: 0.72, ease: 'power2.out' }).to(
+        dots[0],
+        { autoAlpha: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' },
+        '-=0.18'
+    );
+
+    for (let i = 0; i < steps.length; i += 1) {
+        if (i > 0) {
+            tl.to(
+                dots[i],
+                { autoAlpha: 1, scale: 1, duration: 0.24, ease: 'back.out(2)' },
+                '+=0.14'
+            );
+        } else {
+            tl.to({}, { duration: 0.08 });
+        }
+
+        tl.to(contents[i], { autoAlpha: 1, y: 0, duration: 0.34, ease: 'power2.out' }, '-=0.04');
+    }
+}
+
+/** Переключение плана палубы: кнопки слева + вертикальный индикатор справа */
+function initDeckPlanSwitcher() {
+    const root = document.querySelector('[data-deck-plan]');
+    if (!root) return;
+
+    const tabs = Array.from(root.querySelectorAll('[data-deck-tab]'));
+    const image = root.querySelector('[data-deck-image]');
+    const indicators = Array.from(root.querySelectorAll('[data-deck-indicator]'));
+    if (!tabs.length || !image) return;
+
+    const activate = (index) => {
+        const next = tabs[index];
+        if (!next) return;
+
+        tabs.forEach((tab, i) => {
+            const active = i === index;
+            tab.classList.toggle('is-active', active);
+            tab.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+
+        const src = next.getAttribute('data-src');
+        const alt = next.getAttribute('data-alt');
+        const applyImage = () => {
+            if (src) image.setAttribute('src', src);
+            if (alt) image.setAttribute('alt', alt);
+        };
+
+        gsap.killTweensOf(image);
+        gsap.to(image, {
+            autoAlpha: 0,
+            duration: 0.16,
+            ease: 'power1.out',
+            onComplete: () => {
+                applyImage();
+                gsap.to(image, { autoAlpha: 1, duration: 0.24, ease: 'power1.inOut' });
+            }
+        });
+
+        indicators.forEach((item, i) => {
+            const active = i === index;
+            item.classList.toggle('is-active', active);
+            gsap.to(item, {
+                backgroundColor: active ? '#E9CE74' : 'rgba(233, 206, 116, 0.35)',
+                opacity: active ? 1 : 0.72,
+                scaleY: active ? 1.08 : 1,
+                duration: 0.22,
+                ease: 'power2.out'
+            });
+        });
     };
 
-    input.addEventListener('input', sync);
-    sync();
+    tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => activate(index));
+    });
+
+    activate(0);
 }
 
 /** Кнопка «видео» — заглушка: можно заменить на открытие модалки или iframe */
@@ -352,10 +452,179 @@ function initModelVideoPlay() {
 initDescriptionTextAnimation();
 initTechCardSliders();
 initEquipmentTabs();
+initDeckPlanSwitcher();
 initModelAccordions();
-initModelPriceRange();
+initRoadTimeline();
 initModelVideoPlay();
 
+/** «Другие модели»: горизонтальное смещение через GSAP (x), без нативной полосы прокрутки */
+function initOtherModelsHorizontalScroll() {
+    const strip = document.querySelector('[data-other-models-scroll]');
+    const track = strip?.querySelector('.model-other-models__track');
+    if (!strip || !track) return;
+
+    let xPos = 0;
+    let dragMoved = false;
+
+    const getMinX = () => Math.min(0, strip.clientWidth - track.scrollWidth);
+
+    const syncX = () => {
+        const minX = getMinX();
+        xPos = gsap.utils.clamp(minX, 0, xPos);
+        gsap.set(track, { x: xPos });
+    };
+
+    const xTo =
+        typeof gsap.quickTo === 'function'
+            ? gsap.quickTo(track, 'x', {
+                  duration: 0.45,
+                  ease: 'power3.out'
+              })
+            : (value) => {
+                  gsap.to(track, {
+                      x: value,
+                      duration: 0.45,
+                      ease: 'power3.out',
+                      overwrite: 'auto'
+                  });
+              };
+
+    const goToX = (next) => {
+        const minX = getMinX();
+        xPos = gsap.utils.clamp(minX, 0, next);
+        xTo(xPos);
+    };
+
+    syncX();
+
+    strip.addEventListener(
+        'wheel',
+        (e) => {
+            if (track.scrollWidth <= strip.clientWidth) return;
+
+            const minX = getMinX();
+            const tol = 2;
+
+            if (Math.abs(e.deltaX) >= Math.abs(e.deltaY)) {
+                if (e.deltaX > 0 && xPos <= minX + tol) return;
+                if (e.deltaX < 0 && xPos >= -tol) return;
+                e.preventDefault();
+                goToX(xPos - e.deltaX);
+                return;
+            }
+
+            if (e.deltaY > 0 && xPos <= minX + tol) return;
+            if (e.deltaY < 0 && xPos >= -tol) return;
+
+            e.preventDefault();
+            goToX(xPos - e.deltaY);
+        },
+        { passive: false }
+    );
+
+    let dragActive = false;
+    let startPointerX = 0;
+    let startXPos = 0;
+
+    /** Перетаскивание мышью/тачем: слушатели на document — можно тянуть за пределы блока */
+    const onDragMove = (e) => {
+        if (!dragActive) return;
+        const dx = e.clientX - startPointerX;
+        if (Math.abs(dx) > 4) {
+            dragMoved = true;
+            e.preventDefault();
+        }
+        const minX = getMinX();
+        xPos = gsap.utils.clamp(minX, 0, startXPos + dx);
+        gsap.set(track, { x: xPos });
+    };
+
+    const endDrag = () => {
+        if (!dragActive) return;
+        dragActive = false;
+        strip.classList.remove('is-dragging');
+        document.removeEventListener('pointermove', onDragMove, true);
+        document.removeEventListener('pointerup', endDrag, true);
+        document.removeEventListener('pointercancel', endDrag, true);
+        document.removeEventListener('mousemove', onDragMove, true);
+        document.removeEventListener('mouseup', endDrag, true);
+    };
+
+    const beginDrag = (clientX) => {
+        if (track.scrollWidth <= strip.clientWidth) return;
+        dragActive = true;
+        dragMoved = false;
+        startPointerX = clientX;
+        startXPos = xPos;
+        gsap.killTweensOf(track);
+        strip.classList.add('is-dragging');
+    };
+
+    strip.addEventListener('dragstart', (e) => {
+        e.preventDefault();
+    });
+
+    strip.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0) return;
+        beginDrag(e.clientX);
+        if (!dragActive) return;
+        document.addEventListener('pointermove', onDragMove, { capture: true, passive: false });
+        document.addEventListener('pointerup', endDrag, { capture: true });
+        document.addEventListener('pointercancel', endDrag, { capture: true });
+    });
+
+    strip.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        if (typeof window.PointerEvent === 'function') return;
+        beginDrag(e.clientX);
+        if (!dragActive) return;
+        document.addEventListener('mousemove', onDragMove, { capture: true, passive: false });
+        document.addEventListener('mouseup', endDrag, { capture: true });
+    });
+
+    strip.addEventListener(
+        'click',
+        (e) => {
+            if (!dragMoved) return;
+            if (e.target.closest('.model-other-models__cta')) {
+                dragMoved = false;
+                return;
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            dragMoved = false;
+        },
+        true
+    );
+
+    strip.addEventListener('click', (e) => {
+        const btn = e.target.closest('.model-other-models__cta[data-href]');
+        if (!btn || !strip.contains(btn)) return;
+        const href = btn.getAttribute('data-href');
+        if (href) {
+            window.location.href = href;
+        }
+    });
+
+    const onResizeOrImages = () => {
+        syncX();
+    };
+
+    window.addEventListener('resize', onResizeOrImages);
+    track.querySelectorAll('img').forEach((img) => {
+        if (img.complete) return;
+        img.addEventListener('load', onResizeOrImages, { once: true });
+    });
+}
+
+initOtherModelsHorizontalScroll();
+
 document.querySelector('.hero-model__cta')?.addEventListener('click', () => {
-    document.querySelector('.model-video')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const target = document.querySelector('.model-video');
+    if (!target) return;
+    if (lenis) {
+        lenis.scrollTo(target, { offset: 0 });
+    } else {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 });

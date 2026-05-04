@@ -1,0 +1,196 @@
+/* Адаптивные стили (подключается после style.css / model.css) */
+
+@media (max-width: 900px) {
+    .model-specs__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .model-tech__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .model-gallery__grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .model-deck-plan {
+        padding: 48px 20px 56px;
+    }
+
+    .model-deck-plan__inner {
+        gap: 0.75rem;
+    }
+
+    .model-deck-plan__tabs {
+        flex: 0 0 138px;
+        gap: 8px;
+        margin-right: 10px;
+    }
+
+    .model-deck-plan__tab {
+        font-size: clamp(1.05rem, 4.2vw, 1.3rem);
+    }
+
+    .model-deck-plan__tab.is-active {
+        font-size: clamp(1.12rem, 4.4vw, 1.38rem);
+    }
+
+    .model-deck-plan__indicator {
+        flex: 0 0 8px;
+        height: 104px;
+        gap: 7px;
+    }
+
+    .model-deck-plan__indicator-item {
+        width: 2px;
+        height: 22px;
+    }
+
+    .model-road {
+        height: auto;
+        min-height: 530px;
+        padding: 36px 20px;
+    }
+
+    .model-road__inner {
+        height: auto;
+        padding-top: 0;
+    }
+
+    .model-road__timeline {
+        margin: 0;
+    }
+
+    .model-road__line {
+        left: 14px;
+        right: 14px;
+        top: 22px;
+    }
+
+    .model-road__track {
+        flex-direction: column;
+        gap: 42px;
+        align-items: stretch;
+    }
+
+    .model-road__item {
+        justify-content: flex-start;
+        padding-left: 0;
+    }
+
+    .model-road__content {
+        position: relative;
+        left: 0;
+        transform: none;
+        width: calc(100% - 42px);
+        margin-left: 42px;
+    }
+
+    .model-road__item--top .model-road__content,
+    .model-road__item--bottom .model-road__content {
+        top: auto;
+        bottom: auto;
+    }
+
+    .model-road__step-title {
+        font-size: clamp(1.25rem, 5.2vw, 1.65rem);
+    }
+
+    .model-road__step-text {
+        font-size: 0.95rem;
+        line-height: 1.2;
+        max-width: none;
+    }
+
+    .model-equipment__panels,
+    .model-faq__col {
+        margin-left: 0;
+        flex: 1 1 100%;
+    }
+
+    .model-equipment__tabs {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem 1.5rem;
+        max-width: none;
+    }
+
+    .model-faq__title {
+        max-width: none;
+    }
+
+    .model-other-models__slide {
+        width: min(1138px, calc(100vw - 2rem));
+    }
+
+    .model-other-models__card {
+        flex-direction: column;
+    }
+
+    .model-other-models__body {
+        flex: 1 1 auto;
+        order: 1;
+        padding: 1.5rem 1.25rem 1.25rem;
+    }
+
+    .model-other-models__visual {
+        flex: 0 0 auto;
+        order: 0;
+        min-height: clamp(220px, 48vw, 320px);
+        padding: 1.5rem 1rem 1.25rem;
+    }
+
+    .model-other-models__watermark {
+        font-size: clamp(4.5rem, 36vw, 9rem);
+        top: 44%;
+    }
+
+    .model-other-models__img {
+        max-height: 220px;
+        transform: translateY(clamp(4px, 2vw, 12px));
+    }
+
+    .model-other-models__card:hover .model-other-models__img {
+        transform: translateY(clamp(4px, 2vw, 12px)) scale(1.02);
+    }
+}
+
+@media (max-width: 600px) {
+    .model-deck-plan {
+        padding: 40px 16px 52px;
+    }
+
+    .model-deck-plan__inner {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "tabs indicator"
+            "image image";
+        row-gap: 1rem;
+        column-gap: 0.75rem;
+    }
+
+    .model-deck-plan__tabs {
+        grid-area: tabs;
+        flex: none;
+    }
+
+    .model-deck-plan__indicator {
+        grid-area: indicator;
+        justify-self: end;
+    }
+
+    .model-deck-plan__canvas {
+        grid-area: image;
+    }
+
+    .model-road {
+        padding: 56px 16px;
+    }
+
+    .model-specs__grid {
+        grid-template-columns: 1fr;
+    }
+}
