@@ -72,7 +72,7 @@ a {
 
 .header-container.padding {
     padding: 1.188rem 2.625rem 1.188rem 2.625rem;
-    transition: padding 0.3s ease;
+    transition: padding 0.5s ease;
 }
 
 .header-logo {
@@ -86,10 +86,12 @@ a {
     /* точный центр страницы */
 }
 
-.header-logo img {
-    width: 100%;
-    height: auto;
-    display: block;
+.logo-hover svg path:last-of-type {
+    transition: fill 0.3s ease;
+}
+
+.logo-hover:hover svg path:last-of-type {
+    fill: #EAC84B !important;
 }
 
 .header-text {
@@ -354,10 +356,7 @@ a {
     overflow: hidden;
 }
 
-/* Общие правила для всех 3 слайдов */
-.hero-background-image-one,
-.hero-background-image-two,
-.hero-background-image-three {
+.hero-background-image {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -367,32 +366,50 @@ a {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    z-index: 1;
+    will-change: transform;
+    --hero-bg-scale: 1;
+}
+
+.hero-background-image::before {
+    content: "";
+    position: absolute;
+    inset: 0;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0;
-    visibility: hidden;
-    z-index: 1;
-    will-change: opacity, transform;
+    transform: scale(var(--hero-bg-scale));
+    transform-origin: center center;
+    will-change: transform;
+}
+
+.hero-background-image>* {
+    position: relative;
+    z-index: 2;
 }
 
 .hero-background-image-one {
-    background-image: url("../images/hero1.png");
+    z-index: 3;
 }
 
 .hero-background-image-two {
-    background-image: url("../images/hero2.png");
+    z-index: 2;
 }
 
 .hero-background-image-three {
-    background-image: url("../images/hero3.png");
+    z-index: 1;
 }
 
-/* Первый кадр виден до запуска GSAP */
-.hero-background-image-one {
-    opacity: 1;
-    visibility: visible;
-    z-index: 2;
+.hero-background-image-one::before {
+    background-image: url("../images/hero1.png");
+}
+
+.hero-background-image-two::before {
+    background-image: url("../images/hero2.png");
+}
+
+.hero-background-image-three::before {
+    background-image: url("../images/hero3.png");
 }
 
 .hero-header {
@@ -491,6 +508,19 @@ a {
 /***** end hero *****/
 
 /***** welcome *****/
+
+.color-filling-text-container {
+    position: relative;
+}
+
+.color-filling-text {
+    --color-filling-base: #B2B2B2;
+    --color-filling-fill: #0E3A61;
+}
+
+.color-filling-text .text-char {
+    color: var(--color-filling-base);
+}
 
 .welcome {
     background-color: #F3F2EF;
@@ -706,15 +736,13 @@ body {
 
 /***** gallery *****/
 
-.scroll-section {
+.main-gallery.scroll-section {
     position: relative;
-    height: 420vh;
-    background: #FFFFFF;
+    width: 100%;
 }
 
-.sticky-wrapper {
-    position: sticky;
-    top: 0;
+.main-gallery .sticky-wrapper {
+    width: 100%;
     height: 100vh;
     overflow: hidden;
     background: #f3f2ef;
@@ -732,13 +760,19 @@ body {
     gap: 0.75rem;
     transform-origin: center center;
     z-index: 3;
+    /* Ячейки, выходящие за границу при Phase 2, обрезаются */
+    overflow: hidden;
 }
 
 .mosaic-cell {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    will-change: transform, opacity;
+    /* align-self:stretch (default) растягивает ячейку на высоту строки */
+    /* min-width/min-height:0 позволяет GSAP сжать ячейку до нуля */
+    min-width: 0;
+    min-height: 0;
+    will-change: transform, width;
 }
 
 .img-wide {
@@ -775,63 +809,51 @@ body {
 }
 
 
-/* полноэкранная фото (3-е состояние) */
-.hero-shot {
+/* Абсолютный блок поверх sticky-wrapper, раскрывается clip-path */
+.mosaic-cell-content {
     position: absolute;
     inset: 0;
-    background: url("../images/img5.png") center / cover no-repeat;
-    opacity: 0;
-    transform: scale(1.04);
-    z-index: 1;
+    background-image: url("../images/img5.png");
+    background-size: cover;
+    background-position: center;
+    z-index: 4;
+    /* начальное значение задаётся через JS после layout */
+    clip-path: inset(0% 0% 0% 0%);
+    will-change: clip-path;
 }
 
-/* затемнение для 4-го состояния */
-.hero-overlay {
+.mosaic-cell-content__inner {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.32);
-    /* мягкое затемнение как на рефе */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2.5rem 2.5rem 3rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
     opacity: 0;
-    z-index: 2;
+    will-change: opacity;
 }
 
-/* текст для 4-го состояния */
-.info-content {
-    position: absolute;
-    left: 39px;
-    top: 36%;
-    transform: translateY(-50%);
-    max-width: 705px;
-    color: #f3f2ef;
-    opacity: 0;
-    z-index: 5;
-}
-
-.info-content h2 {
-    margin: 0 0 22px;
+.mosaic-cell-content__inner h2 {
+    margin: 0 0 1.25rem;
     font-weight: 500;
-    font-size: clamp(46px, 5.2vw, 64px);
-    line-height: 0.95;
-    letter-spacing: 0;
-    color: #FFFFFF;
+    font-size: clamp(32px, 4vw, 56px);
+    line-height: 1;
+    color: #fff;
+    max-width: 700px;
 }
 
-.info-content p {
-    margin: 0 0 14px;
+.mosaic-cell-content__inner p {
+    margin: 0 0 0.75rem;
     font-weight: 400;
-    font-size: clamp(16px, 1.25vw, 24px);
-    line-height: 1.32;
-    letter-spacing: 0;
-    color: #FFFFFF;
-    max-width: 653px;
+    font-size: clamp(14px, 1.1vw, 20px);
+    line-height: 1.4;
+    color: #fff;
+    max-width: 600px;
 }
 
-.info-content p:last-child {
+.mosaic-cell-content__inner p:last-child {
     margin-bottom: 0;
-}
-
-.mosaic-wrap {
-    clip-path: none;
 }
 
 /***** end gallery *****/
@@ -1291,12 +1313,15 @@ body {
     display: flex;
     width: 280px;
     cursor: pointer;
-    transition: opacity 0.3s;
+    transition: all 0.3s;
 }
 
 .btn-form:hover {
     background-color: #C6C6C6;
-    transition: opacity 0.3s;
+}
+.btn-form:active {
+    background-color: #b4b4b4;
+    border-color: #949494;
 }
 
 .btn-form-text {
@@ -1310,12 +1335,11 @@ body {
 
 .btn-form-img {
     max-width: 83px;
-    transition: opacity 0.3s;
+    transition: all 0.5s ease-in-out;
 }
 
 .btn-form:hover .btn-form-img {
-    transition: opacity 0.3s;
-    transform: scale(1.1);
+    transform: scale(1.08);
 }
 
 

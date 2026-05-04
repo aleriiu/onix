@@ -1,16 +1,13 @@
 'use strict';
 
 //header fixed 
-
 const header = document.querySelector('.header-fixed');
 const headerH = document.querySelector('.header-fixed').clientHeight;
 const height = document.querySelector('.modal_menu-container');
 const headerContainer = document.querySelector('.header-container');
 
 document.onscroll = function () {
-
     let scroll = window.scrollY;
-
     if (scroll > headerH) {
         header.classList.add('fixed');
         header.classList.add('scrolled');
@@ -19,7 +16,6 @@ document.onscroll = function () {
         header.style.backgroundColor = '#FFFFFF33';
         header.style.backdropFilter = 'blur(10px)'
     }
-
     else {
         header.classList.remove('fixed');
         header.classList.remove('scrolled');
@@ -41,87 +37,209 @@ window.addEventListener('scroll', function () {
 
 /***** gallery *****/
 
-// 1. Lenis
-const lenis = new Lenis();
-function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-}
-requestAnimationFrame(raf);
-
-// 2. GSAP
+// 1. GSAP
 gsap.registerPlugin(ScrollTrigger);
 
-// Начальные состояния
-gsap.set(".mosaic-cell", { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 });
-gsap.set(".hero-shot", { opacity: 0, scale: 1.06 });
-gsap.set(".hero-overlay", { opacity: 0 });
-gsap.set(".info-content", { opacity: 0, y: 40 });
+// 2. Lenis + ScrollTrigger sync
+const lenis = new Lenis();
+lenis.on("scroll", ScrollTrigger.update);
+gsap.ticker.add((time) => {
+    // gsap.ticker передает время в секундах, Lenis ожидает миллисекунды
+    lenis.raf(time * 1000);
+});
+gsap.ticker.lagSmoothing(0);
 
-// Все карточки мозаики
-const mosaicCards = gsap.utils.toArray(".mosaic-cell");
+/*
+ * ─────────────────────────────────────────────────────────────────────────────
+ *  GALLERY — 3-фазная анимация по скроллу
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ *  Сетка (3 ряда, 3 колонки):
+ *    ┌──────┬──────┬──────┐  row 0 (34vh)
+ *    │ img2 │ img3 │ img4 │
+ *    ├──────┼──────┴──────┤  row 1 (32vh)
+ *    │ img5 │   img1/ctx  │   img1 = placeholder; ctx = mosaic-cell-content
+ *    ├──────┴──────┬──────┤  row 2 (34vh)
+ *    │    img6     │ img7 │
+ *    └─────────────┴──────┘
+ *
+ *  ФАЗА 1 — горизонтальное сжатие
+ *    • img2 сужается ВЛЕВО  → квадрат (width = height)
+ *    • img3, img4 — ВПРАВО  → квадрат
+ *    • img5 выталкивается ВЛЕВО за экран
+ *    • mosaic-cell-content расширяется ВЛЕВО на 100% ширины ряда 1
+ *    • img6 сужается ВЛЕВО  → 2:1 (width = 2 × height)
+ *    • img7 сужается ВПРАВО → квадрат
+ *
+ *  ФАЗА 2 — вертикальное расширение
+ *    • ряды 0 и 2 уходят за края экрана (вверх/вниз)
+ *    • mosaic-cell-content занимает 100% высоты
+ *
+ *  ФАЗА 3 — появление текста
+ *    • mosaic-cell-content__inner fade in
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
 
+gsap.set(".main-gallery .mosaic-cell-content__inner", { opacity: 0 });
+
+const gallerySection = document.querySelector(".main-gallery");
+const galleryPin     = gallerySection?.querySelector(".sticky-wrapper");
+const mosaicWrap     = gallerySection?.querySelector(".mosaic-wrap");
+const contentCell    = gallerySection?.querySelector(".mosaic-cell-content");
+
+// Ссылки на ячейки сетки
+const img1Cell = gallerySection?.querySelector(".mosaic-cell.img-1"); // placeholder row1
+const img2Cell = gallerySection?.querySelector(".mosaic-cell.img-2"); // row0 col0
+const img3Cell = gallerySection?.querySelector(".mosaic-cell.img-3"); // row0 col1
+const img4Cell = gallerySection?.querySelector(".mosaic-cell.img-4"); // row0 col2
+const img5Cell = gallerySection?.querySelector(".mosaic-cell.img-5"); // row1 col0
+const img6Cell = gallerySection?.querySelector(".mosaic-cell.img-6"); // row2 col0-1 (wide)
+const img7Cell = gallerySection?.querySelector(".mosaic-cell.img-7"); // row2 col2
+
+/*
+ * setupGalleryInitialState()
+ * Вызывается при загрузке и при каждом ScrollTrigger.refreshInit (ресайз).
+ * Устанавливает:
+ *   – justify-self и точную px-ширину каждой ячейки (чтобы анимация шла px→px)
+ *   – начальный clip-path mosaic-cell-content совпадает с позицией img-1 в сетке
+ */
+const setupGalleryInitialState = () => {
+    if (!contentCell || !img1Cell || !mosaicWrap) return;
+
+    const wR  = mosaicWrap.getBoundingClientRect();
+    const c1R = img1Cell.getBoundingClientRect(); // img-1 = row1, cols 1-2
+
+    // ── clip-path начального состояния = рамка вокруг img-1 ──────────────────
+    const topPct    = ((c1R.top    - wR.top)    / wR.height * 100).toFixed(2);
+    const bottomPct = ((wR.bottom  - c1R.bottom) / wR.height * 100).toFixed(2);
+    const leftPct   = ((c1R.left   - wR.left)   / wR.width  * 100).toFixed(2);
+    gsap.set(contentCell, {
+        clipPath: `inset(${topPct}% 0% ${bottomPct}% ${leftPct}%)`
+    });
+
+    // ── якорная привязка и начальная ширина в px ──────────────────────────────
+    // justify-self: start — левый край зафиксирован, ячейка сжимается вправо
+    // justify-self: end   — правый край зафиксирован, ячейка сжимается влево
+    const setCell = (el, side) => {
+        if (!el) return;
+        gsap.set(el, {
+            justifySelf: side,
+            width:       el.offsetWidth, // px от текущего layout
+            x:           0,
+            y:           0
+        });
+    };
+
+    setCell(img2Cell, "start"); // сжимается влево  → левый край фиксирован
+    setCell(img3Cell, "end");   // сжимается вправо → правый край фиксирован
+    setCell(img4Cell, "end");
+    setCell(img5Cell, "start"); // вытесняется влево
+    setCell(img6Cell, "start"); // сжимается влево
+    setCell(img7Cell, "end");   // сжимается вправо
+};
+
+/*
+ * galleryTl — основной timeline.
+ * Все анимационные TO-значения function-based:
+ * GSAP пересчитывает их при invalidateOnRefresh — безопасен при ресайзе.
+ */
 const galleryTl = gsap.timeline({
     scrollTrigger: {
-        trigger: ".scroll-section",
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1.2,
+        trigger:          gallerySection,
+        start:            "top top",
+        end:              "+=300%",
+        scrub:            1.2,
+        pin:              galleryPin,
+        pinSpacing:       true,
+        anticipatePin:    1,
+        refreshPriority:  -10,
+        id:               "main-gallery-scroll",
         invalidateOnRefresh: true
     }
 });
 
-// Немного уменьшаем всю мозаику
-galleryTl.to(".mosaic-wrap", {
-    scale: 0.92,
-    duration: 0.35,
-    ease: "power1.out"
-}, 0);
+if (gallerySection && img1Cell && contentCell && mosaicWrap) {
+    setupGalleryInitialState();
+    ScrollTrigger.addEventListener("refreshInit", setupGalleryInitialState);
 
-// Разлет карточек через цикл
-mosaicCards.forEach((card, i) => {
-    const angle = (i / mosaicCards.length) * Math.PI * 2; // равномерно по кругу
-    const distance = 220 + i * 18;                         // чем дальше карточка в списке, тем дальше улетает
-    const x = Math.cos(angle) * distance;
-    const y = Math.sin(angle) * distance;
-    const rot = (i % 2 === 0 ? -1 : 1) * (4 + i);
+    // ── ФАЗА 1: горизонтальное сжатие (t = 0 → 0.5) ─────────────────────────
 
-    galleryTl.to(card, {
-        x,
-        y,
-        rotate: rot,
-        scale: 0.9,
-        opacity: 0,
-        duration: 0.85,
-        ease: "power2.inOut"
-    }, 0.22);
-});
+    // Ряд 0: img2 → левый квадрат; img3, img4 → правые квадраты
+    galleryTl
+        .to(img2Cell, {
+            width:    () => img2Cell.offsetHeight,
+            duration: 0.5, ease: "power2.inOut"
+        }, 0)
+        .to(img3Cell, {
+            width:    () => img3Cell.offsetHeight,
+            duration: 0.5, ease: "power2.inOut"
+        }, 0)
+        .to(img4Cell, {
+            width:    () => img4Cell.offsetHeight,
+            duration: 0.5, ease: "power2.inOut"
+        }, 0);
 
-// Появляется одна большая картинка
-galleryTl
-    .to(".sticky-wrapper", {
-        backgroundColor: "#000",
-        duration: 0.7
-    }, 0.45)
-    .to(".hero-shot", {
-        opacity: 1,
-        scale: 1,
-        duration: 0.85,
-        ease: "power2.out"
-    }, 0.75)
-    .to(".hero-overlay", {
-        opacity: 1,
-        duration: 0.45
-    }, 1.35)
-    .to(".info-content", {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: "power1.out"
-    }, 1.4);
+    // Ряд 1: img5 вытесняется за левый край; content-cell расширяется до 100% ширины
+    galleryTl
+        .to(img5Cell, {
+            x:        () => -(img5Cell.offsetWidth),
+            duration: 0.5, ease: "power2.inOut"
+        }, 0)
+        .to(contentCell, {
+            // left-inset → 0%, top/bottom остаются (строки 0 и 2 ещё не сдвинуты)
+            clipPath: () => {
+                const wR  = mosaicWrap.getBoundingClientRect();
+                const c1R = img1Cell.getBoundingClientRect();
+                const top    = ((c1R.top    - wR.top)    / wR.height * 100).toFixed(2);
+                const bottom = ((wR.bottom  - c1R.bottom) / wR.height * 100).toFixed(2);
+                return `inset(${top}% 0% ${bottom}% 0%)`;
+            },
+            duration: 0.5, ease: "power2.inOut"
+        }, 0);
 
+    // Ряд 2: img6 → левый 2:1; img7 → правый квадрат
+    galleryTl
+        .to(img6Cell, {
+            width:    () => img6Cell.offsetHeight * 2,
+            duration: 0.5, ease: "power2.inOut"
+        }, 0)
+        .to(img7Cell, {
+            width:    () => img7Cell.offsetHeight,
+            duration: 0.5, ease: "power2.inOut"
+        }, 0);
+
+    // ── ФАЗА 2: вертикальное расширение (t = 0.5 → 0.85) ───────────────────
+
+    // Ряд 0 уходит ВВЕРХ; ряд 2 уходит ВНИЗ (overflow:hidden на mosaic-wrap обрезает их)
+    galleryTl
+        .to([img2Cell, img3Cell, img4Cell], {
+            y:        () => -img2Cell.offsetHeight,
+            duration: 0.35, ease: "power2.inOut"
+        }, 0.5)
+        .to([img6Cell, img7Cell], {
+            y:        () => img6Cell.offsetHeight,
+            duration: 0.35, ease: "power2.inOut"
+        }, 0.5)
+        // clip-path раскрывается на всю высоту → полноэкранный кадр
+        .to(contentCell, {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: 0.35, ease: "power2.inOut"
+        }, 0.5)
+        // Фон sticky-wrapper темнеет
+        .to(galleryPin, {
+            backgroundColor: "#111",
+            duration:        0.2
+        }, 0.5);
+
+    // ── ФАЗА 3: появление текста (t = 0.85 → 1.0) ───────────────────────────
+    galleryTl
+        .to(".main-gallery .mosaic-cell-content__inner", {
+            opacity:  1,
+            duration: 0.15,
+            ease:     "power1.out"
+        }, 0.85);
+}
 /***** end gallery *****/
-
 
 /***** boat *****/
 const boatData = {
@@ -259,164 +377,120 @@ modelButtons.forEach((btn) => {
 /***** end boat *****/
 
 
-/***** hero auto gallery *****/
-const heroSlides = gsap.utils.toArray([
-    ".hero-background-image-one",
-    ".hero-background-image-two",
-    ".hero-background-image-three"
-]);
+/***** hero stacked cards on scroll *****/
+const heroSection = document.querySelector(".hero");
+const heroSlides = gsap.utils.toArray(".hero .hero-background-image");
 const heroDots = gsap.utils.toArray(".hero-dot");
 const heroDotProgresses = gsap.utils.toArray(".hero-dot-progress");
-const HOLD_TIME = 4.6;
-const TRANSITION = 1.45;
 
-if (heroSlides.length) {
-    let currentIndex = 0;
-    let autoCall = null;
-    let progressTween = null;
-    let isAnimating = false;
+if (heroSection && heroSlides.length > 1) {
+    // Карточки уложены стопкой в одном кадре.
+    gsap.set(heroSlides, { yPercent: 0, "--hero-bg-scale": 1 });
 
-    const HOLD_TIME = 3.8;
-    const TRANSITION = 1.0;
+    const slidesCount = heroSlides.length;
+    const totalTransitions = slidesCount - 1;
+    const MOVE_UNIT = 1;
+    const HOLD_UNIT = 0.35;
+    const phaseUnit = MOVE_UNIT + HOLD_UNIT;
+    const totalTimelineUnits = (totalTransitions * phaseUnit) + HOLD_UNIT;
+    const hasHeroDots = heroDots.length > 0;
+    const hasHeroDotProgress = heroDotProgresses.length > 0;
 
-    function getSlideContent(slide) {
-        return slide.querySelectorAll(".hero-header, .hero-header-text, .hero-header-btn");
+    const updateHeroPagination = (progress) => {
+        if (!hasHeroDots) return;
+
+        const timelinePos = progress * totalTimelineUnits;
+        let activeIndex = 0;
+
+        for (let i = 0; i < totalTransitions; i += 1) {
+            const moveEnd = (i * phaseUnit) + MOVE_UNIT;
+            if (timelinePos >= moveEnd) {
+                activeIndex = i + 1;
+            } else {
+                break;
+            }
+        }
+
+        heroDots.forEach((dot, dotIndex) => {
+            dot.classList.toggle("is-active", dotIndex === activeIndex);
+        });
+
+        if (!hasHeroDotProgress) return;
+
+        heroDotProgresses.forEach((progressEl, dotIndex) => {
+            let segmentProgress = 0;
+
+            // 1-я карточка уже активна при старте hero.
+            if (dotIndex === 0) {
+                segmentProgress = 1;
+            } else {
+                // 2-я и 3-я точки заполняются только во время появления
+                // соответствующей карточки (без учета hold-паузы).
+                const transitionIndex = dotIndex - 1;
+                const transitionStart = transitionIndex * phaseUnit;
+                const transitionEnd = transitionStart + MOVE_UNIT;
+                const raw = (timelinePos - transitionStart) / (transitionEnd - transitionStart);
+                segmentProgress = gsap.utils.clamp(0, 1, raw);
+            }
+
+            gsap.set(progressEl, { scaleY: segmentProgress });
+        });
+    };
+
+    if (hasHeroDotProgress) {
+        gsap.set(heroDotProgresses, {
+            scaleY: 0,
+            transformOrigin: "top center"
+        });
     }
 
-    gsap.set(heroSlides, { autoAlpha: 0, scale: 1.08 });
-    gsap.set(heroSlides[0], { autoAlpha: 1, scale: 1.02 });
-    gsap.set(".hero-header-text-container", { autoAlpha: 1, y: 0 });
-    gsap.set(heroDotProgresses, { scaleY: 0, transformOrigin: "top center" });
-
-    // начальное состояние контента
-    heroSlides.forEach((slide, i) => {
-        const content = getSlideContent(slide);
-        if (i === 0) {
-            gsap.set(content, { autoAlpha: 1, y: 0 });
-        } else {
-            gsap.set(content, { autoAlpha: 0, y: 24 });
+    const heroTl = gsap.timeline({
+        scrollTrigger: {
+            trigger: heroSection,
+            start: "top top",
+            end: `+=${slidesCount * 100}%`,
+            scrub: 1,
+            pin: true,
+            anticipatePin: 1,
+            refreshPriority: 20,
+            onUpdate: (self) => updateHeroPagination(self.progress)
         }
     });
 
-    function setActiveDot(index) {
-        heroDots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
-    }
+    heroSlides.slice(0, -1).forEach((slide, index) => {
+        const nextSlide = heroSlides[index + 1];
+        const phaseStart = index * phaseUnit;
 
-    function runProgress(index) {
-        if (progressTween) progressTween.kill();
-        gsap.set(heroDotProgresses, { scaleY: 0 });
-        progressTween = gsap.to(heroDotProgresses[index], {
-            scaleY: 1,
-            duration: HOLD_TIME,
-            ease: "none"
-        });
-    }
+        heroTl.to(slide, {
+            yPercent: -100,
+            ease: "none",
+            duration: MOVE_UNIT
+        }, phaseStart);
 
-    function scheduleNext() {
-        if (autoCall) autoCall.kill();
-        autoCall = gsap.delayedCall(HOLD_TIME, () => {
-            goToSlide((currentIndex + 1) % heroSlides.length);
-        });
-    }
+        if (nextSlide) {
+            // При появлении следующей карточки даем ей легкий медленный zoom (до 110%).
+            heroTl.to(nextSlide, {
+                "--hero-bg-scale": 1.1,
+                ease: "none",
+                duration: MOVE_UNIT + HOLD_UNIT
+            }, phaseStart);
+        }
 
-    function animateInContent(slide, at = 0) {
-        const title = slide.querySelector(".hero-header");
-        const text = slide.querySelector(".hero-header-text");
-        const btn = slide.querySelector(".hero-header-btn");
-
-        return gsap.timeline()
-            .fromTo(
-                title,
-                { autoAlpha: 0, y: 70 },
-                { autoAlpha: 1, y: 0, duration: 1.25, ease: "power3.out" },
-                at
-            )
-            .fromTo(
-                text,
-                { autoAlpha: 0, y: 52 },
-                { autoAlpha: 1, y: 0, duration: 1.05, ease: "power3.out" },
-                at + 0.28
-            )
-            .fromTo(
-                btn,
-                { autoAlpha: 0, y: 40 },
-                { autoAlpha: 1, y: 0, duration: 0.95, ease: "power2.out" },
-                at + 0.46
-            );
-    }
-
-    function animateOutContent(slide, at = 0) {
-        const title = slide.querySelector(".hero-header");
-        const text = slide.querySelector(".hero-header-text");
-        const btn = slide.querySelector(".hero-header-btn");
-
-        return gsap.timeline().to(
-            [btn, text, title],
-            {
-                autoAlpha: 0,
-                y: -12,
-                duration: 0.3,
-                ease: "power2.in",
-                stagger: 0.04
-            },
-            at
-        );
-    }
-
-    function goToSlide(nextIndex) {
-        if (isAnimating || nextIndex === currentIndex) return;
-        isAnimating = true;
-
-        const current = heroSlides[currentIndex];
-        const next = heroSlides[nextIndex];
-
-        gsap.timeline({
-            defaults: { ease: "power2.inOut" },
-            onComplete: () => {
-                currentIndex = nextIndex;
-                setActiveDot(currentIndex);
-                runProgress(currentIndex);
-                scheduleNext();
-                isAnimating = false;
-            }
-        })
-            // сначала мягко уводим текущий текст
-            .add(() => animateOutContent(current, 0), 0)
-
-            // фоновый переход с zoom
-            .to(current, { autoAlpha: 0, scale: 1.11, duration: TRANSITION }, 0)
-            .fromTo(
-                next,
-                { autoAlpha: 0, scale: 1.07 },
-                { autoAlpha: 1, scale: 1.02, duration: TRANSITION },
-                0
-            )
-
-            // затем заводим текст нового слайда снизу
-            .add(() => animateInContent(next, 0), 1.05);
-    }
-
-    heroDots.forEach((dot) => {
-        dot.addEventListener("click", () => {
-            const index = Number(dot.dataset.slide);
-            if (autoCall) autoCall.kill();
-            if (progressTween) progressTween.kill();
-            goToSlide(index);
-        });
+        // Небольшой "холостой" скролл после открытия следующей карточки.
+        heroTl.to({}, { duration: HOLD_UNIT }, phaseStart + MOVE_UNIT);
     });
 
-    setActiveDot(0);
-    runProgress(0);
-    animateInContent(heroSlides[0], 0);
-    scheduleNext();
+    // Пауза на последней карточке перед выходом из pin.
+    heroTl.to({}, { duration: HOLD_UNIT });
+    updateHeroPagination(0);
 }
-/***** end hero auto gallery *****/
+/***** end hero stacked cards on scroll *****/
 
 
 /***** text change color *****/
 
-function splitTextToChars(selector) {
-    const el = document.querySelector(selector);
+function splitTextToChars(target) {
+    const el = typeof target === "string" ? document.querySelector(target) : target;
     if (!el) return null;
 
     // чтобы не разбивать повторно
@@ -438,22 +512,56 @@ function splitTextToChars(selector) {
     return el;
 }
 
-splitTextToChars(".welcome-text");
+function setupColorFillingTextSections() {
+    const sections = document.querySelectorAll(".color-filling-text-container");
 
-gsap.fromTo(
-    ".welcome-text .text-char",
-    { color: "#B2B2B2" },
-    {
-        color: "#0E3A61",
-        stagger: 0.018,         // задержка между буквами
-        ease: "power2.out",
-        scrollTrigger: {
-            trigger: ".welcome",
-            start: "top 70%",
-            toggleActions: "play none none reverse"
-        }
-    }
-);
+    sections.forEach((section) => {
+        const textElement = section.querySelector(".color-filling-text");
+        if (!textElement) return;
+
+        const preparedText = splitTextToChars(textElement);
+        if (!preparedText) return;
+
+        const chars = Array.from(preparedText.querySelectorAll(".text-char"));
+        if (!chars.length) return;
+
+        const baseColor = "var(--color-filling-base, #B2B2B2)";
+        const fillColor = "var(--color-filling-fill, #0E3A61)";
+        let lastFilledCount = -1;
+
+        const paintChars = (filledCount) => {
+            if (filledCount === lastFilledCount) return;
+            lastFilledCount = filledCount;
+
+            chars.forEach((char, index) => {
+                char.style.color = index < filledCount ? fillColor : baseColor;
+            });
+        };
+
+        paintChars(0);
+
+        ScrollTrigger.create({
+            trigger: section,
+            start: "center center",
+            end: () => {
+                const dynamicDistance = chars.length * 14;
+                return `+=${Math.max(window.innerHeight * 1.15, dynamicDistance)}`;
+            },
+            scrub: true,
+            pin: true,
+            anticipatePin: 1,
+            refreshPriority: 10,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+                const filledCount = Math.round(self.progress * chars.length);
+                paintChars(filledCount);
+            }
+        });
+    });
+}
+
+setupColorFillingTextSections();
+ScrollTrigger.refresh();
 
 splitTextToChars(".description-text");
 splitTextToChars(".description-text-italic");
