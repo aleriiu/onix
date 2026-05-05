@@ -298,11 +298,6 @@ a {
     letter-spacing: 0%;
 }
 
-.modal_menu {
-    background-color: #FFFFFF;
-    /* display: none; */
-}
-
 .modal-menu-group {
     display: flex;
     justify-content: space-between;
@@ -904,14 +899,6 @@ body {
     max-width: 282px;
 }
 
-.cards-section-container {
-    display: flex;
-    gap: 2.25rem;
-    padding: 5.5rem 0 7.5rem 0;
-    overflow: hidden;
-    overflow-x: scroll;
-}
-
 .cards-section-header {
     font-weight: 500;
     font-size: 1.75rem;
@@ -932,21 +919,6 @@ body {
 .cards-section-img {
     width: 455px;
     transition: transform 0.5s ease;
-}
-
-.card-section {
-    background-color: #F3F2EF;
-    display: flex;
-    flex-direction: column;
-    gap: 1.75rem;
-    width: 32%;
-}
-
-.card-section-text {
-    padding: 1.875rem 2.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
 }
 
 .cards-section--tech {
@@ -1457,11 +1429,6 @@ input[type="checkbox"]:focus-visible {
     gap: 1.875rem;
 }
 
-.footer-list-group {
-    display: flex;
-    gap: 1.875rem;
-}
-
 .footer-list-group-row {
     display: flex;
     gap: 2.5rem;
@@ -1475,13 +1442,13 @@ input[type="checkbox"]:focus-visible {
     color: #FFFFFF;
 }
 
-ul {
+.footer-list ul {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-li {
+.footer-list li {
     list-style: none;
     font-weight: 400;
     font-size: 1rem;
