@@ -646,7 +646,7 @@ techSections.forEach((techSection) => {
     let suppressClick = false;
     const SWIPE_THRESHOLD = 60;
 
-    const WHEEL_SENSITIVITY = 1.6;
+    const WHEEL_SENSITIVITY = 2.2;
 
     function getTrackX() {
         return Number(gsap.getProperty(track, "x")) || 0;
@@ -750,10 +750,9 @@ techSections.forEach((techSection) => {
 
         const absX = Math.abs(e.deltaX);
         const absY = Math.abs(e.deltaY);
-        const dominant = absX > absY ? e.deltaX : e.deltaY;
-
-        // игнорируем микро-шумы
-        if (Math.abs(dominant) < 2) return;
+        const isIntentionalHorizontal = absX >= 12 && absY <= 4 && absX > absY * 2.2;
+        if (!isIntentionalHorizontal) return;
+        const horizontalDelta = e.deltaX;
 
         e.preventDefault();
 
@@ -767,7 +766,7 @@ techSections.forEach((techSection) => {
         const nextX = gsap.utils.clamp(
             minX,
             maxX,
-            currentX - dominant * WHEEL_SENSITIVITY
+            currentX - horizontalDelta * WHEEL_SENSITIVITY
         );
 
         gsap.to(track, {

@@ -145,7 +145,7 @@ function initTechCardSliders() {
         let moved = false;
         let suppressClick = false;
         const SWIPE_THRESHOLD = 60;
-        const WHEEL_SENSITIVITY = 1.6;
+        const WHEEL_SENSITIVITY = 2.2;
 
         function getTrackX() {
             return Number(gsap.getProperty(track, 'x')) || 0;
@@ -241,11 +241,16 @@ function initTechCardSliders() {
         function onWheel(e) {
             if (isPointerDown || maxOffset <= 0) return;
 
+            const rect = sliderViewport.getBoundingClientRect();
+            const viewportCenterY = window.innerHeight * 0.5;
+            const isSliderInActiveZone = rect.top <= viewportCenterY && rect.bottom >= viewportCenterY;
+            if (!isSliderInActiveZone) return;
+
             const absX = Math.abs(e.deltaX);
             const absY = Math.abs(e.deltaY);
-            const dominant = absX > absY ? e.deltaX : e.deltaY;
-
-            if (Math.abs(dominant) < 2) return;
+            const isIntentionalHorizontal = absX >= 12 && absY <= 4 && absX > absY * 2.2;
+            if (!isIntentionalHorizontal) return;
+            const horizontalDelta = e.deltaX;
 
             e.preventDefault();
 
@@ -258,7 +263,7 @@ function initTechCardSliders() {
             const nextX = gsap.utils.clamp(
                 minX,
                 maxX,
-                currentX - dominant * WHEEL_SENSITIVITY
+                currentX - horizontalDelta * WHEEL_SENSITIVITY
             );
 
             gsap.to(track, {
@@ -839,20 +844,15 @@ function initOtherModelsHorizontalScroll() {
 
             const minX = getMinX();
             const tol = 2;
-
-            if (Math.abs(e.deltaX) >= Math.abs(e.deltaY)) {
-                if (e.deltaX > 0 && xPos <= minX + tol) return;
-                if (e.deltaX < 0 && xPos >= -tol) return;
-                e.preventDefault();
-                goToX(xPos - e.deltaX);
-                return;
-            }
-
-            if (e.deltaY > 0 && xPos <= minX + tol) return;
-            if (e.deltaY < 0 && xPos >= -tol) return;
+            const absX = Math.abs(e.deltaX);
+            const absY = Math.abs(e.deltaY);
+            const isIntentionalHorizontal = absX >= 12 && absY <= 4 && absX > absY * 2.2;
+            if (!isIntentionalHorizontal) return;
+            if (e.deltaX > 0 && xPos <= minX + tol) return;
+            if (e.deltaX < 0 && xPos >= -tol) return;
 
             e.preventDefault();
-            goToX(xPos - e.deltaY);
+            goToX(xPos - e.deltaX);
         },
         { passive: false }
     );
