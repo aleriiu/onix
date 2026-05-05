@@ -489,62 +489,95 @@ if (heroSection && heroSlides.length > 1) {
 
 /***** text change color *****/
 
-function splitTextToChars(target) {
+function splitTextToLines(target) {
     const el = typeof target === "string" ? document.querySelector(target) : target;
     if (!el) return null;
+    const originalText = el.dataset.originalText || el.textContent.replace(/\s+/g, " ").trim();
+    if (!originalText) return null;
+    el.dataset.originalText = originalText;
 
-    // чтобы не разбивать повторно
-    if (el.dataset.splitted === "true") return el;
+    el.textContent = "";
+    const words = originalText.split(" ");
+    words.forEach((word, idx) => {
+        const wordSpan = document.createElement("span");
+        wordSpan.className = "text-word";
+        wordSpan.textContent = idx < words.length - 1 ? `${word} ` : word;
+        el.appendChild(wordSpan);
+    });
 
-    const text = el.textContent.replace(/\s+/g, " ").trim();
+    const wordNodes = Array.from(el.querySelectorAll(".text-word"));
+    if (!wordNodes.length) return null;
+
+    const lines = [];
+    let currentLine = "";
+    let currentTop = wordNodes[0].offsetTop;
+
+    wordNodes.forEach((wordNode) => {
+        const nextTop = wordNode.offsetTop;
+        if (Math.abs(nextTop - currentTop) > 1) {
+            lines.push(currentLine.trimEnd());
+            currentLine = "";
+            currentTop = nextTop;
+        }
+        currentLine += wordNode.textContent || "";
+    });
+    if (currentLine) lines.push(currentLine.trimEnd());
+
     const fragment = document.createDocumentFragment();
-
-    for (const char of text) {
-        const span = document.createElement("span");
-        span.className = "text-char";
-        span.textContent = char; // обычные пробелы, чтобы работал перенос строк
-        fragment.appendChild(span);
-    }
+    lines.forEach((lineText) => {
+        const lineSpan = document.createElement("span");
+        lineSpan.className = "text-line";
+        lineSpan.style.display = "block";
+        lineSpan.textContent = lineText;
+        fragment.appendChild(lineSpan);
+    });
 
     el.textContent = "";
     el.appendChild(fragment);
-    el.dataset.splitted = "true";
     return el;
 }
 
 function setupColorFillingTextSections() {
     const sections = document.querySelectorAll(".welcome.color-filling-text-container");
+    const baseRGB = [178, 178, 178];
+    const fillRGB = [14, 58, 97];
 
     sections.forEach((section) => {
         const textElement = section.querySelector(".color-filling-text");
         if (!textElement) return;
+        let lines = [];
+        let lastProgressKey = -1;
 
-        const preparedText = splitTextToChars(textElement);
-        if (!preparedText) return;
+        const rebuildLines = () => {
+            const preparedText = splitTextToLines(textElement);
+            if (!preparedText) return false;
+            lines = Array.from(preparedText.querySelectorAll(".text-line"));
+            lastProgressKey = -1;
+            return lines.length > 0;
+        };
+        if (!rebuildLines()) return;
 
-        const chars = Array.from(preparedText.querySelectorAll(".text-char"));
-        if (!chars.length) return;
+        const paintLines = (filledFloat) => {
+            const progressKey = Math.round(filledFloat * 1000);
+            if (progressKey === lastProgressKey) return;
+            lastProgressKey = progressKey;
 
-        const baseColor = "var(--color-filling-base, #B2B2B2)";
-        const fillColor = "var(--color-filling-fill, #0E3A61)";
-        let lastFilledCount = -1;
-
-        const paintChars = (filledCount) => {
-            if (filledCount === lastFilledCount) return;
-            lastFilledCount = filledCount;
-
-            chars.forEach((char, index) => {
-                char.style.color = index < filledCount ? fillColor : baseColor;
+            lines.forEach((line, index) => {
+                const local = gsap.utils.clamp(0, 1, filledFloat - index);
+                const r = Math.round(baseRGB[0] + (fillRGB[0] - baseRGB[0]) * local);
+                const g = Math.round(baseRGB[1] + (fillRGB[1] - baseRGB[1]) * local);
+                const b = Math.round(baseRGB[2] + (fillRGB[2] - baseRGB[2]) * local);
+                line.style.color = `rgb(${r}, ${g}, ${b})`;
             });
         };
 
-        paintChars(0);
+        paintLines(0);
 
         ScrollTrigger.create({
             trigger: section,
             start: "center center",
             end: () => {
-                const dynamicDistance = chars.length * 14;
+                const dynamicDistance = lines.length * 220;
                 return `+=${Math.max(window.innerHeight * 1.15, dynamicDistance)}`;
             },
             scrub: true,
@@ -552,9 +585,12 @@ function setupColorFillingTextSections() {
             anticipatePin: 1,
             refreshPriority: 10,
             invalidateOnRefresh: true,
+            onRefreshInit: () => {
+                rebuildLines();
+                paintLines(0);
+            },
             onUpdate: (self) => {
-                const filledCount = Math.round(self.progress * chars.length);
-                paintChars(filledCount);
+                paintLines(self.progress * lines.length);
             }
         });
     });
@@ -568,35 +604,44 @@ function initDescriptionColorFilling() {
 
     const textBlocks = Array.from(section.querySelectorAll(".color-filling-text"));
     if (!textBlocks.length) return;
+    const baseRGB = [178, 178, 178];
+    const fillRGB = [14, 58, 97];
+    let lines = [];
+    let lastProgressKey = -1;
 
-    const chars = [];
-    textBlocks.forEach((textElement) => {
-        const preparedText = splitTextToChars(textElement);
-        if (!preparedText) return;
-        chars.push(...preparedText.querySelectorAll(".text-char"));
-    });
-    if (!chars.length) return;
+    const rebuildLines = () => {
+        lines = [];
+        textBlocks.forEach((textElement) => {
+            const preparedText = splitTextToLines(textElement);
+            if (!preparedText) return;
+            lines.push(...preparedText.querySelectorAll(".text-line"));
+        });
+        lastProgressKey = -1;
+        return lines.length > 0;
+    };
+    if (!rebuildLines()) return;
 
-    const baseColor = "var(--color-filling-base, #B2B2B2)";
-    const fillColor = "var(--color-filling-fill, #0E3A61)";
-    let lastFilledCount = -1;
+    const paintLines = (filledFloat) => {
+        const progressKey = Math.round(filledFloat * 1000);
+        if (progressKey === lastProgressKey) return;
+        lastProgressKey = progressKey;
 
-    const paintChars = (filledCount) => {
-        if (filledCount === lastFilledCount) return;
-        lastFilledCount = filledCount;
-
-        chars.forEach((char, index) => {
-            char.style.color = index < filledCount ? fillColor : baseColor;
+        lines.forEach((line, index) => {
+            const local = gsap.utils.clamp(0, 1, filledFloat - index);
+            const r = Math.round(baseRGB[0] + (fillRGB[0] - baseRGB[0]) * local);
+            const g = Math.round(baseRGB[1] + (fillRGB[1] - baseRGB[1]) * local);
+            const b = Math.round(baseRGB[2] + (fillRGB[2] - baseRGB[2]) * local);
+            line.style.color = `rgb(${r}, ${g}, ${b})`;
         });
     };
 
-    paintChars(0);
+    paintLines(0);
 
     ScrollTrigger.create({
         trigger: section,
         start: "center center",
         end: () => {
-            const dynamicDistance = chars.length * 14;
+            const dynamicDistance = lines.length * 220;
             return `+=${Math.max(window.innerHeight * 1.15, dynamicDistance)}`;
         },
         scrub: true,
@@ -604,9 +649,12 @@ function initDescriptionColorFilling() {
         anticipatePin: 1,
         refreshPriority: -20,
         invalidateOnRefresh: true,
+        onRefreshInit: () => {
+            rebuildLines();
+            paintLines(0);
+        },
         onUpdate: (self) => {
-            const filledCount = Math.round(self.progress * chars.length);
-            paintChars(filledCount);
+            paintLines(self.progress * lines.length);
         }
     });
 }

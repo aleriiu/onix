@@ -48,24 +48,55 @@ if (lenis) {
     gsap.ticker.lagSmoothing(0);
 }
 
-function splitTextToChars(target) {
+function splitTextToLines(target) {
     const el = typeof target === 'string' ? document.querySelector(target) : target;
     if (!el) return null;
-    if (el.dataset.splitted === 'true') return el;
 
-    const text = el.textContent.replace(/\s+/g, ' ').trim();
-    const fragment = document.createDocumentFragment();
+    const originalText =
+        el.dataset.originalText || el.textContent.replace(/\s+/g, ' ').trim();
+    if (!originalText) return null;
+    el.dataset.originalText = originalText;
 
-    for (const char of text) {
-        const span = document.createElement('span');
-        span.className = 'text-char';
-        span.textContent = char;
-        fragment.appendChild(span);
-    }
-
+    // 1) Временно разбиваем на слова, чтобы вычислить реальные переносы строк по offsetTop.
     el.textContent = '';
+    const words = originalText.split(' ');
+    words.forEach((word, idx) => {
+        const wordSpan = document.createElement('span');
+        wordSpan.className = 'text-word';
+        wordSpan.textContent = idx < words.length - 1 ? `${word} ` : word;
+        el.appendChild(wordSpan);
+    });
+
+    const wordNodes = Array.from(el.querySelectorAll('.text-word'));
+    if (!wordNodes.length) return null;
+
+    const lines = [];
+    let currentLine = '';
+    let currentTop = wordNodes[0].offsetTop;
+
+    wordNodes.forEach((wordNode) => {
+        const nextTop = wordNode.offsetTop;
+        if (Math.abs(nextTop - currentTop) > 1) {
+            lines.push(currentLine.trimEnd());
+            currentLine = '';
+            currentTop = nextTop;
+        }
+        currentLine += wordNode.textContent || '';
+    });
+    if (currentLine) lines.push(currentLine.trimEnd());
+
+    // 2) Рендерим реальные линии как отдельные span, чтобы анимировать по строкам.
+    el.textContent = '';
+    const fragment = document.createDocumentFragment();
+    lines.forEach((lineText) => {
+        const lineSpan = document.createElement('span');
+        lineSpan.className = 'text-line';
+        lineSpan.style.display = 'block';
+        lineSpan.textContent = lineText;
+        fragment.appendChild(lineSpan);
+    });
     el.appendChild(fragment);
-    el.dataset.splitted = 'true';
+
     return el;
 }
 
@@ -76,34 +107,46 @@ function initDescriptionColorFilling() {
     const textBlocks = Array.from(section.querySelectorAll('.color-filling-text'));
     if (!textBlocks.length) return;
 
-    const chars = [];
-    textBlocks.forEach((textElement) => {
-        const preparedText = splitTextToChars(textElement);
-        if (!preparedText) return;
-        chars.push(...preparedText.querySelectorAll('.text-char'));
-    });
-    if (!chars.length) return;
+    let lines = [];
 
-    const baseColor = 'var(--color-filling-base, #B2B2B2)';
-    const fillColor = 'var(--color-filling-fill, #0E3A61)';
-    let lastFilledCount = -1;
+    const baseRGB = [178, 178, 178];
+    const fillRGB = [14, 58, 97];
+    let lastProgressKey = -1;
 
-    const paintChars = (filledCount) => {
-        if (filledCount === lastFilledCount) return;
-        lastFilledCount = filledCount;
+    const rebuildLines = () => {
+        lines = [];
+        textBlocks.forEach((textElement) => {
+            const preparedText = splitTextToLines(textElement);
+            if (!preparedText) return;
+            lines.push(...preparedText.querySelectorAll('.text-line'));
+        });
+        lastProgressKey = -1;
+        return lines.length > 0;
+    };
 
-        chars.forEach((char, index) => {
-            char.style.color = index < filledCount ? fillColor : baseColor;
+    if (!rebuildLines()) return;
+
+    const paintLines = (filledFloat) => {
+        const progressKey = Math.round(filledFloat * 1000);
+        if (progressKey === lastProgressKey) return;
+        lastProgressKey = progressKey;
+
+        lines.forEach((line, index) => {
+            const local = gsap.utils.clamp(0, 1, filledFloat - index);
+            const r = Math.round(baseRGB[0] + (fillRGB[0] - baseRGB[0]) * local);
+            const g = Math.round(baseRGB[1] + (fillRGB[1] - baseRGB[1]) * local);
+            const b = Math.round(baseRGB[2] + (fillRGB[2] - baseRGB[2]) * local);
+            line.style.color = `rgb(${r}, ${g}, ${b})`;
         });
     };
 
-    paintChars(0);
+    paintLines(0);
 
     ScrollTrigger.create({
         trigger: section,
         start: 'center center',
         end: () => {
-            const dynamicDistance = chars.length * 14;
+            const dynamicDistance = lines.length * 220;
             return `+=${Math.max(window.innerHeight * 1.15, dynamicDistance)}`;
         },
         scrub: true,
@@ -111,9 +154,13 @@ function initDescriptionColorFilling() {
         anticipatePin: 1,
         refreshPriority: -20,
         invalidateOnRefresh: true,
+        onRefreshInit: () => {
+            rebuildLines();
+            paintLines(0);
+        },
         onUpdate: (self) => {
-            const filledCount = Math.round(self.progress * chars.length);
-            paintChars(filledCount);
+            const filledFloat = self.progress * lines.length;
+            paintLines(filledFloat);
         }
     });
 }
