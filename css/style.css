@@ -756,7 +756,8 @@ body {
     height: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 34vh 32vh 34vh;
+    /* Важно: vh + gap давали высоту > 100vh и ломали геометрию анимации */
+    grid-template-rows: 34fr 32fr 34fr;
     gap: 0.75rem;
     transform-origin: center center;
     z-index: 3;

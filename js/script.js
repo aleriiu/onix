@@ -513,7 +513,7 @@ function splitTextToChars(target) {
 }
 
 function setupColorFillingTextSections() {
-    const sections = document.querySelectorAll(".color-filling-text-container");
+    const sections = document.querySelectorAll(".welcome.color-filling-text-container");
 
     sections.forEach((section) => {
         const textElement = section.querySelector(".color-filling-text");
@@ -561,41 +561,61 @@ function setupColorFillingTextSections() {
 }
 
 setupColorFillingTextSections();
-ScrollTrigger.refresh();
 
-splitTextToChars(".description-text");
-splitTextToChars(".description-text-italic");
+function initDescriptionColorFilling() {
+    const section = document.querySelector(".description.color-filling-text-container");
+    if (!section) return;
 
-const descriptionTl = gsap.timeline({
-    scrollTrigger: {
-        trigger: ".description",
-        start: "top 70%",
-        toggleActions: "play none none reverse"
-    }
-});
+    const textBlocks = Array.from(section.querySelectorAll(".color-filling-text"));
+    if (!textBlocks.length) return;
 
-descriptionTl
-    .fromTo(
-        ".description-text .text-char",
-        { color: "#B2B2B2" },
-        {
-            color: "#0E3A61",
-            stagger: 0.018,
-            ease: "power2.out",
-            duration: 0.6
-        }
-    )
-    .fromTo(
-        ".description-text-italic .text-char",
-        { color: "#B2B2B2" },
-        {
-            color: "#0E3A61",
-            stagger: 0.018,
-            ease: "power2.out",
-            duration: 0.6
+    const chars = [];
+    textBlocks.forEach((textElement) => {
+        const preparedText = splitTextToChars(textElement);
+        if (!preparedText) return;
+        chars.push(...preparedText.querySelectorAll(".text-char"));
+    });
+    if (!chars.length) return;
+
+    const baseColor = "var(--color-filling-base, #B2B2B2)";
+    const fillColor = "var(--color-filling-fill, #0E3A61)";
+    let lastFilledCount = -1;
+
+    const paintChars = (filledCount) => {
+        if (filledCount === lastFilledCount) return;
+        lastFilledCount = filledCount;
+
+        chars.forEach((char, index) => {
+            char.style.color = index < filledCount ? fillColor : baseColor;
+        });
+    };
+
+    paintChars(0);
+
+    ScrollTrigger.create({
+        trigger: section,
+        start: "center center",
+        end: () => {
+            const dynamicDistance = chars.length * 14;
+            return `+=${Math.max(window.innerHeight * 1.15, dynamicDistance)}`;
         },
-        "+=0.15" // пауза после первой анимации
-    );
+        scrub: true,
+        pin: true,
+        anticipatePin: 1,
+        refreshPriority: -20,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+            const filledCount = Math.round(self.progress * chars.length);
+            paintChars(filledCount);
+        }
+    });
+}
+
+window.addEventListener("load", () => {
+    initDescriptionColorFilling();
+    ScrollTrigger.sort();
+    ScrollTrigger.refresh();
+});
 
 /***** end text change color *****/
 
