@@ -5,8 +5,20 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .model-tech__grid {
-        grid-template-columns: 1fr;
+    .model-overview {
+        padding: 56px 28px 64px;
+    }
+
+    .model-overview__inner {
+        gap: 36px;
+    }
+
+    .model-overview__label {
+        font-size: 15px;
+    }
+
+    .model-overview__text {
+        font-size: 18px;
     }
 
     .model-gallery__grid {
@@ -15,6 +27,77 @@
 }
 
 @media (max-width: 768px) {
+    .model-overview {
+        padding: 44px 20px 54px;
+    }
+
+    .model-overview__inner {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .model-overview__specs {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    .model-overview__specs-viewport {
+        height: auto;
+        overflow: visible;
+        cursor: default;
+    }
+
+    .model-overview__specs-track {
+        gap: 18px;
+    }
+
+    .model-overview__media {
+        flex: 0 0 132px;
+        position: static;
+    }
+
+    .model-overview__specs-list {
+        gap: 18px;
+    }
+
+    .model-overview__value {
+        font-size: clamp(1.7rem, 8.2vw, 2.4rem);
+    }
+
+    .model-overview__desc {
+        max-width: none;
+        gap: 16px;
+        position: static;
+    }
+
+    .model-overview__text {
+        font-size: 17px;
+        line-height: 1.28;
+    }
+
+    .model-overview__media-img {
+        width: 132px;
+        height: 132px;
+        object-fit: cover;
+    }
+
+    .model-gallery {
+        min-height: clamp(360px, 80vw, 620px);
+    }
+
+    .model-gallery__toggle {
+        font-size: clamp(1rem, 4.6vw, 1.45rem);
+        padding: 10px 14px;
+        gap: 8px;
+    }
+
+    .model-gallery__back {
+        top: 12px;
+        right: 12px;
+        font-size: clamp(1rem, 4vw, 1.35rem);
+        padding: 10px 12px;
+    }
+
     .model-deck-plan {
         padding: 48px 20px 56px;
     }

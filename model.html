@@ -146,13 +146,34 @@
                 </div>
             </div>
         </section>
-        <section class="model-gallery">
-            <img class="model-gallery__img" src="./images/model-img1-card.png" alt="Интерьер 12X Cruiser">
-            <img class="model-gallery__img" src="./images/model-img2-card.png" alt="Палуба 12X Cruiser">
+        <section class="model-gallery" data-model-gallery>
+            <article class="model-gallery__panel" data-gallery-panel="exterior">
+                <img class="model-gallery__img" src="./images/model-img2-card.png" alt="Экстерьер 12X Cruiser">
+                <button class="model-gallery__toggle" type="button" data-gallery-open="exterior" aria-label="Открыть экстерьер">
+                    Экстерьер
+                    <img class="model-gallery__toggle-plus" src="./images/plus-gallery.png" alt="" aria-hidden="true">
+                </button>
+            </article>
+
+            <article class="model-gallery__panel" data-gallery-panel="interior">
+                <img class="model-gallery__img" src="./images/model-img1-card.png" alt="Интерьер 12X Cruiser">
+                <button class="model-gallery__toggle" type="button" data-gallery-open="interior" aria-label="Открыть интерьер">
+                    Интерьер
+                    <img class="model-gallery__toggle-plus" src="./images/plus-gallery.png" alt="" aria-hidden="true">
+                </button>
+            </article>
+
+            <div class="model-gallery__viewer" data-gallery-viewer hidden>
+                <button class="model-gallery__back" type="button" data-gallery-back aria-label="Вернуться в галерею">
+                    Вернуться
+                    <img class="model-gallery__back-arrow" src="./images/right-arrow-gallery.png" alt="arrow" aria-hidden="true">
+                </button>
+                <div class="model-gallery__scroll" data-gallery-scroll data-lenis-prevent></div>
+            </div>
         </section>
-        <section class="description">
+        <section class="description color-filling-text-container">
             <p class="description-text-yellow">12X Cruixer</p>
-            <p class="description-text">ONIX 12X — пространство для жизни на воде.
+            <p class="description-text color-filling-text">ONIX 12X — пространство для жизни на воде.
                 Три каюты, четыре спальных места и два гальюна создают комфорт для длительных маршрутов. Стабильный ход,
                 автономность и продуманная планировка позволяют не спешить и оставаться там, где хочется дольше.</p>
         </section>
@@ -225,24 +246,80 @@
                 </div>
             </div>
         </section>
-        <section class="model-tech" aria-labelledby="model-tech-title">
-            <h2 id="model-tech-title" class="model-tech__title">Технические особенности</h2>
-            <div class="model-tech__grid">
-                <div class="model-tech__col model-tech__col--visual">
-                    <img class="model-tech__img" src="./images/img-card4.png" alt="Фрагмент конструкции">
+        <section class="model-overview" aria-labelledby="model-overview-title">
+            <h2 id="model-overview-title" class="visually-hidden">Основные характеристики и описание</h2>
+            <div class="model-overview__inner">
+                <div class="model-overview__specs" data-overview-specs>
+                    <div class="model-overview__specs-viewport" data-overview-specs-viewport data-lenis-prevent>
+                        <div class="model-overview__specs-track" data-overview-specs-track>
+                            <div class="model-overview__media">
+                                <img class="model-overview__media-img" src="./images/img-scroll.png" alt="Фрагмент оборудования 12X">
+                                <img class="model-overview__media-img model-overview__media-img--secondary" src="./images/img-scroll.png" alt="Вид сверху на 12X">
+                            </div>
+
+                            <div class="model-overview__specs-list">
+                                <div class="model-overview__spec">
+                                    <p class="model-overview__label">Общая длина (без двигателя)</p>
+                                    <p class="model-overview__value">11,9 м</p>
+                                </div>
+                                <div class="model-overview__spec">
+                                    <p class="model-overview__label">Ширина</p>
+                                    <p class="model-overview__value">4 м</p>
+                                </div>
+                                <div class="model-overview__spec">
+                                    <p class="model-overview__label">Осадка</p>
+                                    <p class="model-overview__value">0,45 м ?</p>
+                                </div>
+                                <div class="model-overview__spec">
+                                    <p class="model-overview__label">Вес (без двигателя)</p>
+                                    <p class="model-overview__value">2090 кг ?</p>
+                                </div>
+                                <div class="model-overview__spec">
+                                    <p class="model-overview__label">Пассажировместимость с-класс</p>
+                                    <p class="model-overview__value">12 человек</p>
+                                </div>
+                                <div class="model-overview__spec">
+                                    <p class="model-overview__label">Спальные места</p>
+                                    <p class="model-overview__value">6 человека</p>
+                                </div>
+                                <div class="model-overview__spec">
+                                    <p class="model-overview__label">Тип устанавливаемого двигателя</p>
+                                    <p class="model-overview__value">Подвесной</p>
+                                </div>
+                                <div class="model-overview__spec">
+                                    <p class="model-overview__label">Корпус</p>
+                                    <p class="model-overview__value">Алюминий Н5083-111</p>
+                                </div>
+                                <div class="model-overview__spec">
+                                    <p class="model-overview__label">Классификация</p>
+                                    <p class="model-overview__value">В - прибрежный</p>
+                                </div>
+                                <div class="model-overview__spec">
+                                    <p class="model-overview__label">Максимальная скорость</p>
+                                    <p class="model-overview__value">120 км/ч</p>
+                                </div>
+                                <div class="model-overview__spec">
+                                    <p class="model-overview__label">Двигатель</p>
+                                    <p class="model-overview__value">600-1200 л.с.</p>
+                                </div>
+                                <div class="model-overview__spec">
+                                    <p class="model-overview__label">Топливный бак</p>
+                                    <p class="model-overview__value">1500 л</p>
+                                </div>
+                                <div class="model-overview__spec">
+                                    <p class="model-overview__label">Угол на транце</p>
+                                    <p class="model-overview__value">20 градусов</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="model-tech__col model-tech__col--list">
-                    <ul class="model-tech__list">
-                        <li>Алюминиевый корпус и усиленная рама</li>
-                        <li>Планировка с тремя каютами и двумя гальюнами</li>
-                        <li>Системы освещения и климат-контроля</li>
-                        <li>Продуманное хранение и эргономика палубы</li>
-                    </ul>
-                </div>
-                <div class="model-tech__col model-tech__col--text">
-                    <p class="model-tech__text">Конструкция и оснащение согласованы для длительных переходов:
-                        устойчивость
-                        на волнении, предсказуемое управление и высокий запас автономности.</p>
+
+                <div class="model-overview__desc">
+                    <p class="model-overview__text">Представляем абсолютно новый флагман ONIX 12X — воплощение передовых технологий, элегантного дизайна и непревзойденного комфорта. Этот уникальный катер устанавливает новые стандарты роскошного отдыха, предлагая инновационные решения для самых взыскательных путешественников.</p>
+                    <p class="model-overview__text">На борту вас ждут три просторные каюты с восемью спальными местами и два гальюна, обеспечивающие удобство для вашей семьи и гостей. Система анти-качки гарантирует плавное движение, а современная климатическая система с генератором создаёт идеальный микроклимат в любую погоду.</p>
+                    <p class="model-overview__text">Эргономичный дизайн, стильные интерьеры и продуманная планировка создают атмосферу уюта и уединения, где любители активного отдыха предусмотрели место для гидроцикла, открывающее безграничные возможности для развлечений на воде.</p>
+                    <p class="model-overview__text">Отправляйтесь в путешествие с ONIX 12X и наслаждайтесь каждым мгновением на воде!</p>
                 </div>
             </div>
         </section>

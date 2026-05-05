@@ -48,8 +48,8 @@ if (lenis) {
     gsap.ticker.lagSmoothing(0);
 }
 
-function splitTextToChars(selector) {
-    const el = document.querySelector(selector);
+function splitTextToChars(target) {
+    const el = typeof target === 'string' ? document.querySelector(target) : target;
     if (!el) return null;
     if (el.dataset.splitted === 'true') return el;
 
@@ -69,46 +69,53 @@ function splitTextToChars(selector) {
     return el;
 }
 
-function initDescriptionTextAnimation() {
-    const descSection = document.querySelector('.description');
-    if (!descSection) return;
+function initDescriptionColorFilling() {
+    const section = document.querySelector('.description.color-filling-text-container');
+    if (!section) return;
 
-    splitTextToChars('.description-text');
-    splitTextToChars('.description-text-italic');
+    const textBlocks = Array.from(section.querySelectorAll('.color-filling-text'));
+    if (!textBlocks.length) return;
 
-    const descriptionTl = gsap.timeline({
-        scrollTrigger: {
-            trigger: '.description',
-            start: 'top 70%',
-            toggleActions: 'play none none reverse'
+    const chars = [];
+    textBlocks.forEach((textElement) => {
+        const preparedText = splitTextToChars(textElement);
+        if (!preparedText) return;
+        chars.push(...preparedText.querySelectorAll('.text-char'));
+    });
+    if (!chars.length) return;
+
+    const baseColor = 'var(--color-filling-base, #B2B2B2)';
+    const fillColor = 'var(--color-filling-fill, #0E3A61)';
+    let lastFilledCount = -1;
+
+    const paintChars = (filledCount) => {
+        if (filledCount === lastFilledCount) return;
+        lastFilledCount = filledCount;
+
+        chars.forEach((char, index) => {
+            char.style.color = index < filledCount ? fillColor : baseColor;
+        });
+    };
+
+    paintChars(0);
+
+    ScrollTrigger.create({
+        trigger: section,
+        start: 'center center',
+        end: () => {
+            const dynamicDistance = chars.length * 14;
+            return `+=${Math.max(window.innerHeight * 1.15, dynamicDistance)}`;
+        },
+        scrub: true,
+        pin: true,
+        anticipatePin: 1,
+        refreshPriority: -20,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+            const filledCount = Math.round(self.progress * chars.length);
+            paintChars(filledCount);
         }
     });
-
-    descriptionTl.fromTo(
-        '.description-text .text-char',
-        { color: '#B2B2B2' },
-        {
-            color: '#0E3A61',
-            stagger: 0.018,
-            ease: 'power2.out',
-            duration: 0.6
-        }
-    );
-
-    const italicChars = document.querySelectorAll('.description-text-italic .text-char');
-    if (italicChars.length) {
-        descriptionTl.fromTo(
-            '.description-text-italic .text-char',
-            { color: '#B2B2B2' },
-            {
-                color: '#0E3A61',
-                stagger: 0.018,
-                ease: 'power2.out',
-                duration: 0.6
-            },
-            '+=0.15'
-        );
-    }
 }
 
 /** Слайдер tech-карточек (из script.js) */
@@ -449,7 +456,186 @@ function initModelVideoPlay() {
     });
 }
 
-initDescriptionTextAnimation();
+function initModelGallery() {
+    const gallery = document.querySelector('[data-model-gallery]');
+    if (!gallery) return;
+
+    const panels = Array.from(gallery.querySelectorAll('[data-gallery-panel]'));
+    const openButtons = Array.from(gallery.querySelectorAll('[data-gallery-open]'));
+    const viewer = gallery.querySelector('[data-gallery-viewer]');
+    const scroll = gallery.querySelector('[data-gallery-scroll]');
+    const backBtn = gallery.querySelector('[data-gallery-back]');
+
+    if (!panels.length || !viewer || !scroll || !backBtn) return;
+
+    const galleryImages = {
+        exterior: [
+            './images/model-img2-card.png',
+            './images/hero-model.png',
+            './images/boat12x.png',
+            './images/video-model1.png',
+            './images/plan-img1.png',
+            './images/plan-img2.png'
+        ],
+        interior: [
+            './images/model-img1-card.png',
+            './images/card-12x-img1.png',
+            './images/model-card-img2.png',
+            './images/plan-img3.png',
+            './images/modal-img1.png',
+            './images/modal-img2.png',
+            './images/modal-img3.png'
+        ]
+    };
+
+    let activeType = null;
+
+    const renderDetails = (type) => {
+        const images = galleryImages[type] || [];
+        scroll.innerHTML = images
+            .map(
+                (src, index) =>
+                    `<img class="model-gallery__detail-img" src="${src}" alt="${type === 'exterior' ? 'Экстерьер' : 'Интерьер'} ${index + 1}">`
+            )
+            .join('');
+        scroll.scrollTop = 0;
+    };
+
+    const setButtonStates = (type) => {
+        openButtons.forEach((btn) => {
+            const current = btn.getAttribute('data-gallery-open');
+            btn.classList.toggle('is-active', current === type);
+        });
+    };
+
+    const openView = (type) => {
+        activeType = type;
+        setButtonStates(type);
+        renderDetails(type);
+        viewer.hidden = false;
+        backBtn.innerHTML =
+            type === 'exterior'
+                ? 'Вернуться <img class="model-gallery__back-arrow" src="./images/right-arrow-gallery.png" alt="" aria-hidden="true">'
+                : '<img class="model-gallery__back-arrow" src="./images/left-arrow-gallery.png" alt="" aria-hidden="true"> Вернуться';
+        gallery.classList.remove('is-viewing--exterior', 'is-viewing--interior');
+        gallery.classList.add(type === 'exterior' ? 'is-viewing--exterior' : 'is-viewing--interior');
+
+        gsap.fromTo(
+            viewer,
+            { autoAlpha: 0 },
+            { autoAlpha: 1, duration: 0.28, ease: 'power2.out' }
+        );
+    };
+
+    const closeView = () => {
+        activeType = null;
+        setButtonStates(null);
+        gsap.to(viewer, {
+            autoAlpha: 0,
+            duration: 0.22,
+            ease: 'power2.out',
+            onComplete: () => {
+                viewer.hidden = true;
+                gallery.classList.remove('is-viewing--exterior', 'is-viewing--interior');
+                scroll.innerHTML = '';
+                gsap.set(viewer, { clearProps: 'all' });
+            }
+        });
+    };
+
+    panels.forEach((panel) => {
+        const image = panel.querySelector('.model-gallery__img');
+        if (!image) return;
+
+        panel.addEventListener('mouseenter', () => {
+            gsap.to(image, { scale: 1.09, duration: 1.6, ease: 'sine.out', overwrite: 'auto' });
+        });
+
+        panel.addEventListener('mouseleave', () => {
+            gsap.to(image, { scale: 1, duration: 1.4, ease: 'sine.out', overwrite: 'auto' });
+        });
+    });
+
+    openButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const type = btn.getAttribute('data-gallery-open');
+            if (!type) return;
+
+            if (activeType === type && !viewer.hidden) return;
+            openView(type);
+        });
+    });
+
+    backBtn.addEventListener('click', closeView);
+}
+
+function initOverviewSpecsScroll() {
+    const root = document.querySelector('[data-overview-specs]');
+    const viewport = root?.querySelector('[data-overview-specs-viewport]');
+    const track = root?.querySelector('[data-overview-specs-track]');
+    if (!root || !viewport || !track) return;
+
+    let y = 0;
+    let targetY = 0;
+
+    const getMinY = () => Math.min(0, viewport.clientHeight - track.scrollHeight);
+
+    const yTo =
+        typeof gsap.quickTo === 'function'
+            ? gsap.quickTo(track, 'y', {
+                  duration: 0.9,
+                  ease: 'power3.out'
+              })
+            : (value) => {
+                  gsap.to(track, {
+                      y: value,
+                      duration: 0.9,
+                      ease: 'power3.out',
+                      overwrite: 'auto'
+                  });
+              };
+
+    const applyY = (nextY, animate = true) => {
+        const minY = getMinY();
+        targetY = gsap.utils.clamp(minY, 0, nextY);
+        y = targetY;
+        if (animate) {
+            yTo(targetY);
+        } else {
+            gsap.set(track, { y: targetY });
+        }
+    };
+
+    const sync = () => {
+        applyY(y, false);
+    };
+
+    sync();
+
+    viewport.addEventListener(
+        'wheel',
+        (e) => {
+            e.preventDefault();
+
+            const minY = getMinY();
+            if (minY === 0) return;
+
+            const step = gsap.utils.clamp(-110, 110, e.deltaY) * 0.86;
+            applyY(targetY - step, true);
+        },
+        { passive: false }
+    );
+
+    window.addEventListener('resize', sync);
+    track.querySelectorAll('img').forEach((img) => {
+        if (img.complete) return;
+        img.addEventListener('load', sync, { once: true });
+    });
+}
+
+initDescriptionColorFilling();
+initModelGallery();
+initOverviewSpecsScroll();
 initTechCardSliders();
 initEquipmentTabs();
 initDeckPlanSwitcher();
@@ -618,6 +804,11 @@ function initOtherModelsHorizontalScroll() {
 }
 
 initOtherModelsHorizontalScroll();
+
+window.addEventListener('load', () => {
+    ScrollTrigger.sort();
+    ScrollTrigger.refresh();
+});
 
 document.querySelector('.hero-model__cta')?.addEventListener('click', () => {
     const target = document.querySelector('.model-video');
