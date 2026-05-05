@@ -250,7 +250,7 @@
             <h2 id="model-overview-title" class="visually-hidden">Основные характеристики и описание</h2>
             <div class="model-overview__inner">
                 <div class="model-overview__specs" data-overview-specs>
-                    <div class="model-overview__specs-viewport" data-overview-specs-viewport data-lenis-prevent>
+                    <div class="model-overview__specs-viewport" data-overview-specs-viewport>
                         <div class="model-overview__specs-track" data-overview-specs-track>
                             <div class="model-overview__media">
                                 <img class="model-overview__media-img" src="./images/img-scroll.png" alt="Фрагмент оборудования 12X">
@@ -314,7 +314,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="model-overview__desc">
                     <p class="model-overview__text">Представляем абсолютно новый флагман ONIX 12X — воплощение передовых технологий, элегантного дизайна и непревзойденного комфорта. Этот уникальный катер устанавливает новые стандарты роскошного отдыха, предлагая инновационные решения для самых взыскательных путешественников.</p>
                     <p class="model-overview__text">На борту вас ждут три просторные каюты с восемью спальными местами и два гальюна, обеспечивающие удобство для вашей семьи и гостей. Система анти-качки гарантирует плавное движение, а современная климатическая система с генератором создаёт идеальный микроклимат в любую погоду.</p>
@@ -323,37 +322,35 @@
                 </div>
             </div>
         </section>
-        <section class="model-deck-plan" aria-labelledby="deck-plan-title">
-            <h2 id="deck-plan-title" class="model-deck-plan__title visually-hidden">Планировка</h2>
-            <div class="model-deck-plan__inner" data-deck-plan>
-                <div class="model-deck-plan__tabs" role="tablist" aria-label="Вариант отображения">
+        <section class="model-deck-plan" aria-labelledby="deck-plan-title" data-deck-plan>
+            <h2 id="deck-plan-title" class="visually-hidden">Планировка</h2>
+            <div class="model-deck-plan__tabs" role="tablist" aria-label="Вариант отображения">
                     <button class="model-deck-plan__tab is-active" type="button" role="tab" aria-selected="true"
                         data-deck-tab data-index="0"
-                        data-src="./images/plan-img1.png"
+                        data-src="./images/12x-scheme-1.webp"
                         data-alt="Планировка: интерьер"><span class="model-deck-plan__tab-label">Интерьер</span></button>
                     <button class="model-deck-plan__tab" type="button" role="tab" aria-selected="false" data-deck-tab
                         data-index="1"
-                        data-src="./images/plan-img2.png"
+                        data-src="./images/12x-scheme-2.webp"
                         data-alt="Планировка: каюты"><span
                             class="model-deck-plan__tab-label">Каюты</span></button>
                     <button class="model-deck-plan__tab" type="button" role="tab" aria-selected="false" data-deck-tab
                         data-index="2"
-                        data-src="./images/plan-img3.png"
+                        data-src="./images/12x-scheme-3.webp"
                         data-alt="Планировка: вид сбоку"><span
                             class="model-deck-plan__tab-label">Вид&nbsp;сбоку</span></button>
-                </div>
+            </div>
 
-                <div class="model-deck-plan__canvas">
-                    <img class="model-deck-plan__img"
-                        src="./images/plan-img1.png"
-                        alt="Планировка: интерьер" data-deck-image>
-                </div>
+            <div class="model-deck-plan__canvas">
+                <img class="model-deck-plan__img"
+                    src="./images/12x-scheme-1.webp"
+                    alt="Планировка: интерьер" data-deck-image>
+            </div>
 
-                <div class="model-deck-plan__indicator" aria-hidden="true">
-                    <span class="model-deck-plan__indicator-item is-active" data-deck-indicator="0"></span>
-                    <span class="model-deck-plan__indicator-item" data-deck-indicator="1"></span>
-                    <span class="model-deck-plan__indicator-item" data-deck-indicator="2"></span>
-                </div>
+            <div class="model-deck-plan__indicator" aria-hidden="true">
+                <span class="model-deck-plan__indicator-item is-active" data-deck-indicator="0"></span>
+                <span class="model-deck-plan__indicator-item" data-deck-indicator="1"></span>
+                <span class="model-deck-plan__indicator-item" data-deck-indicator="2"></span>
             </div>
         </section>
         <section class="model-equipment" aria-labelledby="equipment-tabs-label">

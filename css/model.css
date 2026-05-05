@@ -278,26 +278,31 @@
 /* Блок характеристик и описания */
 .model-overview {
     background: #EFEFED;
-    padding: 172px 40px 86px;
+    padding: 120px 40px 80px 40px;
+    margin: 0 auto;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .model-overview__inner {
-    max-width: 1280px;
-    margin: 0 auto;
     display: flex;
-    align-items: flex-start;
+    align-items: stretch;
     justify-content: space-between;
-    gap: 70px;
+    gap: 36px;
+    height: 100%;
+    min-height: 0;
 }
 
 .model-overview__specs {
-    flex: 0 0 33%;
+    flex: 1 1 48%;
     min-width: 0;
+    height: 100%;
+    min-height: 0;
 }
 
 .model-overview__specs-viewport {
     position: relative;
-    height: min(80vh, 940px);
+    height: 100%;
     overflow: hidden;
     cursor: ns-resize;
 }
@@ -305,12 +310,12 @@
 .model-overview__specs-track {
     display: flex;
     align-items: flex-start;
-    gap: 28px;
+    justify-content: space-between;
     will-change: transform;
 }
 
 .model-overview__media {
-    flex: 0 0 240px;
+    flex: 1 1 34%;
     display: flex;
     flex-direction: column;
     gap: 56px;
@@ -326,8 +331,7 @@
 }
 
 .model-overview__specs-list {
-    flex: 1 1 auto;
-    max-width: 270px;
+    flex: 1 1 50%;
     display: flex;
     flex-direction: column;
     gap: 34px;
@@ -357,12 +361,13 @@
 }
 
 .model-overview__desc {
-    flex: 1 1 auto;
+    flex: 1 1 48%;
     max-width: 662px;
     display: flex;
     flex-direction: column;
     gap: 20px;
     position: relative;
+    min-height: 0;
 }
 
 .model-overview__text {
@@ -375,26 +380,15 @@
 
 /* План палубы */
 .model-deck-plan {
-    padding: 68px 40px 74px;
+    padding: 120px 40px;
     background: #FFFFFF;
-}
-
-.model-deck-plan__title {
-    margin: 0;
-}
-
-.model-deck-plan__inner {
-    max-width: 1520px;
-    margin: 0 auto;
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: space-between;
     gap: 2.25rem;
 }
 
 .model-deck-plan__tabs {
-    flex: 0 0 206px;
     display: flex;
     flex-direction: column;
     gap: 22px;
@@ -405,8 +399,6 @@
     border: none;
     background: transparent;
     text-align: left;
-    padding: 0;
-    margin: 0;
     font-size: 20px;
     font-weight: 400;
     line-height: 1.08;
@@ -414,6 +406,10 @@
     cursor: pointer;
     transition: color 0.22s ease;
     padding-bottom: 16px;
+}
+
+.model-deck-plan__tab:hover span {
+    color: #E9CE74;
 }
 
 .model-deck-plan__tab-label {
@@ -429,7 +425,8 @@
 }
 
 .model-deck-plan__canvas {
-    flex: 1 1 auto;
+    padding-right: 4%;
+    width: 66%;
     min-width: 0;
     display: flex;
     justify-content: center;
@@ -437,12 +434,13 @@
 }
 
 .model-deck-plan__img {
-    display: block;
     width: 100%;
-    min-width: 906px;
-    max-width: 1180px;
-    margin: 0 auto;
-    height: auto;
+    opacity: 1;
+    transition: opacity 0.32s ease;
+}
+
+.model-deck-plan__img.is-switching {
+    opacity: 0;
 }
 
 .model-deck-plan__indicator {
@@ -666,7 +664,6 @@
 }
 
 .model-road__inner {
-    max-width: 1230px;
     margin: 0 auto;
     height: 100%;
     padding-top: 120px;
@@ -705,7 +702,8 @@
     left: 58px;
     right: 58px;
     height: 1px;
-    background: #0e3a61;
+    background: rgba(178, 178, 178, 0);
+    background: linear-gradient(90deg, rgba(178, 178, 178, 0) 0%, rgba(14, 58, 97, 1) 40%, rgba(14, 58, 97, 1) 60%, rgba(178, 178, 178, 0) 100%);
     transform-origin: left center;
 }
 
@@ -719,11 +717,23 @@
 }
 
 .model-road__item {
-    position: relative;
     flex: 1 1 0;
     min-width: 0;
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 20px
+}
+.model-road__item:nth-child(odd) {
+    transform: translateY(-38%);
+   
+    flex-direction: column-reverse;
+}
+.model-road__item:nth-child(even) {
+    transform: translateY(39%);
+    flex-direction: column;
+  
+    
 }
 
 .model-road__dot {
@@ -737,19 +747,12 @@
 }
 
 .model-road__content {
-    position: absolute;
-    width: min(230px, 100%);
-    left: 50%;
-    transform: translateX(-50%);
+    width: 260px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.model-road__item--top .model-road__content {
-    bottom: calc(100% + 22px);
-}
-
-.model-road__item--bottom .model-road__content {
-    top: calc(100% + 20px);
-}
 
 .model-road__step-title {
     margin: 0;
@@ -763,9 +766,9 @@
 .model-road__step-text {
     margin: 5px 0 0;
     color: rgba(0, 0, 0, 0.3);
-    font-size: 1.05rem;
+    font-size: 1rem;
     line-height: 1.12;
-    max-width: 220px;
+    text-align: center;
 }
 
 /* Другие модели */

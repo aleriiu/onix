@@ -102,7 +102,7 @@
         padding: 48px 20px 56px;
     }
 
-    .model-deck-plan__inner {
+    .model-deck-plan {
         gap: 0.75rem;
     }
 
@@ -245,7 +245,7 @@
         padding: 40px 16px 52px;
     }
 
-    .model-deck-plan__inner {
+    .model-deck-plan {
         display: grid;
         grid-template-columns: 1fr auto;
         grid-template-areas:

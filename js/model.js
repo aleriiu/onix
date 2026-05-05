@@ -340,8 +340,26 @@ function initModelAccordions() {
     });
 }
 
+/**
+ * Синхронное скрытие элементов road-timeline до первого рендера (предотвращает FOUC).
+ * Вызывается немедленно при парсинге скрипта — до window.load и до DOMContentLoaded.
+ */
+(function preHideRoadElements() {
+    console.log('[road] 1. preHideRoadElements — синхронно при парсинге скрипта', { readyState: document.readyState, scrollY: window.scrollY });
+    const root = document.querySelector('[data-road-timeline]');
+    if (!root) { console.warn('[road] preHideRoadElements: [data-road-timeline] не найден'); return; }
+    gsap.set(root.querySelector('.model-road__line'),
+        { scaleX: 0 });
+    gsap.set(root.querySelectorAll('[data-road-step] .model-road__dot'),
+        { autoAlpha: 0, scale: 0.5 });
+    gsap.set(root.querySelectorAll('[data-road-step] .model-road__content'),
+        { autoAlpha: 0, y: 18 });
+    console.log('[road] 1. preHideRoadElements — элементы скрыты');
+}());
+
 /** Пошаговая анимация блока «Путь к вашей лодке» */
 function initRoadTimeline() {
+    console.log('[road] 3. initRoadTimeline — старт', { readyState: document.readyState, scrollY: window.scrollY });
     const root = document.querySelector('[data-road-timeline]');
     if (!root) return;
 
@@ -349,40 +367,62 @@ function initRoadTimeline() {
     const steps = Array.from(root.querySelectorAll('[data-road-step]'));
     if (!line || steps.length === 0) return;
 
-    const dots = steps.map((step) => step.querySelector('.model-road__dot')).filter(Boolean);
-    const contents = steps.map((step) => step.querySelector('.model-road__content')).filter(Boolean);
+    const dots     = steps.map((s) => s.querySelector('.model-road__dot')).filter(Boolean);
+    const contents = steps.map((s) => s.querySelector('.model-road__content')).filter(Boolean);
 
-    gsap.set(line, { scaleX: 0 });
-    gsap.set(dots, { autoAlpha: 0, scale: 0.85 });
-    gsap.set(contents, { autoAlpha: 0, y: 12 });
+    // ── Timeline запускается, когда верх блока достигает середины экрана ────────
+    // once: true — анимация играет ровно один раз при входе в зону триггера.
+    // Это исключает ложный play при восстановлении скролла после refresh страницы:
+    // ScrollTrigger с once не проверяет «уже прошли start?» при создании.
+    const roadTriggerStart = root.getBoundingClientRect().top + window.scrollY;
+    console.log('[road] 3. initRoadTimeline — ScrollTrigger создаётся', {
+        'root.top (document)': roadTriggerStart,
+        'start px (top center)': roadTriggerStart - window.innerHeight / 2,
+        scrollY: window.scrollY
+    });
 
     const tl = gsap.timeline({
         scrollTrigger: {
-            trigger: root,
-            start: 'top 75%',
-            toggleActions: 'play none none reverse'
+            trigger:         root,
+            start:           'top center',
+            once:            true,
+            // road находится ниже description (-20) и overview (-30) на странице.
+            // Более низкий refreshPriority = пересчитывается позже, уже после того
+            // как description и overview обновили размеры своих pin-spacer-ов.
+            refreshPriority: -40,
+            onEnter: () => console.log('[road] 4. ScrollTrigger onEnter — анимация запущена', { scrollY: window.scrollY })
         }
     });
 
-    tl.to(line, { scaleX: 1, duration: 0.72, ease: 'power2.out' }).to(
-        dots[0],
-        { autoAlpha: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' },
-        '-=0.18'
-    );
+    // ── Линия вырастает слева направо ──────────────────────────────────────────
+    tl.to(line, {
+        scaleX:   1,
+        duration: 1.4,
+        ease:     'expo.inOut'   // плавное начало и мягкое замедление в конце
+    });
 
-    for (let i = 0; i < steps.length; i += 1) {
-        if (i > 0) {
-            tl.to(
-                dots[i],
-                { autoAlpha: 1, scale: 1, duration: 0.24, ease: 'back.out(2)' },
-                '+=0.14'
-            );
-        } else {
-            tl.to({}, { duration: 0.08 });
-        }
+    // ── Точки и подписи появляются последовательно по ходу линии ───────────────
+    // Каждый шаг: сначала точка (с лёгким пружинным overshooting),
+    // затем — почти одновременно — текстовый блок снизу вверх.
+    steps.forEach((_, i) => {
+        // Задержка после предыдущего шага: первый шаг «приходит» к концу линии,
+        // последующие выдерживают паузу между собой.
+        const offset = i === 0 ? '<0.35' : '+=0.1';
 
-        tl.to(contents[i], { autoAlpha: 1, y: 0, duration: 0.34, ease: 'power2.out' }, '-=0.04');
-    }
+        tl.to(dots[i], {
+            autoAlpha: 1,
+            scale:     1,
+            duration:  0.55,
+            ease:      'back.out(1.4)'   // мягкий пружинный «щелчок»
+        }, offset);
+
+        tl.to(contents[i], {
+            autoAlpha: 1,
+            y:         0,
+            duration:  0.65,
+            ease:      'power3.out'      // плавное торможение текста
+        }, '<0.08');                     // стартует почти одновременно с точкой
+    });
 }
 
 /** Переключение плана палубы: кнопки слева + вертикальный индикатор справа */
@@ -394,6 +434,8 @@ function initDeckPlanSwitcher() {
     const image = root.querySelector('[data-deck-image]');
     const indicators = Array.from(root.querySelectorAll('[data-deck-indicator]'));
     if (!tabs.length || !image) return;
+
+    let imageSwapTimer = null;
 
     const activate = (index) => {
         const next = tabs[index];
@@ -407,21 +449,29 @@ function initDeckPlanSwitcher() {
 
         const src = next.getAttribute('data-src');
         const alt = next.getAttribute('data-alt');
-        const applyImage = () => {
-            if (src) image.setAttribute('src', src);
-            if (alt) image.setAttribute('alt', alt);
-        };
+        if (imageSwapTimer) {
+            window.clearTimeout(imageSwapTimer);
+            imageSwapTimer = null;
+        }
 
-        gsap.killTweensOf(image);
-        gsap.to(image, {
-            autoAlpha: 0,
-            duration: 0.16,
-            ease: 'power1.out',
-            onComplete: () => {
-                applyImage();
-                gsap.to(image, { autoAlpha: 1, duration: 0.24, ease: 'power1.inOut' });
+        image.classList.add('is-switching');
+
+        // Простая схема без гонок:
+        // 1) fade-out через CSS (opacity -> 0)
+        // 2) меняем src/alt
+        // 3) снимаем класс и получаем fade-in (opacity -> 1)
+        imageSwapTimer = window.setTimeout(() => {
+            if (src) {
+                image.setAttribute('src', src);
             }
-        });
+            if (alt) {
+                image.setAttribute('alt', alt);
+            }
+
+            requestAnimationFrame(() => {
+                image.classList.remove('is-switching');
+            });
+        }, 170);
 
         indicators.forEach((item, i) => {
             const active = i === index;
@@ -570,78 +620,177 @@ function initModelGallery() {
 }
 
 function initOverviewSpecsScroll() {
-    const root = document.querySelector('[data-overview-specs]');
-    const viewport = root?.querySelector('[data-overview-specs-viewport]');
-    const track = root?.querySelector('[data-overview-specs-track]');
-    if (!root || !viewport || !track) return;
+    const section = document.querySelector('.model-overview');
+    const specsRoot = section?.querySelector('[data-overview-specs]');
+    const viewport = specsRoot?.querySelector('[data-overview-specs-viewport]');
+    const track = specsRoot?.querySelector('[data-overview-specs-track]');
+    const descCol = section?.querySelector('.model-overview__desc');
+    const mediaCol = track?.querySelector('.model-overview__media');
+    const specsList = track?.querySelector('.model-overview__specs-list');
+    if (!section || !specsRoot || !viewport || !track || !descCol || !mediaCol || !specsList) return;
 
-    let y = 0;
-    let targetY = 0;
+    // Важно: дистанцию считаем по колонке характеристик, а не по общему flex-треку.
+    // Иначе pin может закончиться раньше, чем список дойдет до конца.
+    const getScrollableDistance = () => Math.max(0, specsList.scrollHeight - viewport.clientHeight);
+    const overviewImages = Array.from(track.querySelectorAll('img'));
+    let inited = false;
 
-    const getMinY = () => Math.min(0, viewport.clientHeight - track.scrollHeight);
+    const setupOverviewPin = () => {
+        console.log('[road] 2. setupOverviewPin — старт', { readyState: document.readyState, scrollY: window.scrollY });
+        if (inited) { console.log('[road] setupOverviewPin — уже инициализирован, пропуск'); return; }
+        inited = true;
 
-    const yTo =
-        typeof gsap.quickTo === 'function'
-            ? gsap.quickTo(track, 'y', {
-                  duration: 0.9,
-                  ease: 'power3.out'
-              })
-            : (value) => {
-                  gsap.to(track, {
-                      y: value,
-                      duration: 0.9,
-                      ease: 'power3.out',
-                      overwrite: 'auto'
-                  });
-              };
+        gsap.set(track, { y: 0 });
 
-    const applyY = (nextY, animate = true) => {
-        const minY = getMinY();
-        targetY = gsap.utils.clamp(minY, 0, nextY);
-        y = targetY;
-        if (animate) {
-            yTo(targetY);
-        } else {
-            gsap.set(track, { y: targetY });
-        }
+        // На мобильных (где layout становится колонкой) pin выключаем, чтобы не было "скачков".
+        const mm = gsap.matchMedia();
+        mm.add('(min-width: 769px)', () => {
+            const mediaImages = Array.from(mediaCol.querySelectorAll('.model-overview__media-img'));
+            const firstImage = mediaImages[0] || null;
+            const secondImage = mediaImages[1] || null;
+            const distance = getScrollableDistance();
+
+            // Если скроллить внутри левой части почти нечего — не пиним секцию.
+            if (distance < 8 || !firstImage || !secondImage) {
+                gsap.set(track, { y: 0 });
+                return () => {};
+            }
+
+            // Точные целевые параметры из ТЗ:
+            // 1) первая картинка стартует так, что ее низ = 120px до низа viewport
+            // 2) вторая стартует на ~300px ниже первой (между картинками)
+            // 3) стоп второй — когда зазор до первой = 30px
+            const START_BOTTOM_OFFSET = 120;
+            const START_GAP = 300;
+            const STOP_GAP = 30;
+            const FIRST_STOP_TOP_OFFSET = 0; // фикс на уровне начала текста (top .model-overview__desc)
+            const SECOND_BOTTOM_SAFE_OFFSET = 24; // чтобы вторая картинка полностью вмещалась
+
+            gsap.set(track, { y: 0 });
+            gsap.set(mediaCol, { y: 0 });
+            gsap.set(specsList, { y: 0 });
+            gsap.set(firstImage, { y: 0 });
+            gsap.set(secondImage, { y: 0 });
+
+            let baseY1 = 0;
+            let baseY2 = 0;
+            let maxShift1 = 0;
+            let maxShift2 = 0;
+            let pinDistance = 0;
+
+            const recalcImageTrajectory = () => {
+                gsap.set(firstImage, { y: 0 });
+                gsap.set(secondImage, { y: 0 });
+
+                const sectionRect = section.getBoundingClientRect();
+                const descRect = descCol.getBoundingClientRect();
+                const firstRect = firstImage.getBoundingClientRect();
+                const secondRect = secondImage.getBoundingClientRect();
+
+                const firstH = firstRect.height;
+                const secondH = secondRect.height;
+                const firstStartTopTarget = sectionRect.bottom - START_BOTTOM_OFFSET - firstH;
+                const firstStopTopByRatio = descRect.top + FIRST_STOP_TOP_OFFSET;
+
+                // Ограничиваем стоп первой так, чтобы вторая (при своем стопе) вмещалась в секцию.
+                // secondStopTop = firstStopTop + firstH + STOP_GAP
+                // secondStopBottom = secondStopTop + secondH <= sectionBottom - safeOffset
+                const firstStopTopMaxForSecondFit =
+                    sectionRect.bottom - SECOND_BOTTOM_SAFE_OFFSET - secondH - firstH - STOP_GAP;
+                const firstStopTopTarget = Math.min(firstStopTopByRatio, firstStopTopMaxForSecondFit);
+
+                const secondStartTopTarget = firstStartTopTarget + firstH + START_GAP;
+                const secondStopTopTarget = firstStopTopTarget + firstH + STOP_GAP;
+
+                baseY1 = firstStartTopTarget - firstRect.top;
+                baseY2 = secondStartTopTarget - secondRect.top;
+
+                maxShift1 = Math.max(0, firstStartTopTarget - firstStopTopTarget);
+                maxShift2 = Math.max(0, secondStartTopTarget - secondStopTopTarget);
+                pinDistance = Math.max(getScrollableDistance(), maxShift1, maxShift2);
+
+                gsap.set(firstImage, { y: baseY1 });
+                gsap.set(secondImage, { y: baseY2 });
+            };
+
+            recalcImageTrajectory();
+
+            const st = ScrollTrigger.create({
+                trigger: section,
+                start: 'top top',
+                end: () => `+=${Math.max(1, pinDistance)}`,
+                scrub: true,
+                pin: true,
+                pinSpacing: true,
+                anticipatePin: 1,
+                refreshPriority: -30,
+                invalidateOnRefresh: true,
+                onRefresh: () => {
+                    recalcImageTrajectory();
+                },
+                onUpdate: (self) => {
+                    const current = pinDistance * self.progress;
+
+                    // Список характеристик уходит до своего конца.
+                    gsap.set(specsList, { y: -Math.min(current, getScrollableDistance()) });
+
+                    // Картинки едут вместе со списком, но каждая фиксируется в своей точке.
+                    gsap.set(firstImage, { y: baseY1 - Math.min(current, maxShift1) });
+                    gsap.set(secondImage, { y: baseY2 - Math.min(current, maxShift2) });
+                }
+            });
+
+            return () => {
+                st.kill();
+            };
+        });
+
+        // Явный fallback для узких экранов.
+        mm.add('(max-width: 768px)', () => {
+            gsap.set(track, { y: 0 });
+            gsap.set(mediaCol, { y: 0 });
+            gsap.set(specsList, { y: 0 });
+            return () => {};
+        });
+
+        const onImgLoad = () => ScrollTrigger.refresh();
+        overviewImages.forEach((img) => {
+            if (img.complete) return;
+            img.addEventListener('load', onImgLoad, { once: true });
+        });
+
+        console.log('[road] 2. setupOverviewPin — ScrollTrigger.refresh() вызван');
+        ScrollTrigger.refresh();
     };
 
-    const sync = () => {
-        applyY(y, false);
-    };
-
-    sync();
-
-    viewport.addEventListener(
-        'wheel',
-        (e) => {
-            e.preventDefault();
-
-            const minY = getMinY();
-            if (minY === 0) return;
-
-            const step = gsap.utils.clamp(-110, 110, e.deltaY) * 0.86;
-            applyY(targetY - step, true);
-        },
-        { passive: false }
-    );
-
-    window.addEventListener('resize', sync);
-    track.querySelectorAll('img').forEach((img) => {
-        if (img.complete) return;
-        img.addEventListener('load', sync, { once: true });
-    });
+    // Инициализируем после полной загрузки страницы, чтобы избежать раннего неверного pin-расчета.
+    if (document.readyState === 'complete') {
+        console.log('[road] initOverviewSpecsScroll: readyState=complete — setupOverviewPin вызван синхронно');
+        setupOverviewPin();
+    } else {
+        console.log('[road] initOverviewSpecsScroll: readyState=' + document.readyState + ' — setupOverviewPin отложен до window.load');
+        window.addEventListener('load', setupOverviewPin, { once: true });
+    }
 }
 
-initDescriptionColorFilling();
-initModelGallery();
-initOverviewSpecsScroll();
-initTechCardSliders();
-initEquipmentTabs();
-initDeckPlanSwitcher();
-initModelAccordions();
-initRoadTimeline();
-initModelVideoPlay();
+const safeInit = (name, initFn) => {
+    try {
+        initFn();
+    } catch (error) {
+        // Не даем одному блоку сломать инициализацию всей страницы.
+        console.error(`[model.js] ${name} init failed`, error);
+    }
+};
+
+safeInit('description-color-filling', initDescriptionColorFilling);
+safeInit('model-gallery', initModelGallery);
+safeInit('overview-specs-scroll', initOverviewSpecsScroll);
+safeInit('tech-card-sliders', initTechCardSliders);
+safeInit('equipment-tabs', initEquipmentTabs);
+safeInit('deck-plan-switcher', initDeckPlanSwitcher);
+safeInit('model-accordions', initModelAccordions);
+// initRoadTimeline вызывается в window.load (см. ниже) — после создания pin-spacer от .model-overview
+safeInit('model-video-play', initModelVideoPlay);
 
 /** «Другие модели»: горизонтальное смещение через GSAP (x), без нативной полосы прокрутки */
 function initOtherModelsHorizontalScroll() {
@@ -803,11 +952,17 @@ function initOtherModelsHorizontalScroll() {
     });
 }
 
-initOtherModelsHorizontalScroll();
+safeInit('other-models-horizontal-scroll', initOtherModelsHorizontalScroll);
 
 window.addEventListener('load', () => {
+    console.log('[road] window.load — старт', { scrollY: window.scrollY });
+    // Инициализируем road-timeline здесь: к этому моменту setupOverviewPin уже добавил
+    // pin-spacer для .model-overview, поэтому ScrollTrigger считает позицию правильно.
+    safeInit('road-timeline', initRoadTimeline);
     ScrollTrigger.sort();
+    console.log('[road] window.load — ScrollTrigger.refresh() вызван');
     ScrollTrigger.refresh();
+    console.log('[road] window.load — завершён');
 });
 
 document.querySelector('.hero-model__cta')?.addEventListener('click', () => {
