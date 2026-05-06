@@ -246,7 +246,7 @@ const boatData = {
     cabin: {
         watermark: "850",
         description: "Комфортная каютная лодка для семейных путешествий и продолжительных маршрутов",
-        image: "./images/лодка 8Х.png",
+        image: "./images/850_side.webp",
         imageAlt: "ONIX 850 Cabin",
         length: "8,5",
         capacity: "8",
@@ -255,7 +255,7 @@ const boatData = {
     day: {
         watermark: "850",
         description: "Открытый, стильный катер для истинных ценителей скорости и ощущений на воде. Его цель — максимум внимания и драйва.",
-        image: "./images/boat850.png",
+        image: "./images/850_day_cruiser_side.webp",
         imageAlt: "ONIX 850 Day Cruiser",
         length: "8,43",
         capacity: "2",
@@ -264,7 +264,7 @@ const boatData = {
     x12: {
         watermark: "12X",
         description: "Представляем абсолютно новый флагман ONIX 12X — воплощение передовых технологий, элегантного дизайна и непревзойдённого комфорта.",
-        image: "./images/boat12x.png",
+        image: "./images/12x_side.webp",
         imageAlt: "ONIX 12X",
         length: "11,9",
         capacity: "12",
@@ -659,8 +659,119 @@ function initDescriptionColorFilling() {
     });
 }
 
+/**
+ * FEEDBACK SVG — увеличение до 90vw + pin по скроллу.
+ * Логика:
+ * 1) Как только секция .feedback входит в экран (top bottom) — стартует анимация.
+ * 2) SVG плавно увеличивается с текущей ширины до 90vw.
+ * 3) SVG остается зафиксированным, пока пользователь не проскроллит половину
+ *    высоты родительской секции .feedback.
+ */
+function initFeedbackSvgScroll() {
+    const container = document.querySelector(".feedback-video-container");
+    const pinWrap = container?.querySelector(".feedback-video-container-svg-pin");
+    const svg = pinWrap?.querySelector(".feedback-video-container-svg");
+    if (!container || !pinWrap || !svg) return;
+
+    // Важно: pin и анимация выполняются на разных элементах.
+    // pinWrap фиксируется, svg внутри масштабируется — это убирает рывки на обратном скролле.
+    gsap.set(pinWrap, {
+        zIndex: 1
+    });
+    gsap.set(svg, {
+        transformOrigin: "50% 50%",
+        scale: 1,
+        zIndex: 1
+    });
+
+    const getTargetScale = () => {
+        // Масштаб до 90% ширины родителя относительно текущей базовой ширины SVG.
+        const baseWidth = pinWrap.getBoundingClientRect().width || 1;
+        const targetWidth = container.clientWidth * 0.96;
+        return Math.max(1, targetWidth / baseWidth);
+    };
+
+    gsap.timeline({
+        scrollTrigger: {
+            trigger: container,
+            // Старт, когда .feedback-video-container полностью виден в окне.
+            start: "bottom bottom",
+            // SVG фиксируется, пока контейнер не прокрутится на 30% своей высоты.
+            end: () => `+=${Math.max(1, container.offsetHeight * 0.35)}`,
+            scrub: 1,
+            pin: pinWrap,
+            pinSpacing: false,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            // Блок ниже уже существующих pinned-секций.
+            // Более низкий приоритет -> пересчет позже -> корректные start/end после spacer-ов.
+            refreshPriority: -35,
+            // Держим слой SVG стабильным: ScrollTrigger может менять inline-стили при pin.
+            onRefreshInit: () => gsap.set(pinWrap, { zIndex: 1 }),
+            onEnter: () => gsap.set(pinWrap, { zIndex: 1 }),
+            onEnterBack: () => gsap.set(pinWrap, { zIndex: 1 }),
+            onLeave: () => gsap.set(pinWrap, { zIndex: 1 }),
+            onLeaveBack: () => gsap.set(pinWrap, { zIndex: 1 })
+        }
+    }).to(svg, {
+        // Увеличиваем через scale (а не width), чтобы избежать горизонтального дрейфа
+        // на обратном скролле при pin/unpin.
+        scale: () => getTargetScale(),
+        ease: "none"
+    });
+}
+
+/**
+ * FEEDBACK FORM — мягкий fade-up по скроллу.
+ * Старт: когда верх form-container доходит до 60% высоты viewport
+ * (то есть примерно 40% блока уже на экране).
+ */
+function initFeedbackFormFadeIn() {
+    const formContainer = document.querySelector(".form-container");
+    if (!formContainer) return;
+    const contentItems = Array.from(formContainer.children);
+    if (!contentItems.length) return;
+
+    // Важно: анимируем только содержимое контейнера (детей),
+    // сам контейнер и его фон остаются неизменными.
+    gsap.set(contentItems, {
+        autoAlpha: 0,
+        y: 60
+    });
+
+    const VISIBLE_RATIO = 0.8;
+    // Формула:
+    // visible = viewportBottom - elementTop
+    // visible = elementHeight * VISIBLE_RATIO
+    // => startScroll = elementTop - (viewportHeight - elementHeight * VISIBLE_RATIO)
+    const getStartAt40PctVisible = () => {
+        const rect = formContainer.getBoundingClientRect();
+        const topInDocument = rect.top + window.scrollY;
+        const startScroll = topInDocument - (window.innerHeight - formContainer.offsetHeight * VISIBLE_RATIO);
+        return Math.max(0, startScroll);
+    };
+
+    gsap.to(contentItems, {
+        autoAlpha: 1,
+        y: -10,
+        duration: 1,
+        ease: "power3.out",
+        stagger: 0.12,
+        scrollTrigger: {
+            trigger: formContainer,
+            start: getStartAt40PctVisible,
+            toggleActions: "play none none reverse",
+            invalidateOnRefresh: true,
+            // Блок расположен ниже основных pin-анимаций выше по странице.
+            refreshPriority: -35
+        }
+    });
+}
+
 window.addEventListener("load", () => {
     initDescriptionColorFilling();
+    initFeedbackSvgScroll();
+    initFeedbackFormFadeIn();
     ScrollTrigger.sort();
     ScrollTrigger.refresh();
 });
