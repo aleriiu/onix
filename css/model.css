@@ -581,7 +581,6 @@
     padding: 1rem 0;
     border: none;
     background: transparent;
-    font-size: 20px;
     font-weight: 400;
     color: #000000;
     cursor: pointer;
@@ -590,9 +589,11 @@
     align-items: center;
     gap: 1rem;
     font-size: 20px;
-    leading-trim: NONE;
     letter-spacing: 0%;
+}
 
+.model-accordion--equipment .model-accordion__trigger {
+    font-size: 1rem;
 }
 
 .model-accordion--equipment .model-accordion__trigger::after {
@@ -760,7 +761,7 @@
 
 .model-road__step-title {
     margin: 0;
-    font-size: clamp(1.8rem, 2.05vw, 2.2rem);
+    font-size: clamp(1.4rem, 2.05vw, 2.2rem);
     font-weight: 500;
     line-height: 1;
     letter-spacing: 0.005em;
