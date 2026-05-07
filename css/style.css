@@ -1453,24 +1453,25 @@ input[type="checkbox"]:focus-visible {
 
 .footer {
     display: flex;
+    flex-direction: column;
     padding: 3.813rem 0 3.25rem 3.25rem;
     gap: 4.5rem;
     background-color: #121212;
     position: relative;
     height: auto;
     width: 100%;
+    height: calc(100vh - 54px);
+    justify-content: space-between;
 }
 
 .footer-container {
     display: flex;
-    flex-direction: column;
-    gap: 4.5rem;
 }
 
 .footer-list {
     display: flex;
-    gap: 2.5rem;
-    justify-content: space-between;
+    gap: 0 3rem;
+    width: 50%;
 }
 
 .footer-list-group {
@@ -1541,7 +1542,8 @@ input[type="checkbox"]:focus-visible {
     display: flex;
     flex-direction: column;
     gap: 0.625rem;
-    width: 62%;
+    width: 50%;
+    padding-right: 1rem;
 }
 
 .footer-contacts-text {
@@ -1602,16 +1604,21 @@ input[type="checkbox"]:focus-visible {
     transform: translateX(-50%);
     /* Высота линии */
 }
-
 .footer-form-news {
     display: flex;
     flex-direction: column;
-    gap: 2.188rem;
-    padding-top: 4.5rem;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.footer-form-news-input {
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
 }
 
 .footer-form-news-header {
-    font-weight: 700;
+    font-weight: 600;
     font-size: 2rem;
     line-height: 110.00000000000001%;
     letter-spacing: 0%;
@@ -1665,7 +1672,9 @@ input[type="checkbox"]:focus-visible {
     display: flex;
     flex-direction: column;
     gap: 192px;
-    padding: 10px 118px 148px 171px;
+    width: 50%;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .footer-form-news-socity-img {
