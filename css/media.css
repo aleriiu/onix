@@ -331,6 +331,10 @@
     .header {
         width: 100%;
         max-width: 100vw;
+        height: auto;
+    }
+    .header.scrolled {
+        height: auto;
     }
 
     .header-container {
@@ -800,14 +804,6 @@
 }
 
 @media (max-width: 380px) {
-    .header {
-        height: auto;
-    }
-
-    .header.scrolled {
-        height: auto;
-    }
-
     .header-container {
         padding: 13px 10px 10px 10px;
         min-width: 0;
