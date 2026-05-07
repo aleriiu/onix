@@ -225,11 +225,6 @@ if (gallerySection && img1Cell && contentCell && mosaicWrap) {
             clipPath: "inset(0% 0% 0% 0%)",
             duration: 0.35, ease: "power2.inOut"
         }, 0.5)
-        // Фон sticky-wrapper темнеет
-        .to(galleryPin, {
-            backgroundColor: "#111",
-            duration:        0.2
-        }, 0.5);
 
     // ── ФАЗА 3: появление текста (t = 0.85 → 1.0) ───────────────────────────
     galleryTl

@@ -9,7 +9,7 @@
     .hero-header {
         font-size: 2.5rem;
         font-size: clamp(2.25rem, 1.5914rem + 3.0108vw, 4rem);
-        
+
     }
 
     .hero-header-text-container {
@@ -40,10 +40,6 @@
     .boat-information {
         padding: 80px 20px;
         gap: 20px;
-    }
-
-    .boat-info-description {
-        max-width: 380px;
     }
 
     .cards-section--tech {
@@ -94,43 +90,62 @@
 
     .welcome {
         padding: 72px 20px;
+        height: 100vh
     }
 
     .welcome-text {
         font-size: clamp(1.2rem, 3.8vw, 1rem);
     }
 
-    .boat-information {
-        flex-direction: column;
-        padding: 64px 20px;
-    }
-
-    .boat-info-description {
-        max-width: none;
-        min-height: auto;
-        gap: 28px;
-    }
-
-    .boat-info-img-container {
-        width: 100%;
-    }
-
     .main-gallery .sticky-wrapper {
         height: 92vh;
     }
 
+    /* card section */
     .cards-section--tech {
-        grid-template-columns: 1fr;
-        padding: 52px 20px 56px;
-        gap: 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
-
-    .cards-section--tech .cards-section-description {
-        gap: 18px;
+    .cards-section {
+        gap: 2rem;
     }
-
-    .tech-slider {
-        overflow: hidden;
+    .cards-section-description {
+        position: relative;
+    }
+    .tech-slider-nav {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+    }
+    .cards-section-description-group {
+        max-width: unset;
+        width: 100%;
+        gap: 0.5rem;
+    }
+    .cards-section-description-header {
+        width: 100%;
+        max-width: unset;
+        font-size: 1.75rem;
+        font-size: clamp(1.5rem, 1.2404rem + 1.1869vw, 2rem);
+        padding-right: 40px;
+    }
+    .cards-section-description-text {
+        font-size: 1rem;
+        width: 100%;
+        max-width: unset;
+    }
+    .cards-section-header {
+        font-size: 1.25rem;
+        font-size: clamp(1.125rem, 0.9303rem + 0.8902vw, 1.5rem);
+    }
+    .cards-section-text {
+        font-size: 0.875rem;
+        font-size: clamp(0.75rem, 0.6154rem + 0.5935vw, 0.875rem);
+    }
+    img.cards-section-img {
+        min-height: 260px !important;
     }
 
     .description {
@@ -174,14 +189,6 @@
         font-size: 2rem;
     }
 
-    .boat-model-btn.active {
-        font-size: 2rem;
-    }
-
-    .boat-info-desc-text-text {
-        font-size: 0.9rem;
-    }
-
     .boat-info-desc-text-btn {
         font-size: 0.9rem;
         padding: 0.9rem 2rem;
@@ -205,10 +212,6 @@
 
     .boat-information-card-text-black {
         font-size: 1.1rem;
-    }
-
-    .cards-section-header, .cards-news-title {
-        font-size: 1.5rem;
     }
 
     .cards-section-text, .cards-news-text {
@@ -246,6 +249,81 @@
     .model-road__step-text {
         font-size: 0.8rem;
     }
+
+    /* boats promo section */
+    .boat-information {
+        flex-direction: column;
+        padding: 64px 20px;
+    }
+    .boat-info-description {
+        max-width: none;
+        min-height: auto;
+        gap: 40px;
+        align-items: center;
+    }
+    .boat-info-img-container {
+        width: 100%;
+    }
+    .boat-information {
+        height: 100vh;
+        justify-content: space-between;
+    }
+    .boat-models-switch {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .boat-model-btn {
+        width: 30%;
+        text-align: center;
+    }
+    .boat-model-btn,
+    .boat-model-btn.active {
+        font-size: 1.25rem; 
+    }
+    .boat-info-desc-text-text {
+        font-size: 0.875rem;
+        text-align: center;
+    }
+    .boat-info-desc-text-btn__desktop {
+        display: none;
+    }
+    .boat-info-desc-text-btn__mobile {
+        display: block;
+        width: 100%;
+    }
+    .boat-information-card-group {
+        justify-content: space-between;
+        gap: unset;
+        width: 100%;
+        padding-bottom: 1rem;
+    }
+    .boat-information-card {
+        gap: 0;
+        width: 33.3%;
+        flex-direction: column;
+        align-items: center;
+    }
+    .boat-information-card-big-text {
+        font-size: 1.75rem;
+    }
+    .boat-information-card-text-gray,
+    .boat-information-card-text-black {
+        font-size: 0.75rem;
+        line-height: 120%;
+    }
+    .boat-information-card-container {
+        align-items: center;
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+    .boat-info-watermark {
+        font-size: 140px;
+        top: 30%;
+        left: 50%;
+        right: unset;
+        transform: translate(-50%, -50%);
+    }
+
 }
 
 @media (max-width: 768px) {
@@ -358,23 +436,8 @@
         min-width: 200px;
     }
 
-    .boat-model-btn {
-        font-size: clamp(1.15rem, 5vw, 1.45rem);
-    }
-
-    .boat-information-card-group {
-        flex-wrap: wrap;
-        gap: 12px;
-        width: 0;
-        justify-content: center;
-    }
-
     .boat-image-stage {
         width: 354px;
-    }
-
-    .boat-info-watermark {
-        font-size: 115px;
     }
 
     .model-road {
@@ -434,10 +497,6 @@
 
     .hero-model__text {
         font-size: 0.8rem;
-    }
-
-    .boat-information-card {
-        min-width: 120px;
     }
 
     .main-gallery .sticky-wrapper {
