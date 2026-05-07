@@ -336,7 +336,15 @@
     .header.scrolled {
         height: auto;
     }
-
+    .header-container {
+        padding: 14px 10px 11px 10px;
+    }
+    .header-container p {
+        line-height: 100%;
+    }
+    .header-container.padding {
+        padding: 10px 10px 8px 10px;
+    }
     .header-container {
         width: 100%;
         max-width: 100%;
@@ -804,18 +812,6 @@
 }
 
 @media (max-width: 380px) {
-    .header-container {
-        padding: 13px 10px 10px 10px;
-        min-width: 0;
-        column-gap: 6px;
-    }
-    .header-container p {
-        line-height: 100%;
-    }
-    .header-container.padding {
-        padding: 10px 10px 8px 10px;
-    }
-
     .header-text,
     .header-text-form {
         font-size: 0.8rem;
