@@ -735,9 +735,9 @@ body {
     overflow-x: hidden;
 }
 
-
-/***** gallery *****/
-
+.mosaic-cell-content__mobile {
+    display: none;
+}
 .main-gallery.scroll-section {
     position: relative;
     width: 100%;

@@ -96,15 +96,16 @@
 
     .welcome {
         padding: 72px 20px;
-        height: 100vh
+        height: 100vh;
+        height: 100svh;
     }
-
     .welcome-text {
         font-size: clamp(1.2rem, 3.8vw, 1rem);
     }
 
     .main-gallery .sticky-wrapper {
         height: 92vh;
+        height: 92svh;
     }
 
     /* card section */
@@ -161,10 +162,6 @@
 
     .description-text {
         font-size: clamp(1.15rem, 3.8vw, 1.3rem);
-    }
-
-    .feedback {
-        padding: 72px 20px;
     }
 
     .form-container,
@@ -253,6 +250,7 @@
     }
     .boat-information {
         height: 100vh;
+        height: 100svh;
         justify-content: space-between;
     }
     .boat-models-switch {
@@ -388,8 +386,8 @@
     }
 
     .description {
-        height: auto;
-        min-height: 72vh;
+        height: 100vh;
+       height: 100svh;
     }
 
     .feedback-header {
@@ -475,6 +473,7 @@
     }
 
     .hero {
+        height: 100vh;
         height: 100svh;
     }
 
@@ -527,10 +526,6 @@
         font-size: 1.3rem;
     }
 
-    .model-gallery {
-        flex-direction: column;
-    }
-
     .hero-model__inner {
         padding: 0 0 56px 20px;
     }
@@ -539,8 +534,11 @@
         font-size: 0.8rem;
     }
 
-    .main-gallery .sticky-wrapper {
-        height: 84vh;
+    .mosaic-cell-content__mobile {
+        display: block;
+    }
+    .main-gallery {
+        display: none;
     }
 
     .mosaic-cell-content__inner {
