@@ -645,8 +645,8 @@ a {
 
 .boat-info-watermark {
     position: absolute;
-    top: 21%;
-    right: 0;
+    top: 44%;
+    left: 50%;
     transform: translate(-50%, -50%);
     font-size: 220px;
     line-height: 1;
