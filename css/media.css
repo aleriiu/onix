@@ -78,20 +78,20 @@
 
 @media (max-width: 1024px) {
     .modal-window {
-        width: calc(100% - 24px);
+        width: 100%;
     }
-
-    .modal-menu-group {
-        flex-direction: column;
-        gap: 16px;
+    .modal-window-choose-boat-img {
+        width: 120px;
+        width: clamp(120px, calc(29.529px + 11.765vw), 150px);
     }
-
-    .vertical-line-modal {
+    .modal-media-wrap {
         display: none;
     }
-
     .modal-window-description {
         width: 100%;
+    }
+    .modal-window-choose-boat {
+        padding: 8px 28px 8px 10px;
     }
 
     .welcome {
@@ -417,8 +417,15 @@
     .boat-info-watermark {
         font-size: 140px;
     }
-    
 
+    /************ modal menu ************/
+    .modal-window-description {
+        display: none;
+    }
+    .vertical-line-modal {
+        display: none;
+    }
+    
     /*************** footer ***************/
     .footer {
         align-items: center;
