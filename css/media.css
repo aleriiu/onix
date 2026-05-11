@@ -1,11 +1,25 @@
 /* Адаптивные стили (подключается после style.css / model.css) */
 @media (min-width: 1920px) {
-    .modal-window-description-container {
-        flex: 0 0 40%;
-    }
-    .modal-media-wrap {
-        flex: 0 0 60%;
-    }
+   .modal-window-choose-boat-img {
+    max-width: 200px;
+   }
+   .modal-window-choose-boat-container {
+    width: 350px;
+    width: clamp(350px, calc(-400px + 39.063vw), 600px);
+   }
+   .modal-window-choose-boat {
+    width: 100%;
+   }
+   .modal-window-choose-boat-name {
+    font-size: 1.25rem;
+   }
+   .modal-window-choose-boat-name-about {
+    font-size: 0.875rem;
+   }
+   .modal-window-description-text {
+    font-size: 1rem;
+    max-width: 620px;
+   }
     
 }
 @media (max-width: 1439px) {
