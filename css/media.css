@@ -1,10 +1,33 @@
 /* Адаптивные стили (подключается после style.css / model.css) */
+@media (min-width: 1920px) {
+    .modal-window-description-container {
+        flex: 0 0 40%;
+    }
+    .modal-media-wrap {
+        flex: 0 0 60%;
+    }
+    
+}
 @media (max-width: 1439px) {
     .boat-info-desc-text-text {
         font-size: 0.875rem;
     }
+
+    section.welcome,
+    section.description,
+    section.boat-information,
+    .mosaic-cell-content__inner,
+    section.cards-section,
+    .form-container,
+    footer {
+        padding: 80px 40px !important;
+    }
+    .modal-menu-group {
+        padding: 40px;
+    }
+
 }
-@media (max-width: 1280px) {
+@media (max-width: 1279px) {
     .header-container {
         padding-left: 20px;
         padding-right: 20px;
@@ -44,17 +67,8 @@
         gap: 20px;
     }
 
-    .footer {
-        padding: 56px 20px 48px;
-        gap: 28px;
-    }
-
     .model-specs__grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .model-overview {
-        padding: 56px 28px 64px;
     }
 
     .model-overview__inner {
@@ -63,6 +77,12 @@
 
     .model-gallery__grid {
         grid-template-columns: 1fr;
+    }
+    .modal-media-wrap {
+        display: none;
+    }
+    .modal-window-description-container {
+        flex: 0 0 100%;
     }
 }
 
@@ -74,6 +94,10 @@
     .boat-model-btn.active {
         font-size: 1.875rem;
     }
+    .boat-information-card-group {
+        width: 640px;
+        width: clamp(640px, calc(491.449px + 14.493vw), 700px);
+    }
 }
 
 @media (max-width: 1024px) {
@@ -84,18 +108,21 @@
         width: 120px;
         width: clamp(120px, calc(29.529px + 11.765vw), 150px);
     }
-    .modal-media-wrap {
-        display: none;
-    }
     .modal-window-description {
         width: 100%;
     }
     .modal-window-choose-boat {
         padding: 8px 28px 8px 10px;
     }
+    .modal-window-description-text {
+        max-width: unset;
+    }
+    .modal-window-description-container {
+        padding: 0 0 0 28px;
+    }
+   
 
     .welcome {
-        padding: 72px 20px;
         height: 100vh;
         height: 100svh;
     }
@@ -143,7 +170,8 @@
         width: 100%;
         max-width: unset;
     }
-    .cards-section-header {
+    .cards-section-header,
+    .cards-news-title  {
         font-size: 1.25rem;
         font-size: clamp(1.125rem, 0.9303rem + 0.8902vw, 1.5rem);
     }
@@ -156,7 +184,6 @@
     }
 
     .description {
-        padding: 72px 20px;
         gap: 20px;
     }
 
@@ -348,10 +375,6 @@
         gap: 10px;
     }
 
-    .header-container.padding {
-        padding: 10px 12px;
-    }
-
     .header-logo {
         width: 100px;
         width: clamp(90px, calc(65.581px + 6.977vw), 120px);
@@ -403,6 +426,9 @@
         width: auto;
         font-size: 1rem;
     }
+    .feedback-video-container {
+        display: none;
+    }
 
     /********* boats-promo section ********/
     .boat-information-card-group {
@@ -424,6 +450,9 @@
     }
     .vertical-line-modal {
         display: none;
+    }
+    .modal-menu-group {
+        justify-content: center;
     }
     
     /*************** footer ***************/

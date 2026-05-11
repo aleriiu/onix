@@ -142,11 +142,14 @@ a {
     justify-content: space-between;
     flex-direction: column;
     width: 100%;
+    /* height: 100vh;
+    height: 100svh; */
 }
 
 .modal-window-choose-boat-container {
     display: flex;
     flex-direction: column;
+    overflow: scroll-y;
 }
 
 .modal-window-choose-boat-text {
@@ -160,7 +163,7 @@ a {
     background: transparent;
     text-align: left;
     cursor: pointer;
-    padding: 8px 10px;
+    padding: 8px 32px 8px 10px;
     border-radius: 6px;
     width: 100%;
     display: flex;
@@ -212,13 +215,11 @@ a {
     width: 100%;
 }
 
-.modal-main-img {
-    max-width: 540px;
-}
-
 .modal-window-description {
     display: flex;
     align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .modal-window-description-container {
@@ -227,6 +228,7 @@ a {
     gap: 2rem;
     align-items: flex-start;
     padding: 0 2.125rem 0 3.125rem;
+    flex: 0 0 50%;
 }
 
 .modal-window-description-title {
@@ -245,7 +247,6 @@ a {
 }
 
 .modal-window-description-text {
-    max-width: 370px;
     font-weight: 400;
     font-size: 0.875rem;
     line-height: 135%;
@@ -306,7 +307,7 @@ a {
 .modal-menu-group {
     display: flex;
     justify-content: space-between;
-    padding: 4.188rem 2.938rem 4.313rem 2.625rem;
+    padding: 4.188rem 2.938rem 12% 2.625rem;
 }
 
 .header-modal {
@@ -318,22 +319,20 @@ a {
 
 .modal-media-wrap {
     position: relative;
-    width: 540px;
     /* как у основной картинки */
-    flex-shrink: 0;
+    flex: 0 0 50%;
+    max-width: 1000px;
 }
 
 .modal-main-img {
     width: 100%;
-    max-width: 540px;
-    display: block;
 }
 
 .modal-boat-overlay {
     position: absolute;
-    right: 0;
-    bottom: -168px;
-    width: 760px;
+    right: -6%;
+    bottom: -36%;
+    width: 140%;
     max-width: none;
     pointer-events: none;
     opacity: 0;
@@ -573,7 +572,7 @@ a {
     justify-content: space-between;
     align-items: stretch;
     background-color: #fff;
-    padding: 7.5rem 1.25rem 7.5rem 2.5rem;
+    padding: 7.5rem 2.5rem;
     gap: 1.5rem;
 }
 

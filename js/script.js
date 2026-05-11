@@ -241,7 +241,7 @@ const boatData = {
     cabin: {
         watermark: "850",
         description: "Комфортная каютная лодка для семейных путешествий и продолжительных маршрутов",
-        image: "./images/850_side.webp",
+        image: "./images/850_cabin_side.webp",
         imageAlt: "ONIX 850 Cabin",
         length: "8,5",
         capacity: "8",
@@ -252,7 +252,7 @@ const boatData = {
         description: "Открытый, стильный катер для истинных ценителей скорости и ощущений на воде. Его цель — максимум внимания и драйва.",
         image: "./images/850_day_cruiser_side.webp",
         imageAlt: "ONIX 850 Day Cruiser",
-        length: "8,43",
+        length: "8,5",
         capacity: "2",
         speed: "95"
     },
@@ -261,7 +261,7 @@ const boatData = {
         description: "Представляем абсолютно новый флагман ONIX 12X — воплощение передовых технологий, элегантного дизайна и непревзойдённого комфорта.",
         image: "./images/12x_side.webp",
         imageAlt: "ONIX 12X",
-        length: "11,9",
+        length: "12",
         capacity: "12",
         speed: "120"
     }
