@@ -1,5 +1,13 @@
 /* Адаптивные стили (подключается после style.css / model.css) */
 @media (min-width: 1920px) {
+    .boat-information,
+    .mosaic-cell-content__inner,
+    .cards-section,
+    .footer {
+        padding-block: 140px;
+        padding-inline: 10%;
+    }
+
    .modal-window-choose-boat-img {
     max-width: 200px;
    }
@@ -20,6 +28,17 @@
     font-size: 1rem;
     max-width: 620px;
    }
+   .boat-image-stage {
+    width: 940px;
+    width: clamp(940px, calc(640px + 15.625vw), 1040px);
+   }
+   .boat-info-watermark {
+    font-size: 19rem;
+    font-size: clamp(18.75rem, 7.5rem + 9.375vw, 22.5rem);
+}
+.boat-info-img-container {
+    transform: translateX(12%);
+}
     
 }
 @media (max-width: 1439px) {
@@ -247,10 +266,6 @@
         min-height: 0;
     }
 
-    .footer-form-news-container {
-        padding: 10px 0 90px 0px;
-    }
-
     .model-specs__label {
         font-size: 1rem;
     }
@@ -354,7 +369,7 @@
     section.welcome,
     section.description,
     section.boat-information,
-    .mosaic-cell-content__inner,
+    .mosaic-cell-content__mobile,
     section.cards-section,
     .form-container,
     footer {
@@ -426,20 +441,7 @@
         height: 100vh;
        height: 100svh;
     }
-
-    .feedback-header {
-        font-size: clamp(1.6rem, 8vw, 2.1rem);
-    }
-
-    .btn-form {
-        width: 100%;
-        padding: 16px 14px;
-    }
-
-    .btn-form-text {
-        width: auto;
-        font-size: 1rem;
-    }
+   
     .feedback-video-container {
         display: none;
     }
@@ -468,16 +470,69 @@
     .modal-menu-group {
         justify-content: center;
     }
+
+    /********* mosaic cell content ************/
+    .mosaic-cell-content__mobile {
+        color: #fff;
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../images/img5.png);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        min-height: 100svh;
+        position: relative;
+    }
+    /* .mosaic-cell-content__mobile::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+        z-index: 1;
+    } */
+    .mosaic-cell-content__mobile h2 {
+        color: #fff !important;
+        padding: 0 0 12px 0 !important;
+    }
+
+    /*************** FOS ***************/
+    .feedback-header {
+        font-size: 1.75rem;
+        font-size: clamp(1.75rem, 1.3313rem + 1.9139vw, 2.25rem);
+    }
+    .form-container-group {
+        flex-direction: column;
+    }
+    .checkbox-container,
+    .form-container-group {
+        width: 310px;
+        width: clamp(310px, calc(125.789px + 52.632vw), 530px);
+    }
+    .input-container {
+        width: 100%;
+    }
+    .btn-form {
+        width: 100%;
+        padding: 16px 14px;
+        justify-content: space-between;
+    }
+    .btn-form-text {
+        width: auto;
+        font-size: 1rem;
+    }
+
     
     /*************** footer ***************/
     .footer {
         align-items: center;
         height: auto;
-        gap: 2.25rem;
+        gap: 60px;
     }
     .footer-container {
         flex-direction: column-reverse;
-        gap: 2rem;
+        gap: 60px;
         width: 100%;
         align-items: center;
     }
@@ -496,11 +551,15 @@
         max-width: unset;
         width: 100%;
     }
-    .footer-form-news-container {
-        padding: 0 0 36px 0;
-    }
+    .footer-pages-n-contacts,
+    .footer-form-news-container,
     .footer-contacts {
-        padding-right: 0;
+        padding: 0;
+    }
+    .footer-pages-n-contacts {
+        border: none;
+        width: 100%;
+        gap: 60px;
     }
     .footer-form-news-input {
         gap: 1.25rem;
@@ -516,6 +575,9 @@
     }
     .footer-list-group {
         width: 50%;
+    }
+    .footer-form-news-socity-img {
+        width: 30px;
     }
 
     .model-specs__item {
@@ -539,10 +601,6 @@
 
     .model-road {
         display: none;
-    }
-
-    .form-container-group {
-        flex-direction: column;
     }
 
     .input-email-container {

@@ -33,7 +33,7 @@
     font-family: 'Involve';
 }
 
-a {
+a, button {
     text-decoration: none;
     cursor: pointer;
 }
@@ -132,8 +132,8 @@ a {
     border: none;
     background-color: #00000066;
     height: 1px;
-    width: 95%;
-    margin: 0 auto;
+    width: stretch;
+    margin: 0 2.625rem;
 }
 
 .modal-window {
@@ -163,7 +163,6 @@ a {
     border: 0;
     background: transparent;
     text-align: left;
-    cursor: pointer;
     padding: 8px 32px 8px 10px;
     border-radius: 6px;
     width: 100%;
@@ -265,7 +264,6 @@ a {
     line-height: 100%;
     letter-spacing: 0%;
     color: #F3F2EF;
-    cursor: pointer;
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
@@ -299,7 +297,6 @@ a {
     color: #000000;
     font-weight: 500;
     font-size: 0.875rem;
-    ;
     line-height: 100%;
     letter-spacing: 0%;
 }
@@ -596,7 +593,6 @@ a {
     border: 0;
     background: transparent;
     text-align: left;
-    cursor: pointer;
     padding: 0;
     font-size: 1.625rem;
     font-weight: 500;
@@ -651,7 +647,7 @@ a {
     transform: translate(-50%, -50%);
     font-size: 220px;
     line-height: 1;
-    font-weight: 600;
+    font-weight: 500;
     color: #f0efeb;
     z-index: 0;
     pointer-events: none;
@@ -955,7 +951,6 @@ body {
     color: #e2c95a;
     font-size: 36px;
     line-height: 1;
-    cursor: pointer;
     padding: 0;
 }
 
@@ -1039,7 +1034,6 @@ body {
     height: 40px;
     border: 0;
     border-radius: 6px;
-    cursor: pointer;
     background: url("../images/img-plus-icon.png") center / contain no-repeat;
 }
 
@@ -1153,7 +1147,6 @@ body {
     border: 0;
     border-radius: 6px;
     background: #fff;
-    cursor: pointer;
     /* важно для стабильного текста */
     position: absolute;
     text-align: center;
@@ -1332,8 +1325,8 @@ body {
     border-radius: 6px;
     display: flex;
     width: 280px;
-    cursor: pointer;
     transition: all 0.3s;
+    align-items: center;
 }
 
 .btn-form:hover {
@@ -1351,6 +1344,7 @@ body {
     letter-spacing: 0%;
     color: #232323;
     width: 64%;
+    text-align: left;
 }
 
 .btn-form-img {
@@ -1451,13 +1445,14 @@ input[type="checkbox"]:focus-visible {
 .footer {
     display: flex;
     flex-direction: column;
-    padding: 3.813rem 0 3.25rem 3.25rem;
+    padding: 112px 40px;
     gap: 4.5rem;
     background-color: #121212;
     position: relative;
     height: auto;
     width: 100%;
-    height: calc(100vh - 54px);
+    min-height: 100vh;
+    min-height: calc(100vh - 54px);
     justify-content: space-between;
 }
 
@@ -1467,19 +1462,27 @@ input[type="checkbox"]:focus-visible {
 
 .footer-list {
     display: flex;
-    gap: 0 3rem;
+    gap: 3rem;
+}
+.footer-pages-n-contacts {
+    display: flex;
     width: 50%;
+    flex-direction: column;
+    gap: 200px;
+    border-right: 1px solid #FFFFFF33;
+    padding: 0 20px 0 0;
 }
 
 .footer-list-group {
     display: flex;
     flex-direction: column;
-    gap: 1.875rem;
+    gap: 30px;
 }
 
 .footer-list-group-row {
     display: flex;
-    gap: 2.5rem;
+    flex-wrap: wrap;
+    gap: 10px 2.5rem;
 }
 
 .footer-list-group-name {
@@ -1539,8 +1542,6 @@ input[type="checkbox"]:focus-visible {
     display: flex;
     flex-direction: column;
     gap: 0.625rem;
-    width: 50%;
-    padding-right: 1rem;
 }
 
 .footer-contacts-text {
@@ -1643,6 +1644,28 @@ input[type="checkbox"]:focus-visible {
     color: #FFFFFF;
     caret-color: #FFFFFF;
 }
+.input-email-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 2px;
+    background-color: #FFFFFF;
+    transition: fill 0.2s ease;
+    height: 40px;
+}
+.input-email-btn svg path {
+    transition: fill 0.2s ease;
+}
+.input-email-btn:hover svg path {
+    fill: #EAC84B;
+}
+.input-email-btn:hover {
+    background-color: #F3F2EF;
+}
+.input-email-btn:active {
+    background-color: #C6C6C6;
+}
 
 .input-email::placeholder {
     font-weight: 400;
@@ -1657,7 +1680,7 @@ input[type="checkbox"]:focus-visible {
     transition: transform 0.2s ease, opacity 0.2s ease;
 }
 .footer-form-news-socity a:hover .footer-form-news-socity-img {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
     opacity: 0.85;
 }
 
@@ -1668,10 +1691,10 @@ input[type="checkbox"]:focus-visible {
 .footer-form-news-container {
     display: flex;
     flex-direction: column;
-    gap: 192px;
     width: 50%;
     align-items: center;
     justify-content: flex-start;
+    padding: 0 0 0 20px;
 }
 
 .footer-form-news-socity-img {
@@ -1768,7 +1791,6 @@ input[type="checkbox"]:focus-visible {
     background-color: #FFFFFF;
     border: 1px solid #FFFFFF;
     border-radius: 6px;
-    cursor: pointer;
     transition: all 0.3s;
     color: #000000;
     padding: 12px;

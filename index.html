@@ -32,7 +32,7 @@
             </a>
             <p class="header-text-form js-open-request">Оставить заявку</p>
         </div>
-        <hr class="horizontal-line">
+        <div class="horizontal-line"></div>
         <div class="modal-menu">
             <div class="modal-window">
                 <div class="header-modal">
@@ -58,7 +58,7 @@
                         <p class="header-text-form js-open-request">Оставить заявку</p>
                     </div>
                 </div>
-                <hr class="horizontal-line">
+                <div class="horizontal-line"></div>
                 <div class="modal-menu-group">
                     <div class="modal-window-choose-boat-container">
                         <button class="modal-window-choose-boat is-active" type="button" data-boat="x12">
@@ -263,15 +263,15 @@
             </div>
         </section>
         <div class="mosaic-cell-content__mobile">
-                <h2>Большой интересный заголовок</h2>
-                <p>Сайт рыбатекст поможет дизайнеру, верстальщику, вебмастеру сгенерировать несколько абзацев
-                    более менее осмысленного текста рыбы на&nbsp;русском языке, а&nbsp;начинающему оратору
-                    отточить навык публичных выступлений в&nbsp;домашних условиях.</p>
-                <p>При создании генератора мы&nbsp;использовали небезизвестный универсальный код речей. Текст
-                    генерируется абзацами случайным образом от&nbsp;двух до&nbsp;десяти предложений
-                    в&nbsp;абзаце,
-                    что позволяет сделать текст более привлекательным и&nbsp;живым для визуально-слухового
-                    восприятия.</p>
+            <h2 class="cards-section-description-header">Большой интересный заголовок</h2>
+            <p>Сайт рыбатекст поможет дизайнеру, верстальщику, вебмастеру сгенерировать несколько абзацев
+                более менее осмысленного текста рыбы на&nbsp;русском языке, а&nbsp;начинающему оратору
+                отточить навык публичных выступлений в&nbsp;домашних условиях.</p>
+            <p>При создании генератора мы&nbsp;использовали небезизвестный универсальный код речей. Текст
+                генерируется абзацами случайным образом от&nbsp;двух до&nbsp;десяти предложений
+                в&nbsp;абзаце,
+                что позволяет сделать текст более привлекательным и&nbsp;живым для визуально-слухового
+                восприятия.</p>
         </div>
         <section class="cards-section cards-section--tech js-tech-cards">
             <div class="cards-section-description">
@@ -458,11 +458,11 @@
                             <input class="form-feedback-input" type="text" placeholder="Имя">
                             <input class="form-feedback-input" type="number" placeholder="Телефон">
                         </div>
-                        <div class="btn-form">
+                        <button class="btn-form" type="submit">
                             <p class="btn-form-text">Получить
                                 консультацию</p>
-                            <img class="btn-form-img" src="./images/btn-form.png" alt="кнопка формы">
-                        </div>
+                            <img class="btn-form-img" src="./images/btn-form.png" alt="лодка">
+                        </button>
                     </div>
                     <div class="checkbox-container">
                         <input class="checkbox-hidden" type="checkbox" id="checkbox1">
@@ -498,39 +498,49 @@
         </a>
 
         <div class="footer-container">
-            <div class="footer-list">
-                <div class="footer-list-group">
-                    <p class="footer-list-group-name">Модели</p>
-                    <div class="footer-list-group-row">
-                        <ul>
-                            <li><a href="#" class="footer-link">600S Aero</a></li>
-                            <li><a href="#" class="footer-link">600S Aero Cabin</a></li>
-                            <li><a href="#" class="footer-link">680 Cabin</a></li>
-                            <li><a href="#" class="footer-link">800 Aero Cabin</a></li>
-                            <li><a href="#" class="footer-link">850 Cruiser</a></li>
-                            <li><a href="#" class="footer-link">850 Day Cruiser</a></li>
-                        </ul>
-                        <ul>
-                            <li><a href="#" class="footer-link">850 Cross Cabin</a></li>
-                            <li><a href="#" class="footer-link">850 Day Cruiser</a></li>
-                            <li><a href="#" class="footer-link">850 Cabin</a></li>
-                            <li><a href="./model.html" class="footer-link">12X Cruiser</a></li>
-                        </ul>
+            <div class="footer-pages-n-contacts">
+                <div class="footer-list">
+                    <div class="footer-list-group">
+                        <p class="footer-list-group-name">Модели</p>
+                        <div class="footer-list-group-row">
+                            <ul>
+                                <li><a href="#" class="footer-link">600S Aero</a></li>
+                                <li><a href="#" class="footer-link">600S Aero Cabin</a></li>
+                                <li><a href="#" class="footer-link">680 Cabin</a></li>
+                                <li><a href="#" class="footer-link">800 Aero Cabin</a></li>
+                                <li><a href="#" class="footer-link">850 Cruiser</a></li>
+                                <li><a href="#" class="footer-link">850 Day Cruiser</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="#" class="footer-link">850 Cross Cabin</a></li>
+                                <li><a href="#" class="footer-link">850 Day Cruiser</a></li>
+                                <li><a href="#" class="footer-link">850 Cabin</a></li>
+                                <li><a href="./model.html" class="footer-link">12X Cruiser</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="footer-list-group">
+                        <p class="footer-list-group-name">Страницы</p>
+                        <div class="footer-list-group">
+                            <ul>
+                                <li><a href="#" class="footer-link">600S Aero</a></li>
+                                <li><a href="#" class="footer-link">600S Aero Cabin</a></li>
+                                <li><a href="#" class="footer-link">680 Cabin</a></li>
+                                <li><a href="#" class="footer-link">800 Aero Cabin</a></li>
+                                <li><a href="#" class="footer-link">850 Cruiser</a></li>
+                                <li><a href="#" class="footer-link">850 Day Cruiser</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-
-                <div class="footer-list-group">
-                    <p class="footer-list-group-name">Страницы</p>
-                    <div class="footer-list-group">
-                        <ul>
-                            <li><a href="#" class="footer-link">600S Aero</a></li>
-                            <li><a href="#" class="footer-link">600S Aero Cabin</a></li>
-                            <li><a href="#" class="footer-link">680 Cabin</a></li>
-                            <li><a href="#" class="footer-link">800 Aero Cabin</a></li>
-                            <li><a href="#" class="footer-link">850 Cruiser</a></li>
-                            <li><a href="#" class="footer-link">850 Day Cruiser</a></li>
-                        </ul>
-                    </div>
+                <div class="footer-contacts">
+                    <a class="footer-contacts-text" href="tel:+79990000000">+7 (999) 000-00-00</a>
+                    <a class="footer-contacts-text"
+                        href="https://maps.google.com/?q=Россия,+г.+Самара,+Московское+шоссе,+18-й+километр,+лит.+А+корп.+3"
+                        target="_blank" rel="noopener noreferrer">
+                        Россия, г. Самара, Московское шоссе, 18-й километр, лит. А корп. 3
+                    </a>
                 </div>
             </div>
             <div class="footer-form-news-container">
@@ -541,31 +551,29 @@
                         <form action="">
                             <div class="input-email-container">
                                 <input class="input-email" type="text" placeholder="Email">
-                                <img class="input-email-btn" src="images/btn-footer-email.png" alt="кнопка стрелка">
+                                <button class="input-email-btn" type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                        <path d="M21.7409 16.7409C22.2606 16.2212 22.2606 15.3786 21.7409 14.8589L13.2718 6.38978C12.7521 5.87007 11.9095 5.87007 11.3898 6.38978C10.8701 6.90948 10.8701 7.7521 11.3898 8.2718L18.9179 15.7999L11.3898 23.328C10.8701 23.8477 10.8701 24.6903 11.3898 25.21C11.9095 25.7297 12.7521 25.7297 13.2718 25.21L21.7409 16.7409ZM19.469 15.7999V17.1307H20.7999V15.7999V14.4691H19.469V15.7999Z" fill="black"/>
+                                        </svg>
+                                </button>
                             </div>
                         </form>
                     </div>
                     <div class="footer-form-news-socity">
-                        <a href="https://t.me/your_channel" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+                        <a href="https://t.me/your_channel" target="_blank" rel="noopener noreferrer"
+                            aria-label="Telegram">
                             <img class="footer-form-news-socity-img" src="images/tg-icon.png" alt="Telegram">
                         </a>
                         <a href="https://vk.com/your_page" target="_blank" rel="noopener noreferrer" aria-label="VK">
                             <img class="footer-form-news-socity-img" src="images/vk-icon.png" alt="VK">
                         </a>
                     </div>
-                    
+
                 </div>
-                
+
             </div>
         </div>
-        <div class="footer-contacts">
-            <a class="footer-contacts-text" href="tel:+79990000000">+7 (999) 000-00-00</a>
-            <a class="footer-contacts-text"
-                href="https://maps.google.com/?q=Россия,+г.+Самара,+Московское+шоссе,+18-й+километр,+лит.+А+корп.+3"
-                target="_blank" rel="noopener noreferrer">
-                Россия, г. Самара, Московское шоссе, 18-й километр, лит. А корп. 3
-            </a>
-        </div>
+
         <div class="footer-contacts-policy">
             <a class="footer-contacts-policy-text-underline" href="/privacy-policy.html">Политика
                 конфиденциальности</a>
@@ -573,8 +581,6 @@
                 обработку персональных данных</a>
             <p class="footer-contacts-policy-text">© 2025 Все права защищены.</p>
         </div>
-
-        <div class="vertical-line"></div>
 
     </footer>
     <div class="request-modal" id="requestModal" aria-hidden="true">

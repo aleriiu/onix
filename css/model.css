@@ -284,6 +284,24 @@
     margin: 0 auto;
     height: 100vh;
     overflow: hidden;
+    position: relative;
+}
+.model-overview::before,
+.model-overview::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 50%;
+    height: 10%;
+    z-index: 1;
+}
+.model-overview::before {
+    top: 0;
+    background: linear-gradient(to bottom, #EFEFED, transparent);
+}
+.model-overview::after {
+    bottom: 0;
+    background: linear-gradient(to top, #EFEFED, transparent);
 }
 
 .model-overview__inner {
@@ -305,7 +323,6 @@
 .model-overview__specs-viewport {
     position: relative;
     height: 100%;
-    overflow: hidden;
     cursor: ns-resize;
 }
 
