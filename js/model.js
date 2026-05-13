@@ -508,7 +508,7 @@ function initDeckPlanSwitcher() {
 
         image.classList.add('is-switching');
 
-        // Простая схема без гонок:
+        // Простая схема:
         // 1) fade-out через CSS (opacity -> 0)
         // 2) меняем src/alt
         // 3) снимаем класс и получаем fade-in (opacity -> 1)
@@ -680,6 +680,15 @@ function initOverviewSpecsScroll() {
     const mediaCol = track?.querySelector('.model-overview__media');
     const specsList = track?.querySelector('.model-overview__specs-list');
     if (!section || !specsRoot || !viewport || !track || !descCol || !mediaCol || !specsList) return;
+
+    const isMobileOverview = () => window.matchMedia('(max-width: 768px)').matches;
+    if (isMobileOverview()) {
+        // На мобильном брейкпоинте отключаем JS-скролл/анимации для overview.
+        gsap.set(track, { clearProps: 'all' });
+        gsap.set(mediaCol, { clearProps: 'all' });
+        gsap.set(specsList, { clearProps: 'all' });
+        return;
+    }
 
     // Важно: дистанцию считаем по колонке характеристик, а не по общему flex-треку.
     // Иначе pin может закончиться раньше, чем список дойдет до конца.
