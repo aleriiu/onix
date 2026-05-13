@@ -362,6 +362,35 @@
     .boat-info-watermark {
         font-size: 180px;
     }
+    /* MODEL PAGE STYLES */
+    /************ model overview ************/
+    .model-overview__media {
+        padding: 0;
+        gap: 10px;
+        flex-direction: row;
+        width: 100%;
+        max-width: unset;
+    }
+    .model-overview::after,
+    .model-overview::before {
+        display: none;
+    }
+    .model-overview__inner {
+        gap: 30px;
+    }
+    .model-overview__specs-track {
+        flex-direction: column;
+        gap: 30px;
+    }
+    .model-overview__media-img {
+        width: 100%;
+    }
+    .model-overview__desc,
+    .model-overview__specs {
+        flex: 1 1 auto;
+        width: 50%;
+        max-width: unset;
+    }
 
 }
 
@@ -373,6 +402,7 @@
     section.cards-section,
     .form-container,
     .model-overview,
+    .model-deck-plan,
     footer {
         padding: 60px 20px !important;
     }
@@ -483,16 +513,6 @@
         min-height: 100svh;
         position: relative;
     }
-    /* .mosaic-cell-content__mobile::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
-        z-index: 1;
-    } */
     .mosaic-cell-content__mobile h2 {
         color: #fff !important;
         padding: 0 0 12px 0 !important;
@@ -734,61 +754,12 @@
         font-size: 0.875rem;
     }
 
-    .model-overview {
-        padding: 44px 20px 54px;
-    }
-
-    .model-overview__inner {
-        flex-direction: column;
-        gap: 30px;
-    }
-
-    .model-overview__specs {
-        flex: 1 1 auto;
-        width: 100%;
-    }
-
-    .model-overview__specs-viewport {
-        height: auto;
-        overflow: visible;
-        cursor: default;
-    }
-
-    .model-overview__specs-track {
-        gap: 18px;
-    }
-
-    .model-overview__media {
-        flex: 0 0 132px;
-        position: static;
-    }
-
-    .model-overview__specs-list {
-        gap: 18px;
-    }
-
-    .model-overview__value {
-        font-size: clamp(1.7rem, 8.2vw, 2.4rem);
-        flex-direction: column;
-    }
-
     .model-equipment__tab, .model-faq__title {
         font-size: 26px;
     }
 
     .main-gallery.scroll-section {
         display: nones;
-    }
-
-    .model-overview__desc {
-        max-width: none;
-        gap: 16px;
-        position: static;
-    }
-
-    .model-overview__text {
-        font-size: 17px;
-        line-height: 1.28;
     }
 
     .model-gallery {
@@ -799,34 +770,6 @@
         font-size: clamp(1rem, 4.6vw, 1.45rem);
         padding: 10px 14px;
         gap: 8px;
-    }
-
-    .model-deck-plan {
-        padding: 48px 20px 56px;
-    }
-
-    .model-deck-plan {
-        gap: 0.75rem;
-    }
-
-    .model-deck-plan__tabs {
-        flex: 0 0 138px;
-        gap: 8px;
-        margin-right: 10px;
-    }
-
-    .model-deck-plan__tab {
-        font-size: clamp(1.05rem, 4.2vw, 1.3rem);
-    }
-
-    .model-deck-plan__tab.is-active {
-        font-size: clamp(1.12rem, 4.4vw, 1.38rem);
-    }
-
-    .model-deck-plan__indicator {
-        flex: 0 0 8px;
-        height: 104px;
-        gap: 7px;
     }
 
     .model-deck-plan__indicator-item {
@@ -942,49 +885,12 @@
         transform: translateY(clamp(4px, 2vw, 12px)) scale(1.02);
     }
 
-    .model-deck-plan {
-        padding: 40px 16px 52px;
-    }
-
-    .model-deck-plan {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        grid-template-areas:
-            "tabs indicator"
-            "image image";
-        row-gap: 1rem;
-        column-gap: 0.75rem;
-    }
-
-    .model-deck-plan__tabs {
-        grid-area: tabs;
-        flex: none;
-    }
-
-    .model-deck-plan__indicator {
-        grid-area: indicator;
-        justify-self: end;
-    }
-
-    .model-deck-plan__canvas {
-        grid-area: image;
-    }
-
     .model-road {
         padding: 56px 16px;
     }
-
-    .model-specs__grid {
-        grid-template-columns: 1fr;
-    }
-
     /********* model overview section *********/
     .model-overview {
         height: auto;
-    }
-    .model-overview::after,
-    .model-overview::before {
-        display: none;
     }
     .model-overview__inner {
         flex-direction: column;
@@ -992,33 +898,32 @@
         min-height: 100vh;
         min-height: 100svh;
     }
-    .model-overview__specs-track {
-        flex-direction: column;
-    }
     .model-overview__inner,
     .model-overview__specs-track {
         gap: 60px;
+        width: 100%;
+    }
+    .model-overview__specs {
+        width: 100%;
     }
     .model-overview__media-img {
         width: 100%;
         font-size: 0px;
-    }
-    .model-overview__media {
-        padding: 0;
-        gap: 10px;
-        flex-direction: row;
-        flex: 0 0 50%;
+        position: static;
     }
     .model-overview__specs-list {
         flex-wrap: wrap;
         gap: 16px;
         width: 100%;
+        max-width: unset;
     }
     .model-overview__spec {
+        display: flex;
        flex-direction: row;
-       align-items: baseline;
+       align-items: flex-end;
        justify-content: space-between;
        padding-top: 16px;
+       width: 100%;
     }
     .model-overview__spec:not(:first-child) {
         border-top: 1px solid #ffffff;
@@ -1031,14 +936,77 @@
         font-size: 1.25rem;
         font-size: clamp(1.125rem, 0.9157rem + 0.9569vw, 1.375rem);
         text-align: right;
+    } 
+    .model-overview__desc {
+        max-width: none;
+        gap: 16px;
+        position: static;
+        width: 100%;
     }
     .model-overview__text {
         font-size: 0.875rem;
+        line-height: 135%;
         font-size: clamp(0.875rem, 0.7703rem + 0.4785vw, 1rem);
     }
-   
+    .model-overview__specs-viewport {
+        height: auto;
+        overflow: visible;
+        cursor: default;
+        width: 100%;
+    }
 
+    /*********** model-deck-plan ***********/
+    .model-deck-plan {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 60px;
+    }
+    .model-deck-plan__canvas {
+        width: 100%;
+        padding: 0;
+        position: relative;
+    }
+    .model-deck-plan__tabs {
+       flex-direction: row;
+       justify-content: space-between;
+       margin: 0;
+       width: 100%;
+    }
+    .model-deck-plan__tab {
+        text-align: center;
+        text-decoration: none;
+        padding: 0;
+    }
+    .model-deck-plan__tab,
+    .model-deck-plan__tab.is-active {
+        font-size: clamp(1.05rem, 4.2vw, 1.3rem);
+    }
+    .model-deck-plan__tab-label {
+        border: none;
+        padding: 0;
+    }
+    .model-deck-plan__tab-separator {
+        display: block;
+        width: 1px;
+        height: 100%;
+        background: #EFEEEA;
+    }
 
+    .model-deck-plan__indicator {
+        display: none;
+        /* flex: 0 0 8px;
+        height: 104px;
+        gap: 7px;
+        transform-origin: center center;
+        transform: rotate(-90deg); */
+    }
+
+    .model-deck-plan__indicator {
+        grid-area: indicator;
+        justify-self: end;
+    }
 }
 
 @media (max-width: 380px) {

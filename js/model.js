@@ -681,9 +681,9 @@ function initOverviewSpecsScroll() {
     const specsList = track?.querySelector('.model-overview__specs-list');
     if (!section || !specsRoot || !viewport || !track || !descCol || !mediaCol || !specsList) return;
 
-    const isMobileOverview = () => window.matchMedia('(max-width: 768px)').matches;
+    const isMobileOverview = () => window.matchMedia('(max-width: 1024px)').matches;
     if (isMobileOverview()) {
-        // На мобильном брейкпоинте отключаем JS-скролл/анимации для overview.
+        // До 1024px отключаем JS-скролл/pin для overview.
         gsap.set(track, { clearProps: 'all' });
         gsap.set(mediaCol, { clearProps: 'all' });
         gsap.set(specsList, { clearProps: 'all' });
@@ -703,9 +703,9 @@ function initOverviewSpecsScroll() {
 
         gsap.set(track, { y: 0 });
 
-        // На мобильных (где layout становится колонкой) pin выключаем, чтобы не было "скачков".
+        // На узких экранах pin выключаем, чтобы не было "скачков".
         const mm = gsap.matchMedia();
-        mm.add('(min-width: 769px)', () => {
+        mm.add('(min-width: 1025px)', () => {
             const mediaImages = Array.from(mediaCol.querySelectorAll('.model-overview__media-img'));
             const firstImage = mediaImages[0] || null;
             const secondImage = mediaImages[1] || null;
@@ -807,7 +807,7 @@ function initOverviewSpecsScroll() {
         });
 
         // Явный fallback для узких экранов.
-        mm.add('(max-width: 768px)', () => {
+        mm.add('(max-width: 1024px)', () => {
             gsap.set(track, { y: 0 });
             gsap.set(mediaCol, { y: 0 });
             gsap.set(specsList, { y: 0 });
