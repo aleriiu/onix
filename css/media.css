@@ -3,6 +3,13 @@
     .boat-information,
     .mosaic-cell-content__inner,
     .cards-section,
+    .model-overview,
+    .model-deck-plan,
+    .model-equipment,
+    .model-faq,
+    .model-documentation,
+    .model-other-models,
+    .model-road,
     .footer {
         padding-block: 140px;
         padding-inline: 10%;
@@ -392,6 +399,33 @@
         max-width: unset;
     }
 
+    /******** accordion sections ********/
+    .model-faq__col,
+    .model-equipment__panels {
+        max-width: none;
+        flex: 0 0 100%;
+        width: 100%;
+    }
+
+    /******** other-models section *********/
+    .model-other-models {
+        padding-inline: 0;;
+    }
+    .model-other-models__track {
+        padding-inline: 40px;
+    }
+    .model-other-models__slide {
+        width: fit-content;
+    }
+    .model-other-models__card {
+        width: 90vw;
+        width: clamp(680px, calc(-73.922px + 98.039vw), 930px);
+    } 
+    .model-other-models__visual .boat-info-watermark {
+        font-size: 180px;
+    }
+
+
 }
 
 @media (max-width: 768px) {
@@ -403,6 +437,11 @@
     .form-container,
     .model-overview,
     .model-deck-plan,
+    .model-equipment,
+    .model-road,
+    .model-faq,
+    .model-documentation,
+    .model-other-models,
     footer {
         padding: 60px 20px !important;
     }
@@ -620,10 +659,6 @@
         min-width: 200px;
     }
 
-    .model-road {
-        display: none;
-    }
-
     .input-email-container {
         width: 100%;
     }
@@ -775,62 +810,6 @@
     .model-deck-plan__indicator-item {
         width: 2px;
         height: 22px;
-    }
-
-    .model-road {
-        height: auto;
-        min-height: 530px;
-        padding: 36px 20px;
-    }
-
-    .model-road__inner {
-        height: auto;
-        padding-top: 0;
-    }
-
-    .model-road__timeline {
-        margin: 0;
-    }
-
-    .model-road__line {
-        left: 14px;
-        right: 14px;
-        top: 22px;
-    }
-
-    .model-road__track {
-        flex-direction: column;
-        gap: 42px;
-        align-items: stretch;
-    }
-
-    .model-road__item {
-        justify-content: flex-start;
-        padding-left: 0;
-    }
-
-    .model-road__content {
-        position: relative;
-        left: 0;
-        transform: none;
-        width: calc(100% - 42px);
-        margin-left: 42px;
-    }
-
-    .model-road__item--top .model-road__content,
-    .model-road__item--bottom .model-road__content {
-        top: auto;
-        bottom: auto;
-    }
-
-    .model-road__step-title {
-        font-size: clamp(1.25rem, 5.2vw, 1.65rem);
-    }
-
-    .model-road__step-text {
-        font-size: 0.95rem;
-        line-height: 1.2;
-        max-width: none;
     }
 
     .model-equipment__panels,
@@ -993,7 +972,6 @@
         height: 100%;
         background: #EFEEEA;
     }
-
     .model-deck-plan__indicator {
         display: none;
         /* flex: 0 0 8px;
@@ -1003,10 +981,113 @@
         transform: rotate(-90deg); */
     }
 
-    .model-deck-plan__indicator {
-        grid-area: indicator;
-        justify-self: end;
+    /******** accodion sections ********/
+    .model-equipment__inner,
+    .model-faq__inner,
+    .model-documentation__inner {
+        flex-direction: column;
     }
+    .model-equipment__tab {
+        font-size: 1.75rem;
+        font-size: clamp(1.5rem, 1.2404rem + 1.1869vw, 2rem);
+    }
+   .model-equipment__tabs {
+    width: 100%;
+   }
+
+    /********* model road section *********/
+    .model-road {
+        height: auto;
+    }
+    .model-road__title {
+        font-size: 1.75rem;
+        font-size: clamp(1.5rem, 1.2404rem + 1.1869vw, 2rem);
+        line-height: 100%;
+        height: auto;
+    }
+    .model-road__timeline {
+        width: fit-content;
+        justify-content: center;
+        align-items: center;
+    }
+    .model-road__line {
+        transform: rotate(90deg);
+        width: 150%;
+        top: 0;
+        bottom: 0;
+        left: 12px;
+    }
+    .model-road__track {
+        flex-direction: column;
+        gap: 20px;
+        width: auto;
+    }
+    .model-road__inner {
+        height: auto;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+    .model-road__item {
+        flex-direction: row !important;
+        align-items: flex-start;
+        gap: 10px;
+        transform: translateY(0) !important;
+    }
+    .model-road__content {
+        align-items: flex-start;
+        gap: 0px
+    }
+    .model-road__step-title {
+        font-size: 18px;
+        line-height: 28px;
+    }
+    .model-road__step-text {
+        text-align: left;
+        margin: 0;
+    }
+
+    /******** other-models section *********/
+    .model-other-models {
+        padding-inline: 0 !important;
+     }
+    .model-other-models__card {
+        padding: 20px;
+    }
+    .model-other-models__track {
+        padding-inline: 20px;
+    }
+    .model-other-models__slide {
+        width: 298px;
+        height: auto;
+    }
+    .model-other-models__visual {
+        padding: 20px 0;
+        min-height: unset;
+        transform: translateY(0);
+    }
+    .model-other-models__visual .boat-info-watermark {
+        font-size: 110px;
+    }
+    .model-other-models__card-title {
+        font-size: 1.75rem;
+        font-size: clamp(1.5rem, 1.2404rem + 1.1869vw, 2rem);
+    }
+    .model-other-models__specs-text,
+    .model-other-models__specs-value {
+        font-size: 14px;
+    }
+    .model-other-models__body {
+        padding: 0; 
+        gap: 20px
+    }
+    .model-other-models__cta {
+        width: 100%;
+        justify-content: center;
+    }
+
+    
+
 }
 
 @media (max-width: 380px) {

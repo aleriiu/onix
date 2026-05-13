@@ -1345,6 +1345,7 @@ body {
     color: #232323;
     width: 64%;
     text-align: left;
+    padding-top: 2px;
 }
 
 .btn-form-img {
