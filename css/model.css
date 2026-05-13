@@ -354,7 +354,7 @@
     line-height: 100%;
     letter-spacing: 0%;
     text-transform: uppercase;
-    color: #6D6D6D;
+    color: #B2B2B2;
 }
 
 .model-overview__value {
@@ -928,7 +928,7 @@ a.model-other-models__visual:focus-visible {
     font-size: 16px;
     line-height: 20px;
     letter-spacing: 0%;
-    color: #6D6D6D;
+    color: #B2B2B2;
 }
 
 .model-other-models__specs-value {
