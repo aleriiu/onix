@@ -827,8 +827,10 @@
         width: 100%;
     }
 
+    /* width alone не переопределяет flex-basis из style.css (.tech-card { flex: 0 0 clamp(...) }) */
     .tech-card {
-        width: min(84vw, 410px);
+        flex: 0 0 min(84vw, 410px);
+        width: auto;
     }
     .tech-cards-track {
         gap: 20px;
@@ -837,10 +839,6 @@
     .cards-section::before,
     .tech-cards-track::after {
        display: none !important;
-    }
-    .tech-slider,
-    .cards-section--tech {
-        overflow: visible;
     }
 
 
