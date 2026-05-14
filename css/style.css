@@ -175,6 +175,7 @@ a, button {
     align-items: center;
     gap: 0.625rem;
     transition: all 0.25s ease;
+    position: relative;
 }
 
 .modal-window-choose-boat.is-active {
@@ -347,6 +348,18 @@ a, button {
     opacity: 1;
     transform: translateX(0);
     transition: transform 0.8s cubic-bezier(.22, .61, .36, 1), opacity 0.5s ease;
+}
+
+.modal-window-link {
+    position: absolute;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+    text-decoration: none;
+    display: none;
 }
 
 /***** end header *****/

@@ -631,6 +631,10 @@
         font-size: 140px;
     }
 
+    .modal-window-link {
+        display: block;
+    }
+
     /************ modal menu ************/
     .modal-window-description {
         display: none;

@@ -8,10 +8,6 @@ mobMenu?.addEventListener('click', () => {
     modalMenu.style.display = 'flex';
 });
 
-closeBtn?.addEventListener('click', () => {
-    modalMenu.style.display = 'none';
-});
-
 /***** modal boat switcher *****/
 const OVERLAY_DELAY = 300; // 1000 = 1 секунда
 
@@ -23,6 +19,11 @@ const modalBoatOverlay = document.getElementById('modalBoatOverlay');
 
 let overlayTimer = null;
 let activeBoatKey = 'x12';
+let mobileX12NavPrimed = false;
+
+function isMobileBoatNav() {
+    return window.matchMedia('(max-width: 768px)').matches;
+}
 
 const modalBoatData = {
     x12: {
@@ -56,6 +57,9 @@ const modalBoatData = {
 };
 
 function setActiveBoat(key) {
+    if (key !== 'x12') {
+        mobileX12NavPrimed = false;
+    }
     activeBoatKey = key;
     const boat = modalBoatData[key];
     if (!boat) return;
@@ -97,6 +101,39 @@ modalBoatButtons.forEach((btn) => {
     btn.addEventListener('click', activate);
 });
 
+document.querySelectorAll('.modal-window-link').forEach((link) => {
+    link.addEventListener('click', (e) => {
+        if (!isMobileBoatNav()) return;
+
+        const card = link.closest('.modal-window-choose-boat');
+        const key = card?.dataset?.boat;
+        if (!key) return;
+
+        const href = (link.getAttribute('href') || '').trim();
+        const isRealModelPage =
+            key === 'x12' && href !== '' && href !== '#' && !href.startsWith('#');
+
+        if (key !== 'x12') {
+            e.preventDefault();
+            setActiveBoat(key);
+            return;
+        }
+
+        if (mobileX12NavPrimed && isRealModelPage) {
+            e.preventDefault();
+            mobileX12NavPrimed = false;
+            window.location.assign(href);
+            return;
+        }
+
+        e.preventDefault();
+        setActiveBoat('x12');
+        if (isRealModelPage) {
+            mobileX12NavPrimed = true;
+        }
+    });
+});
+
 // стартовое состояние
 setActiveBoat('x12');
 
@@ -108,6 +145,10 @@ modalDetailBtn?.addEventListener('click', () => {
 });
 /***** end modal boat switcher *****/
 
+closeBtn?.addEventListener('click', () => {
+    modalMenu.style.display = 'none';
+    mobileX12NavPrimed = false;
+});
 
 /***** request modal *****/
 
@@ -138,4 +179,4 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeRequestModal();
 });
 
-/***** end request modal *****/ 
+/***** end request modal *****/
