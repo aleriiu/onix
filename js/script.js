@@ -209,22 +209,36 @@ if (gallerySection && img1Cell && contentCell && mosaicWrap) {
         }, 0);
 
     // ── ФАЗА 2: вертикальное расширение (t = 0.5 → 0.85) ───────────────────
+    // Считаем сдвиги по реальной геометрии ячеек внутри контейнера:
+    // так ряды уходят за границы плавно и одинаково на разных разрешениях.
+    const getVerticalExitShift = (cell, direction) => {
+        if (!cell || !mosaicWrap) return 0;
+        const wrapRect = mosaicWrap.getBoundingClientRect();
+        const cellRect = cell.getBoundingClientRect();
+        const baseShift = direction === "up"
+            ? (cellRect.bottom - wrapRect.top)
+            : (wrapRect.bottom - cellRect.top);
+        return Math.ceil(baseShift + 2);
+    };
 
     // Ряд 0 уходит ВВЕРХ; ряд 2 уходит ВНИЗ (overflow:hidden на mosaic-wrap обрезает их)
     galleryTl
         .to([img2Cell, img3Cell, img4Cell], {
-            y:        () => -img2Cell.offsetHeight,
-            duration: 0.35, ease: "power2.inOut"
+            y:        (_, target) => -getVerticalExitShift(target, "up"),
+            opacity:  0,
+            duration: 0.44, ease: "power1.inOut"
         }, 0.5)
         .to([img6Cell, img7Cell], {
-            y:        () => img6Cell.offsetHeight,
-            duration: 0.35, ease: "power2.inOut"
+            y:        (_, target) => getVerticalExitShift(target, "down"),
+            opacity:  0,
+            duration: 0.44, ease: "power1.inOut"
         }, 0.5)
-        // clip-path раскрывается на всю высоту → полноэкранный кадр
+        // clip-path раскрываем заметно позже начала ухода рядов,
+        // чтобы нижний ряд успевал уйти и не выглядел "схлопывающимся".
         .to(contentCell, {
             clipPath: "inset(0% 0% 0% 0%)",
-            duration: 0.35, ease: "power2.inOut"
-        }, 0.5)
+            duration: 0.34, ease: "power1.inOut"
+        }, 0.64)
 
     // ── ФАЗА 3: появление текста (t = 0.85 → 1.0) ───────────────────────────
     galleryTl

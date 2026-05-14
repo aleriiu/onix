@@ -323,7 +323,7 @@
     flex-direction: column;
     gap: 56px;
     padding-top: 320px;
-    max-width: 400px;
+    max-width: 360px;
 }
 
 .model-overview__media-img {
@@ -695,20 +695,16 @@
 
 /* Путь к вашей лодке */
 .model-road {
-    height: 530px;
     padding: 0 40px;
     margin: 0;
     background: #f3f2ef;
-    box-sizing: border-box;
 }
 
 .model-road__inner {
     margin: 0 auto;
-    height: 100%;
-    padding-top: 120px;
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    gap: 60px;
 }
 
 .model-road__title {
@@ -718,11 +714,8 @@
     font-weight: 500;
     line-height: 1;
     letter-spacing: 0.02em;
-    text-transform: uppercase;
     color: #000;
-    height: 53px;
-    line-height: 53px;
-    flex: 0 0 53px;
+    line-height: 100%;
 }
 
 .model-road__timeline {
@@ -733,6 +726,7 @@
     flex: 1 1 auto;
     width: 100%;
     min-height: 0;
+    padding-block: 80px;
 }
 
 .model-road__line {

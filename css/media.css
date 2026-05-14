@@ -1,53 +1,58 @@
 /* Адаптивные стили (подключается после style.css / model.css) */
 @media (min-width: 1920px) {
-    .boat-information,
-    .mosaic-cell-content__inner,
-    .cards-section,
-    .model-overview,
-    .model-deck-plan,
-    .model-equipment,
-    .model-faq,
-    .model-documentation,
-    .model-other-models,
-    .model-road,
-    .footer {
-        padding-block: 140px;
-        padding-inline: 10%;
+    .section-padding {
+        padding-block: 140px !important;
+        padding-inline: 10% !important;
     }
+    .model-overview {
+        padding-inline: 10% !important;
+    }
+    .model-overview__specs-track {
+        gap: 60px;
+    }
+    .modal-window-choose-boat-img {
+        max-width: 200px;
+    }
+    .modal-window-choose-boat-container {
+        width: 350px;
+        width: clamp(350px, calc(-400px + 39.063vw), 600px);
+    }
+    .modal-window-choose-boat {
+        width: 100%;
+    }
+    .modal-window-choose-boat-name {
+        font-size: 1.25rem;
+    }
+    .modal-window-choose-boat-name-about {
+        font-size: 0.875rem;
+    }
+    .modal-window-description-text {
+        font-size: 1rem;
+        max-width: 620px;
+    }
+    .boat-image-stage {
+        width: 940px;
+        width: clamp(940px, calc(640px + 15.625vw), 1040px);
+    }
+    .boat-info-watermark {
+        font-size: 19rem;
+        font-size: clamp(18.75rem, 7.5rem + 9.375vw, 22.5rem);
+    }
+    .cards-section::before {
+        right: 10%;
+        width: clamp(40px, 3.6vw, 60px);
+    }
+    .model-overview__media {
+        padding-top: 180px;
+    }
+    .model-road__inner {
+        gap: 80px;
+    }
+    .cards-section {
+        gap: 60px;
+    }
+}
 
-   .modal-window-choose-boat-img {
-    max-width: 200px;
-   }
-   .modal-window-choose-boat-container {
-    width: 350px;
-    width: clamp(350px, calc(-400px + 39.063vw), 600px);
-   }
-   .modal-window-choose-boat {
-    width: 100%;
-   }
-   .modal-window-choose-boat-name {
-    font-size: 1.25rem;
-   }
-   .modal-window-choose-boat-name-about {
-    font-size: 0.875rem;
-   }
-   .modal-window-description-text {
-    font-size: 1rem;
-    max-width: 620px;
-   }
-   .boat-image-stage {
-    width: 940px;
-    width: clamp(940px, calc(640px + 15.625vw), 1040px);
-   }
-   .boat-info-watermark {
-    font-size: 19rem;
-    font-size: clamp(18.75rem, 7.5rem + 9.375vw, 22.5rem);
-}
-.boat-info-img-container {
-    transform: translateX(12%);
-}
-    
-}
 @media (max-width: 1439px) {
     .boat-info-desc-text-text {
         font-size: 0.875rem;
@@ -62,11 +67,17 @@
     footer {
         padding: 80px 40px !important;
     }
+
+    .cards-section::before {
+        width: clamp(30px, 4.5vw, 68px);
+    }
+
     .modal-menu-group {
         padding: 40px;
     }
 
 }
+
 @media (max-width: 1279px) {
     .header-container {
         padding-left: 20px;
@@ -107,6 +118,24 @@
         gap: 20px;
     }
 
+    .cards-section::before {
+        width: clamp(28px, 4vw, 64px);
+        -webkit-mask-image: linear-gradient(
+            to bottom,
+            transparent 0%,
+            #000 8%,
+            #000 92%,
+            transparent 100%
+        );
+        mask-image: linear-gradient(
+            to bottom,
+            transparent 0%,
+            #000 8%,
+            #000 92%,
+            transparent 100%
+        );
+    }
+
     .model-specs__grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -118,9 +147,11 @@
     .model-gallery__grid {
         grid-template-columns: 1fr;
     }
+
     .modal-media-wrap {
         display: none;
     }
+
     .modal-window-description-container {
         flex: 0 0 100%;
     }
@@ -131,9 +162,11 @@
         height: 30px;
         font-size: 1.625rem;
     }
+
     .boat-model-btn.active {
         font-size: 1.875rem;
     }
+
     .boat-information-card-group {
         width: 640px;
         width: clamp(640px, calc(491.449px + 14.493vw), 700px);
@@ -144,28 +177,34 @@
     .modal-window {
         width: 100%;
     }
+
     .modal-window-choose-boat-img {
         width: 120px;
         width: clamp(120px, calc(29.529px + 11.765vw), 150px);
     }
+
     .modal-window-description {
         width: 100%;
     }
+
     .modal-window-choose-boat {
         padding: 8px 28px 8px 10px;
     }
+
     .modal-window-description-text {
         max-width: unset;
     }
+
     .modal-window-description-container {
         padding: 0 0 0 28px;
     }
-   
+
 
     .welcome {
         height: 100vh;
         height: 100svh;
     }
+
     .welcome-text {
         font-size: clamp(1.2rem, 3.8vw, 1rem);
     }
@@ -181,23 +220,28 @@
         flex-direction: column;
         gap: 20px;
     }
+
     .cards-section {
         gap: 2rem;
     }
+
     .cards-section-description {
         position: relative;
     }
+
     .tech-slider-nav {
         position: absolute;
         top: 0;
         right: 0;
         margin: 0;
     }
+
     .cards-section-description-group {
         max-width: unset;
         width: 100%;
         gap: 0.5rem;
     }
+
     .cards-section-description-header {
         width: 100%;
         max-width: unset;
@@ -205,20 +249,24 @@
         font-size: clamp(1.5rem, 1.2404rem + 1.1869vw, 2rem);
         padding-right: 40px;
     }
+
     .cards-section-description-text {
         font-size: 1rem;
         width: 100%;
         max-width: unset;
     }
+
     .cards-section-header,
-    .cards-news-title  {
+    .cards-news-title {
         font-size: 1.25rem;
         font-size: clamp(1.125rem, 0.9303rem + 0.8902vw, 1.5rem);
     }
+
     .cards-section-text {
         font-size: 0.875rem;
         font-size: clamp(0.75rem, 0.6154rem + 0.5935vw, 0.875rem);
     }
+
     img.cards-section-img {
         min-height: 260px !important;
     }
@@ -265,12 +313,37 @@
         font-size: 1.1rem;
     }
 
-    .cards-section-text, .cards-news-text {
+    .cards-section-text,
+    .cards-news-text {
         font-size: 0.75rem;
     }
 
     .tech-card {
         min-height: 0;
+    }
+
+    .cards-section::before {
+        width: clamp(24px, 6.5vw, 52px);
+        -webkit-mask-image: linear-gradient(
+            to bottom,
+            transparent 0%,
+            #000 5%,
+            #000 95%,
+            transparent 100%
+        );
+        mask-image: linear-gradient(
+            to bottom,
+            transparent 0%,
+            #000 5%,
+            #000 95%,
+            transparent 100%
+        );
+        background: linear-gradient(
+            to left,
+            #ffffff 0%,
+            rgba(255, 255, 255, 0.98) 26%,
+            rgba(255, 255, 255, 0) 100%
+        );
     }
 
     .model-specs__label {
@@ -302,73 +375,90 @@
         flex-direction: column;
         padding: 64px 20px;
     }
+
     .boat-info-description {
         max-width: none;
         min-height: auto;
         gap: 40px;
         align-items: center;
     }
+
     .boat-info-img-container {
         width: 100%;
     }
+
     .boat-information {
         height: 100vh;
         height: 100svh;
         justify-content: space-between;
     }
+
     .boat-models-switch {
         flex-direction: row;
         justify-content: space-between;
     }
+
     .boat-model-btn {
         width: 30%;
         text-align: center;
     }
+
     .boat-model-btn,
     .boat-model-btn.active {
-        font-size: 1.25rem; 
+        font-size: 1.25rem;
     }
+
     .boat-info-desc-text-text {
         text-align: center;
     }
+
     .boat-info-desc-text-btn__desktop {
         display: none;
     }
+
     .boat-info-desc-text-btn__mobile {
         display: block;
         width: 100%;
     }
+
     .boat-information-card-group {
         justify-content: space-between;
         gap: unset;
         width: 100%;
         padding-block: 1rem;
     }
+
     .boat-information-card {
         gap: 0;
         width: 33.3%;
         flex-direction: column;
         align-items: center;
     }
+
     .boat-information-card-big-text {
         font-size: 1.75rem;
     }
+
     .boat-information-card-text-gray,
     .boat-information-card-text-black {
         font-size: 0.75rem;
         line-height: 120%;
     }
+
     .boat-information-card-container {
         align-items: center;
         flex-direction: column-reverse;
         width: 100%;
     }
+
     .boat-image-stage {
         height: 230px;
     }
+
     .boat-info-watermark {
         font-size: 180px;
     }
+
     /* MODEL PAGE STYLES */
     /************ model overview ************/
     .model-overview__media {
@@ -378,20 +468,25 @@
         width: 100%;
         max-width: unset;
     }
+
     .model-overview::after,
     .model-overview::before {
         display: none;
     }
+
     .model-overview__inner {
         gap: 30px;
     }
+
     .model-overview__specs-track {
         flex-direction: column;
         gap: 30px;
     }
+
     .model-overview__media-img {
         width: 100%;
     }
+
     .model-overview__desc,
     .model-overview__specs {
         flex: 1 1 auto;
@@ -409,18 +504,23 @@
 
     /******** other-models section *********/
     .model-other-models {
-        padding-inline: 0;;
+        padding-inline: 0;
+        ;
     }
+
     .model-other-models__track {
         padding-inline: 40px;
     }
+
     .model-other-models__slide {
         width: fit-content;
     }
+
     .model-other-models__card {
         width: 90vw;
         width: clamp(680px, calc(-73.922px + 98.039vw), 930px);
-    } 
+    }
+
     .model-other-models__visual .boat-info-watermark {
         font-size: 180px;
     }
@@ -429,20 +529,7 @@
 }
 
 @media (max-width: 768px) {
-    section.welcome,
-    section.description,
-    section.boat-information,
-    .mosaic-cell-content__mobile,
-    section.cards-section,
-    .form-container,
-    .model-overview,
-    .model-deck-plan,
-    .model-equipment,
-    .model-road,
-    .model-faq,
-    .model-documentation,
-    .model-other-models,
-    footer {
+    .section-padding {
         padding: 60px 20px !important;
     }
 
@@ -451,18 +538,23 @@
         max-width: 100vw;
         height: auto;
     }
+
     .header.scrolled {
         height: auto;
     }
+
     .header-container {
         padding: 14px 10px 11px 10px;
     }
+
     .header-container p {
         line-height: 100%;
     }
+
     .header-container.padding {
         padding: 10px 10px 8px 10px;
     }
+
     .header-container {
         width: 100%;
         max-width: 100%;
@@ -509,9 +601,9 @@
 
     .description {
         height: 100vh;
-       height: 100svh;
+        height: 100svh;
     }
-   
+
     .feedback-video-container {
         display: none;
     }
@@ -520,12 +612,14 @@
     .boat-information-card-group {
         padding-top: 1rem;
     }
+
     .boat-image-stage {
         width: 100%;
         max-width: unset;
         height: 140px;
         height: clamp(140px, calc(114.88px + 7.177vh), 170px);
     }
+
     .boat-info-watermark {
         font-size: 140px;
     }
@@ -534,9 +628,11 @@
     .modal-window-description {
         display: none;
     }
+
     .vertical-line-modal {
         display: none;
     }
+
     .modal-menu-group {
         justify-content: center;
     }
@@ -552,6 +648,7 @@
         min-height: 100svh;
         position: relative;
     }
+
     .mosaic-cell-content__mobile h2 {
         color: #fff !important;
         padding: 0 0 12px 0 !important;
@@ -562,45 +659,53 @@
         font-size: 1.75rem;
         font-size: clamp(1.75rem, 1.3313rem + 1.9139vw, 2.25rem);
     }
+
     .form-container-group {
         flex-direction: column;
     }
+
     .checkbox-container,
     .form-container-group {
         width: 310px;
         width: clamp(310px, calc(125.789px + 52.632vw), 530px);
     }
+
     .input-container {
         width: 100%;
     }
+
     .btn-form {
         width: 100%;
         padding: 16px 14px;
         justify-content: space-between;
     }
+
     .btn-form-text {
         width: auto;
         font-size: 1rem;
     }
 
-    
+
     /*************** footer ***************/
     .footer {
         align-items: center;
         height: auto;
         gap: 60px;
     }
+
     .footer-container {
         flex-direction: column-reverse;
         gap: 60px;
         width: 100%;
         align-items: center;
     }
+
     .footer-form-news-header {
         text-align: center;
         font-size: 1.75rem;
         font-size: clamp(1.625rem, 1.2063rem + 1.9139vw, 2.125rem);
     }
+
     .footer-list,
     .footer-form-news,
     .footer-form-news-container,
@@ -611,31 +716,38 @@
         max-width: unset;
         width: 100%;
     }
+
     .footer-pages-n-contacts,
     .footer-form-news-container,
     .footer-contacts {
         padding: 0;
     }
+
     .footer-pages-n-contacts {
         border: none;
         width: 100%;
         gap: 60px;
     }
+
     .footer-form-news-input {
         gap: 1.25rem;
     }
+
     .footer-list {
         border-top: 1px solid rgba(255, 255, 255, 0.3);
         padding-top: 30px;
-        gap:0;
+        gap: 0;
     }
+
     .footer-form-news-socity {
         justify-content: center;
         padding-top: 16px;
     }
+
     .footer-list-group {
         width: 50%;
     }
+
     .footer-form-news-socity-img {
         width: 30px;
     }
@@ -701,6 +813,7 @@
     .mosaic-cell-content__mobile {
         display: block;
     }
+
     .main-gallery {
         display: none;
     }
@@ -721,6 +834,10 @@
         width: min(84vw, 410px);
     }
 
+    .cards-section::before {
+        width: clamp(20px, 7.5vw, 44px);
+    }
+
     .request-modal__dialog {
         padding: 42px 20px 24px;
     }
@@ -735,10 +852,12 @@
     .model-specs {
         padding: 10px;
     }
+
     .model-specs__group {
         flex-wrap: wrap;
         gap: 0;
     }
+
     .model-specs__item {
         width: 50%;
         min-width: unset;
@@ -746,6 +865,7 @@
         border: none;
         position: relative;
     }
+
     .model-specs__item:nth-child(odd)::after,
     .model-specs__item:nth-child(-n + 2)::before {
         content: '';
@@ -753,6 +873,7 @@
         background: #EFEEEA;
         z-index: 1;
     }
+
     .model-specs__item:nth-child(odd)::after {
         top: 50%;
         right: 0;
@@ -760,6 +881,7 @@
         height: 70%;
         transform: translateY(-50%);
     }
+
     .model-specs__item:nth-child(-n + 2)::before {
         bottom: 0;
         left: 50%;
@@ -767,7 +889,7 @@
         height: 1px;
         transform: translateX(-50%);
     }
-    
+
     /************* model gallery ************/
     .model-gallery {
         width: 100%;
@@ -776,9 +898,11 @@
         height: 100vh;
         height: 100svh;
     }
+
     .model-gallery__viewer {
         width: 100%;
     }
+
     .model-gallery__back {
         top: 30px;
         left: 10px;
@@ -789,7 +913,8 @@
         font-size: 0.875rem;
     }
 
-    .model-equipment__tab, .model-faq__title {
+    .model-equipment__tab,
+    .model-faq__title {
         font-size: 26px;
     }
 
@@ -867,66 +992,79 @@
     .model-road {
         padding: 56px 16px;
     }
+
     /********* model overview section *********/
     .model-overview {
         height: auto;
     }
+
     .model-overview__inner {
         flex-direction: column;
         height: auto;
         min-height: 100vh;
         min-height: 100svh;
     }
+
     .model-overview__inner,
     .model-overview__specs-track {
         gap: 60px;
         width: 100%;
     }
+
     .model-overview__specs {
         width: 100%;
     }
+
     .model-overview__media-img {
         width: 100%;
         font-size: 0px;
         position: static;
     }
+
     .model-overview__specs-list {
         flex-wrap: wrap;
         gap: 16px;
         width: 100%;
         max-width: unset;
     }
+
     .model-overview__spec {
         display: flex;
-       flex-direction: row;
-       align-items: flex-end;
-       justify-content: space-between;
-       padding-top: 16px;
-       width: 100%;
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding-top: 16px;
+        width: 100%;
     }
+
     .model-overview__spec:not(:first-child) {
         border-top: 1px solid #ffffff;
     }
+
     .model-overview__label {
         font-size: 0.75rem;
         font-size: clamp(0.75rem, 0.436rem + 1.4354vw, 1.125rem);
     }
+
     .model-overview__value {
         font-size: 1.25rem;
         font-size: clamp(1.125rem, 0.9157rem + 0.9569vw, 1.375rem);
         text-align: right;
-    } 
+    }
+
     .model-overview__desc {
         max-width: none;
         gap: 16px;
         position: static;
         width: 100%;
     }
+
     .model-overview__text {
         font-size: 0.875rem;
         line-height: 135%;
         font-size: clamp(0.875rem, 0.7703rem + 0.4785vw, 1rem);
     }
+
     .model-overview__specs-viewport {
         height: auto;
         overflow: visible;
@@ -942,36 +1080,43 @@
         justify-content: center;
         gap: 60px;
     }
+
     .model-deck-plan__canvas {
         width: 100%;
         padding: 0;
         position: relative;
     }
+
     .model-deck-plan__tabs {
-       flex-direction: row;
-       justify-content: space-between;
-       margin: 0;
-       width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 0;
+        width: 100%;
     }
+
     .model-deck-plan__tab {
         text-align: center;
         text-decoration: none;
         padding: 0;
     }
+
     .model-deck-plan__tab,
     .model-deck-plan__tab.is-active {
         font-size: clamp(1.05rem, 4.2vw, 1.3rem);
     }
+
     .model-deck-plan__tab-label {
         border: none;
         padding: 0;
     }
+
     .model-deck-plan__tab-separator {
         display: block;
         width: 1px;
         height: 100%;
         background: #EFEEEA;
     }
+
     .model-deck-plan__indicator {
         display: none;
         /* flex: 0 0 8px;
@@ -987,29 +1132,34 @@
     .model-documentation__inner {
         flex-direction: column;
     }
+
     .model-equipment__tab {
         font-size: 1.75rem;
         font-size: clamp(1.5rem, 1.2404rem + 1.1869vw, 2rem);
     }
-   .model-equipment__tabs {
-    width: 100%;
-   }
+
+    .model-equipment__tabs {
+        width: 100%;
+    }
 
     /********* model road section *********/
     .model-road {
         height: auto;
     }
+
     .model-road__title {
         font-size: 1.75rem;
         font-size: clamp(1.5rem, 1.2404rem + 1.1869vw, 2rem);
         line-height: 100%;
         height: auto;
     }
+
     .model-road__timeline {
         width: fit-content;
         justify-content: center;
         align-items: center;
     }
+
     .model-road__line {
         transform: rotate(90deg);
         width: 150%;
@@ -1017,31 +1167,37 @@
         bottom: 0;
         left: 12px;
     }
+
     .model-road__track {
         flex-direction: column;
         gap: 20px;
         width: auto;
     }
+
     .model-road__inner {
         height: auto;
         align-items: center;
         justify-content: center;
         padding: 0;
     }
+
     .model-road__item {
         flex-direction: row !important;
         align-items: flex-start;
         gap: 10px;
         transform: translateY(0) !important;
     }
+
     .model-road__content {
         align-items: flex-start;
         gap: 0px
     }
+
     .model-road__step-title {
         font-size: 18px;
         line-height: 28px;
     }
+
     .model-road__step-text {
         text-align: left;
         margin: 0;
@@ -1050,47 +1206,61 @@
     /******** other-models section *********/
     .model-other-models {
         padding-inline: 0 !important;
-     }
+    }
+
     .model-other-models__card {
         padding: 20px;
     }
+
     .model-other-models__track {
         padding-inline: 20px;
     }
+
     .model-other-models__slide {
         width: 298px;
         height: auto;
     }
+
     .model-other-models__visual {
         padding: 20px 0;
         min-height: unset;
         transform: translateY(0);
     }
+
     .model-other-models__visual .boat-info-watermark {
         font-size: 110px;
     }
+
     .model-other-models__card-title {
         font-size: 1.75rem;
         font-size: clamp(1.5rem, 1.2404rem + 1.1869vw, 2rem);
     }
+
     .model-other-models__specs-text,
     .model-other-models__specs-value {
         font-size: 14px;
     }
+
     .model-other-models__body {
-        padding: 0; 
+        padding: 0;
         gap: 20px
     }
+
     .model-other-models__cta {
         width: 100%;
         justify-content: center;
     }
 
-    
+
 
 }
 
 @media (max-width: 380px) {
+
+    .cards-section::before {
+        width: clamp(18px, 9vw, 32px);
+    }
+
     .header-text,
     .header-text-form {
         font-size: 0.8rem;
