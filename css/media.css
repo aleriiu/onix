@@ -936,10 +936,6 @@
         font-size: 26px;
     }
 
-    .main-gallery.scroll-section {
-        display: nones;
-    }
-
     .model-gallery {
         min-height: clamp(360px, 80vw, 620px);
     }
