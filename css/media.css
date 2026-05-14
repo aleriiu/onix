@@ -58,13 +58,7 @@
         font-size: 0.875rem;
     }
 
-    section.welcome,
-    section.description,
-    section.boat-information,
-    .mosaic-cell-content__inner,
-    section.cards-section,
-    .form-container,
-    footer {
+    .section-padding {
         padding: 80px 40px !important;
     }
 
@@ -231,7 +225,7 @@
 
     .tech-slider-nav {
         position: absolute;
-        top: 0;
+        top: -8%;
         right: 0;
         margin: 0;
     }
@@ -498,8 +492,11 @@
     .model-faq__col,
     .model-equipment__panels {
         max-width: none;
-        flex: 0 0 100%;
         width: 100%;
+    }
+    .model-equipment__tab,
+     .model-faq__title {
+        font-size: 32px;
     }
 
     /******** other-models section *********/
@@ -833,10 +830,19 @@
     .tech-card {
         width: min(84vw, 410px);
     }
-
-    .cards-section::before {
-        width: clamp(20px, 7.5vw, 44px);
+    .tech-cards-track {
+        gap: 20px;
     }
+
+    .cards-section::before,
+    .tech-cards-track::after {
+       display: none !important;
+    }
+    .tech-slider,
+    .cards-section--tech {
+        overflow: visible;
+    }
+
 
     .request-modal__dialog {
         padding: 42px 20px 24px;
@@ -952,6 +958,7 @@
 
     .model-faq__title {
         max-width: none;
+        width: 100%;
     }
 
     .model-other-models__slide {
@@ -996,6 +1003,7 @@
     /********* model overview section *********/
     .model-overview {
         height: auto;
+        padding: 60px 20px;
     }
 
     .model-overview__inner {
@@ -1158,11 +1166,12 @@
         width: fit-content;
         justify-content: center;
         align-items: center;
+        padding: 0;
     }
 
     .model-road__line {
-        transform: rotate(90deg);
-        width: 150%;
+        transform: rotate(90deg) translateX(-15px);
+        width: 160%;
         top: 0;
         bottom: 0;
         left: 12px;

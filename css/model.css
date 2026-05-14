@@ -578,7 +578,7 @@
 }
 
 .model-equipment__tab {
-    color: rgba(0, 0, 0, 0.38);
+    color: rgba(0, 0, 0, 0.25);
     cursor: pointer;
     transition: color 0.2s ease;
 }
