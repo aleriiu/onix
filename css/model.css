@@ -689,6 +689,14 @@
     line-height: 1.6;
 }
 
+.model-accordion__panel p {
+    font-size: clamp(0.875rem, 0.7703rem + 0.4785vw, 1rem);
+    line-height: 135%;
+    letter-spacing: 0%;
+    color: #121212;
+    font-weight: 400;
+}
+
 .model-accordion__panel[hidden] {
     display: none;
 }

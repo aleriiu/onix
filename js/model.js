@@ -1020,13 +1020,3 @@ window.addEventListener('load', () => {
     ScrollTrigger.refresh();
     console.log('[road] window.load — завершён');
 });
-
-document.querySelector('.hero-model__cta')?.addEventListener('click', () => {
-    const target = document.querySelector('.model-video');
-    if (!target) return;
-    if (lenis) {
-        lenis.scrollTo(target, { offset: 0 });
-    } else {
-        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-});

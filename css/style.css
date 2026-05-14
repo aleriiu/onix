@@ -137,8 +137,8 @@ a, button {
     border: none;
     background-color: #00000066;
     height: 1px;
-    width: stretch;
-    margin: 0 2.625rem;
+    margin-left: 2.625rem;
+    margin-right: 2.625rem;
 }
 
 .modal-window {
@@ -1216,7 +1216,7 @@ body {
     content: "";
     position: absolute;
     right: 10px;
-    top: 50%;
+    top: 49%;
     transform: translateY(-50%);
     width: 11px;
     height: 11px;
