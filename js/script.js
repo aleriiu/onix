@@ -107,10 +107,16 @@ const getMidRowFullWidth = () => {
     return rowMid.clientWidth - getRowGap(rowMid);
 };
 
-const getGalleryViewport = () => ({
-    w: galleryPin?.clientWidth  ?? window.innerWidth,
-    h: galleryPin?.clientHeight ?? window.innerHeight
-});
+const getGalleryViewport = () => {
+    const vv = window.visualViewport;
+    const viewportW = Math.round(vv?.width ?? window.innerWidth);
+    const viewportH = Math.round(vv?.height ?? window.innerHeight);
+    const pinRect = galleryPin?.getBoundingClientRect();
+    return {
+        w: Math.round(pinRect?.width ?? viewportW),
+        h: Math.round(pinRect?.height ?? viewportH)
+    };
+};
 
 /** Цели фаз 1–2 фиксируем один раз при входе — иначе scrub пересчитывает offsetHeight каждый кадр */
 let galleryMetrics = null;
@@ -189,7 +195,7 @@ if (gallerySection && img1Cell && mosaicWrap && rowMid) {
     const m = () => galleryMetrics;
 
     galleryTl.to(img1Cell, {
-        backgroundSize: "100%",
+        backgroundSize: "cover",
         duration:       1,
         ease:           growEase
     }, 0);
@@ -241,7 +247,7 @@ if (gallerySection && img1Cell && mosaicWrap && rowMid) {
 
     galleryTl
         .to(img5Cell, {
-            flex:     flexLock,
+            flex:     "0 0 auto",
             width:    0,
             minWidth: 0,
             opacity:  0,
@@ -290,20 +296,23 @@ if (gallerySection && img1Cell && mosaicWrap && rowMid) {
             duration:  0.42,
             ease:      fadeEase
         }, P2)
+          .to(img5Cell, {
+            marginRight:  0,
+            duration: 0.42,
+            ease:     growEase
+        }, P2)
         .to(rowMid, {
             flex:       "1 1 100%",
-            minHeight:  () => m()?.vpH ?? getGalleryViewport().h,
-            height:     () => m()?.vpH ?? getGalleryViewport().h,
-            roundProps: "height,minHeight",
+            minHeight:  "100%",
+            height:     "100%",
             duration:   0.42,
             ease:       fadeEase
         }, P2)
         .to(img1Cell, {
             flex:       "1 1 100%",
-            width:      () => m()?.vpW ?? getGalleryViewport().w,
-            height:     () => m()?.vpH ?? getGalleryViewport().h,
-            minHeight:  () => m()?.vpH ?? getGalleryViewport().h,
-            roundProps: "width,height,minHeight",
+            width:      "100%",
+            height:     "100%",
+            minHeight:  "100%",
             duration:   0.36,
             ease:       fadeEase
         }, P2_IMG1);

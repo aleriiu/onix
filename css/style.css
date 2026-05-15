@@ -770,6 +770,7 @@ body {
     max-width: 100%;
     height: 100vh;
     height: 100svh;
+    height: 100dvh; 
     overflow: hidden;
     box-sizing: border-box;
     z-index: 1;
@@ -788,9 +789,20 @@ body {
     display: flex;
     flex-direction: row;
     align-items: stretch;
-    gap: 0.75rem;
+    /* gap: 0.75rem; */
     min-height: 0;
     overflow: hidden;
+}
+.mosaic-row .img-2,
+.mosaic-row .img-5,
+.mosaic-row .img-6 {
+    margin-right: 12px;
+}
+.mosaic-cell .img-3 {
+    margin-inline: 12px;
+}
+.mosaic-row .img-4 {
+    margin-left: 12px;
 }
 
 .mosaic-row--top,
@@ -807,7 +819,7 @@ body {
 /* после фазы 2 средний ряд и img-1 заполняют весь pin-viewport */
 .mosaic-wrap.is-fullscreen .mosaic-row--mid,
 .mosaic-wrap.is-fullscreen .mosaic-cell.img-1 {
-    min-height: 100%;
+    height: 100%;
 }
 
 .mosaic-row-spacer {
@@ -828,23 +840,24 @@ body {
 }
 
 .mosaic-row--top .mosaic-cell {
-    flex: 1 1 0;
+    flex: 1 1 auto;
 }
 
 .mosaic-row--mid .mosaic-cell.img-5 {
-    flex: 1 1 0;
+    flex: 0 0 auto;
+    width: 298px;
 }
 
 .mosaic-row--mid .mosaic-cell.img-1.img-wide {
-    flex: 2 1 0;
+    flex: 1 1 auto;
 }
 
 .mosaic-row--bottom .mosaic-cell.img-6.img-wide {
-    flex: 2 1 0;
+    flex: 2 1 auto;
 }
 
 .mosaic-row--bottom .mosaic-cell.img-7 {
-    flex: 1 1 0;
+    flex: 1 1 auto;
 }
 
 /* твои реальные кадры */
@@ -852,7 +865,7 @@ body {
     position: relative;
     overflow: hidden;
     background-image: url("../images/img5.png");
-    background-size: 118%;
+    background-size: cover;
     background-position: center;
 }
 
