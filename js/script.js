@@ -40,44 +40,38 @@ window.addEventListener('scroll', function () {
 // 1. GSAP
 gsap.registerPlugin(ScrollTrigger);
 
-// 2. Lenis + ScrollTrigger sync
+// 2. Lenis + ScrollTrigger sync (scrollerProxy убирает рывок при pin/unpin)
 const lenis = new Lenis();
+ScrollTrigger.scrollerProxy(document.documentElement, {
+    scrollTop(value) {
+        if (arguments.length) {
+            lenis.scrollTo(value, { immediate: true });
+        }
+        return lenis.scroll;
+    },
+    getBoundingClientRect() {
+        return {
+            top:    0,
+            left:   0,
+            width:  window.innerWidth,
+            height: window.innerHeight
+        };
+    }
+});
 lenis.on("scroll", ScrollTrigger.update);
+ScrollTrigger.addEventListener("refresh", () => lenis.resize());
 gsap.ticker.add((time) => {
     // gsap.ticker передает время в секундах, Lenis ожидает миллисекунды
     lenis.raf(time * 1000);
 });
 gsap.ticker.lagSmoothing(0);
+ScrollTrigger.refresh();
 
 /*
- * ─────────────────────────────────────────────────────────────────────────────
- *  GALLERY — 3-фазная анимация по скроллу
- * ─────────────────────────────────────────────────────────────────────────────
- *
- *  Сетка (3 ряда, 3 колонки):
- *    ┌──────┬──────┬──────┐  row 0 (34vh)
- *    │ img2 │ img3 │ img4 │
- *    ├──────┼──────┴──────┤  row 1 (32vh)
- *    │ img5 │   img1/ctx  │   img1 = placeholder; ctx = mosaic-cell-content
- *    ├──────┴──────┬──────┤  row 2 (34vh)
- *    │    img6     │ img7 │
- *    └─────────────┴──────┘
- *
- *  ФАЗА 1 — горизонтальное сжатие
- *    • img2 сужается ВЛЕВО  → квадрат (width = height)
- *    • img3, img4 — ВПРАВО  → квадрат
- *    • img5 выталкивается ВЛЕВО за экран
- *    • mosaic-cell-content расширяется ВЛЕВО на 100% ширины ряда 1
- *    • img6 сужается ВЛЕВО  → 2:1 (width = 2 × height)
- *    • img7 сужается ВПРАВО → квадрат
- *
- *  ФАЗА 2 — вертикальное расширение
- *    • ряды 0 и 2 уходят за края экрана (вверх/вниз)
- *    • mosaic-cell-content занимает 100% высоты
- *
- *  ФАЗА 3 — появление текста
- *    • mosaic-cell-content__inner fade in
- * ─────────────────────────────────────────────────────────────────────────────
+ * GALLERY — flex-мозаика + CSS sticky (без GSAP pin → нет скачка при входе).
+ * Фаза 1: img-1 шире, img-5 уходит, крайние ряды — квадраты по краям + spacer.
+ * Фаза 2: верх/низ схлопываются, img-1 на всю высоту.
+ * Фаза 3: текст.
  */
 
 gsap.set(".main-gallery .mosaic-cell-content__inner", { opacity: 0 });
@@ -85,168 +79,250 @@ gsap.set(".main-gallery .mosaic-cell-content__inner", { opacity: 0 });
 const gallerySection = document.querySelector(".main-gallery");
 const galleryPin     = gallerySection?.querySelector(".sticky-wrapper");
 const mosaicWrap     = gallerySection?.querySelector(".mosaic-wrap");
-const contentCell    = gallerySection?.querySelector(".mosaic-cell-content");
+const rowTop         = gallerySection?.querySelector(".mosaic-row--top");
+const rowMid         = gallerySection?.querySelector(".mosaic-row--mid");
+const rowBot         = gallerySection?.querySelector(".mosaic-row--bottom");
+const spacerTop      = rowTop?.querySelector(".mosaic-row-spacer");
+const spacerBot      = rowBot?.querySelector(".mosaic-row-spacer");
 
-// Ссылки на ячейки сетки
-const img1Cell = gallerySection?.querySelector(".mosaic-cell.img-1"); // placeholder row1
-const img2Cell = gallerySection?.querySelector(".mosaic-cell.img-2"); // row0 col0
-const img3Cell = gallerySection?.querySelector(".mosaic-cell.img-3"); // row0 col1
-const img4Cell = gallerySection?.querySelector(".mosaic-cell.img-4"); // row0 col2
-const img5Cell = gallerySection?.querySelector(".mosaic-cell.img-5"); // row1 col0
-const img6Cell = gallerySection?.querySelector(".mosaic-cell.img-6"); // row2 col0-1 (wide)
-const img7Cell = gallerySection?.querySelector(".mosaic-cell.img-7"); // row2 col2
+const img1Cell = gallerySection?.querySelector(".mosaic-cell.img-1");
+const img2Cell = gallerySection?.querySelector(".mosaic-cell.img-2");
+const img3Cell = gallerySection?.querySelector(".mosaic-cell.img-3");
+const img4Cell = gallerySection?.querySelector(".mosaic-cell.img-4");
+const img5Cell = gallerySection?.querySelector(".mosaic-cell.img-5");
+const img6Cell = gallerySection?.querySelector(".mosaic-cell.img-6");
+const img7Cell = gallerySection?.querySelector(".mosaic-cell.img-7");
 
-/*
- * setupGalleryInitialState()
- * Вызывается при загрузке и при каждом ScrollTrigger.refreshInit (ресайз).
- * Устанавливает:
- *   – justify-self и точную px-ширину каждой ячейки (чтобы анимация шла px→px)
- *   – начальный clip-path mosaic-cell-content совпадает с позицией img-1 в сетке
- */
-const setupGalleryInitialState = () => {
-    if (!contentCell || !img1Cell || !mosaicWrap) return;
+const neighborCells = [img2Cell, img3Cell, img4Cell, img5Cell, img6Cell, img7Cell].filter(Boolean);
+const flexCells     = [img1Cell, img2Cell, img3Cell, img4Cell, img5Cell, img6Cell, img7Cell].filter(Boolean);
 
-    const wR  = mosaicWrap.getBoundingClientRect();
-    const c1R = img1Cell.getBoundingClientRect(); // img-1 = row1, cols 1-2
-
-    // ── clip-path начального состояния = рамка вокруг img-1 ──────────────────
-    const topPct    = ((c1R.top    - wR.top)    / wR.height * 100).toFixed(2);
-    const bottomPct = ((wR.bottom  - c1R.bottom) / wR.height * 100).toFixed(2);
-    const leftPct   = ((c1R.left   - wR.left)   / wR.width  * 100).toFixed(2);
-    gsap.set(contentCell, {
-        clipPath: `inset(${topPct}% 0% ${bottomPct}% ${leftPct}%)`
-    });
-
-    // ── якорная привязка и начальная ширина в px ──────────────────────────────
-    // justify-self: start — левый край зафиксирован, ячейка сжимается вправо
-    // justify-self: end   — правый край зафиксирован, ячейка сжимается влево
-    const setCell = (el, side) => {
-        if (!el) return;
-        gsap.set(el, {
-            justifySelf: side,
-            width:       el.offsetWidth, // px от текущего layout
-            x:           0,
-            y:           0
-        });
-    };
-
-    setCell(img2Cell, "start"); // сжимается влево  → левый край фиксирован
-    setCell(img3Cell, "end");   // сжимается вправо → правый край фиксирован
-    setCell(img4Cell, "end");
-    setCell(img5Cell, "start"); // вытесняется влево
-    setCell(img6Cell, "start"); // сжимается влево
-    setCell(img7Cell, "end");   // сжимается вправо
+const getRowGap = (row) => {
+    if (!row) return 0;
+    const g = parseFloat(getComputedStyle(row).gap);
+    return Number.isFinite(g) ? g : 12;
 };
 
-/*
- * galleryTl — основной timeline.
- * Все анимационные TO-значения function-based:
- * GSAP пересчитывает их при invalidateOnRefresh — безопасен при ресайзе.
- */
+const getMidRowFullWidth = () => {
+    if (!rowMid) return 0;
+    return rowMid.clientWidth - getRowGap(rowMid);
+};
+
+const getGalleryViewport = () => ({
+    w: galleryPin?.clientWidth  ?? window.innerWidth,
+    h: galleryPin?.clientHeight ?? window.innerHeight
+});
+
+/** Цели фаз 1–2 фиксируем один раз при входе — иначе scrub пересчитывает offsetHeight каждый кадр */
+let galleryMetrics = null;
+
+const measureGalleryMetrics = () => {
+    if (!img2Cell || !img6Cell || !img7Cell || !rowMid) return;
+
+    galleryMetrics = {
+        square: Math.round(img2Cell.offsetHeight),
+        wide:   Math.round(img6Cell.offsetHeight * 2),
+        img1w:  Math.round(getMidRowFullWidth()),
+        vpW:    Math.round(getGalleryViewport().w),
+        vpH:    Math.round(getGalleryViewport().h)
+    };
+};
+
+/** full: сброс inline-стилей GSAP (скролл назад / resize). Без full — только spacer’ы. */
+const resetGalleryLayout = (full = false) => {
+    if (!img1Cell || !mosaicWrap || !rowMid) return;
+
+    if (full) {
+        flexCells.forEach((el) => {
+            gsap.set(el, { clearProps: "width,height,flex,flexGrow,flexShrink,flexBasis,opacity,minWidth,maxWidth,margin,boxSizing,x" });
+        });
+        [spacerTop, spacerBot].forEach((el) => {
+            if (!el) return;
+            gsap.set(el, { clearProps: "flex,width,flexGrow" });
+        });
+        gsap.set([rowTop, rowBot], { clearProps: "flex,opacity,height,minHeight", opacity: 1 });
+        gsap.set(rowMid, { clearProps: "flex,opacity", opacity: 1 });
+        gsap.set(mosaicWrap, { clearProps: "gap" });
+        gsap.set(img1Cell, { clearProps: "backgroundSize,backgroundPosition" });
+        galleryMetrics = null;
+    }
+
+    gsap.set([spacerTop, spacerBot], { flex: "0 0 0px", width: 0 });
+    mosaicWrap?.classList.remove("is-fullscreen");
+};
+
+const onGallerySectionEnter = () => {
+    measureGalleryMetrics();
+};
+
 const galleryTl = gsap.timeline({
     scrollTrigger: {
-        trigger:          gallerySection,
-        start:            "top top",
-        end:              "+=300%",
-        scrub:            1.2,
-        pin:              galleryPin,
-        pinSpacing:       true,
-        anticipatePin:    1,
-        refreshPriority:  -10,
-        id:               "main-gallery-scroll",
-        invalidateOnRefresh: true
+        trigger:             gallerySection,
+        start:               "top top",
+        end:                 "+=380%",
+        scrub:               1,
+        refreshPriority:     -10,
+        id:                  "main-gallery-scroll",
+        invalidateOnRefresh: false,
+        onEnter:             onGallerySectionEnter,
+        onEnterBack:         onGallerySectionEnter,
+        onLeaveBack:         () => resetGalleryLayout(true)
     }
 });
 
-if (gallerySection && img1Cell && contentCell && mosaicWrap) {
-    setupGalleryInitialState();
-    ScrollTrigger.addEventListener("refreshInit", setupGalleryInitialState);
+if (gallerySection && img1Cell && mosaicWrap && rowMid) {
+    resetGalleryLayout(false);
 
-    // ── ФАЗА 1: горизонтальное сжатие (t = 0 → 0.5) ─────────────────────────
+    let galleryResizeTimer;
+    window.addEventListener("resize", () => {
+        clearTimeout(galleryResizeTimer);
+        galleryResizeTimer = setTimeout(() => {
+            resetGalleryLayout(true);
+            measureGalleryMetrics();
+            galleryTl.scrollTrigger?.invalidate();
+            ScrollTrigger.refresh();
+        }, 200);
+    });
 
-    // Ряд 0: img2 → левый квадрат; img3, img4 → правые квадраты
+    const growEase = "power2.inOut";
+    const fadeEase = "power1.inOut";
+    const flexLock = "0 0 auto";
+    const m = () => galleryMetrics;
+
+    galleryTl.to(img1Cell, {
+        backgroundSize: "100%",
+        duration:       1,
+        ease:           growEase
+    }, 0);
+
+    // ── Фаза 1: горизонтальное выталкивание ─────────────────────────────────
+    galleryTl.to([spacerTop, spacerBot], {
+        flex:     "1 1 auto",
+        width:    "auto",
+        duration: 0.5,
+        ease:     growEase
+    }, 0);
+
     galleryTl
         .to(img2Cell, {
-            width:    () => img2Cell.offsetHeight,
-            duration: 0.5, ease: "power2.inOut"
+            flex:       flexLock,
+            width:      () => m()?.square ?? img2Cell.offsetHeight,
+            roundProps: "width",
+            duration:   0.5,
+            ease:       growEase
         }, 0)
         .to(img3Cell, {
-            width:    () => img3Cell.offsetHeight,
-            duration: 0.5, ease: "power2.inOut"
+            flex:       flexLock,
+            width:      () => m()?.square ?? img3Cell.offsetHeight,
+            roundProps: "width",
+            duration:   0.5,
+            ease:       growEase
         }, 0)
         .to(img4Cell, {
-            width:    () => img4Cell.offsetHeight,
-            duration: 0.5, ease: "power2.inOut"
-        }, 0);
-
-    // Ряд 1: img5 вытесняется за левый край; content-cell расширяется до 100% ширины
-    galleryTl
-        .to(img5Cell, {
-            x:        () => -(img5Cell.offsetWidth),
-            duration: 0.5, ease: "power2.inOut"
+            flex:       flexLock,
+            width:      () => m()?.square ?? img4Cell.offsetHeight,
+            roundProps: "width",
+            duration:   0.5,
+            ease:       growEase
         }, 0)
-        .to(contentCell, {
-            // left-inset → 0%, top/bottom остаются (строки 0 и 2 ещё не сдвинуты)
-            clipPath: () => {
-                const wR  = mosaicWrap.getBoundingClientRect();
-                const c1R = img1Cell.getBoundingClientRect();
-                const top    = ((c1R.top    - wR.top)    / wR.height * 100).toFixed(2);
-                const bottom = ((wR.bottom  - c1R.bottom) / wR.height * 100).toFixed(2);
-                return `inset(${top}% 0% ${bottom}% 0%)`;
-            },
-            duration: 0.5, ease: "power2.inOut"
-        }, 0);
-
-    // Ряд 2: img6 → левый 2:1; img7 → правый квадрат
-    galleryTl
         .to(img6Cell, {
-            width:    () => img6Cell.offsetHeight * 2,
-            duration: 0.5, ease: "power2.inOut"
+            flex:       flexLock,
+            width:      () => m()?.wide ?? img6Cell.offsetHeight * 2,
+            roundProps: "width",
+            duration:   0.5,
+            ease:       growEase
         }, 0)
         .to(img7Cell, {
-            width:    () => img7Cell.offsetHeight,
-            duration: 0.5, ease: "power2.inOut"
+            flex:       flexLock,
+            width:      () => m()?.square ?? img7Cell.offsetHeight,
+            roundProps: "width",
+            duration:   0.5,
+            ease:       growEase
         }, 0);
 
-    // ── ФАЗА 2: вертикальное расширение (t = 0.5 → 0.85) ───────────────────
-    // Считаем сдвиги по реальной геометрии ячеек внутри контейнера:
-    // так ряды уходят за границы плавно и одинаково на разных разрешениях.
-    const getVerticalExitShift = (cell, direction) => {
-        if (!cell || !mosaicWrap) return 0;
-        const wrapRect = mosaicWrap.getBoundingClientRect();
-        const cellRect = cell.getBoundingClientRect();
-        const baseShift = direction === "up"
-            ? (cellRect.bottom - wrapRect.top)
-            : (wrapRect.bottom - cellRect.top);
-        return Math.ceil(baseShift + 2);
-    };
-
-    // Ряд 0 уходит ВВЕРХ; ряд 2 уходит ВНИЗ (overflow:hidden на mosaic-wrap обрезает их)
     galleryTl
-        .to([img2Cell, img3Cell, img4Cell], {
-            y:        (_, target) => -getVerticalExitShift(target, "up"),
+        .to(img5Cell, {
+            flex:     flexLock,
+            width:    0,
+            minWidth: 0,
             opacity:  0,
-            duration: 0.44, ease: "power1.inOut"
-        }, 0.5)
-        .to([img6Cell, img7Cell], {
-            y:        (_, target) => getVerticalExitShift(target, "down"),
-            opacity:  0,
-            duration: 0.44, ease: "power1.inOut"
-        }, 0.5)
-        // clip-path раскрываем заметно позже начала ухода рядов,
-        // чтобы нижний ряд успевал уйти и не выглядел "схлопывающимся".
-        .to(contentCell, {
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 0.34, ease: "power1.inOut"
-        }, 0.64)
+            duration: 0.5,
+            ease:     growEase
+        }, 0)
+        .to(img1Cell, {
+            flex:       "1 1 auto",
+            width:      () => m()?.img1w ?? getMidRowFullWidth(),
+            roundProps: "width",
+            duration:   0.5,
+            ease:       growEase
+        }, 0);
 
-    // ── ФАЗА 3: появление текста (t = 0.85 → 1.0) ───────────────────────────
+    galleryTl.to(neighborCells, {
+        opacity:  0,
+        duration: 0.45,
+        ease:     fadeEase,
+        stagger:  0.03
+    }, 0.15);
+
+    const P2 = 0.48;
+    const P2_IMG1 = 0.58;
+    const P3 = 0.72;
+    const P_HOLD = 0.78;
+
+    // ── Фаза 2: вертикальное раскрытие img-1 на весь viewport ───────────────
+    galleryTl.to(mosaicWrap, {
+        gap:      0,
+        duration: 0.42,
+        ease:     fadeEase
+    }, P2);
+
     galleryTl
-        .to(".main-gallery .mosaic-cell-content__inner", {
-            opacity:  1,
-            duration: 0.15,
-            ease:     "power1.out"
-        }, 0.85);
+        .to(rowTop, {
+            flex:      "0 0 0px",
+            minHeight: 0,
+            opacity:   0,
+            duration:  0.42,
+            ease:      fadeEase
+        }, P2)
+        .to(rowBot, {
+            flex:      "0 0 0px",
+            minHeight: 0,
+            opacity:   0,
+            duration:  0.42,
+            ease:      fadeEase
+        }, P2)
+        .to(rowMid, {
+            flex:       "1 1 100%",
+            minHeight:  () => m()?.vpH ?? getGalleryViewport().h,
+            height:     () => m()?.vpH ?? getGalleryViewport().h,
+            roundProps: "height,minHeight",
+            duration:   0.42,
+            ease:       fadeEase
+        }, P2)
+        .to(img1Cell, {
+            flex:       "1 1 100%",
+            width:      () => m()?.vpW ?? getGalleryViewport().w,
+            height:     () => m()?.vpH ?? getGalleryViewport().h,
+            minHeight:  () => m()?.vpH ?? getGalleryViewport().h,
+            roundProps: "width,height,minHeight",
+            duration:   0.36,
+            ease:       fadeEase
+        }, P2_IMG1);
+
+    // ── Фаза 3: текст ───────────────────────────────────────────────────────
+    galleryTl.to(".main-gallery .mosaic-cell-content__inner", {
+        opacity:  1,
+        duration: 0.12,
+        ease:     "power1.out"
+    }, P3);
+
+    // ── Пауза: полный экран закреплён, скролл идёт «вхолостую» ───────────────
+    galleryTl.to({}, { duration: 0.22 }, P_HOLD);
+
+    galleryTl.eventCallback("onUpdate", () => {
+        mosaicWrap?.classList.toggle("is-fullscreen", galleryTl.progress() >= P2_IMG1);
+    });
+
+    window.addEventListener("load", () => ScrollTrigger.refresh());
 }
 /***** end gallery *****/
 

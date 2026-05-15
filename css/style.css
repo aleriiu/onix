@@ -742,6 +742,10 @@ button {
 
 /***** gallery *****/
 
+html {
+    scrollbar-gutter: stable;
+}
+
 body {
     margin: 0;
     font-family: sans-serif;
@@ -755,49 +759,101 @@ body {
 .main-gallery.scroll-section {
     position: relative;
     width: 100%;
+    /* 100svh — видимая мозаика + 380svh — дистанция scrub (как end: "+=380%") */
+    min-height: calc(100svh + 380svh);
 }
 
 .main-gallery .sticky-wrapper {
+    position: sticky;
+    top: 0;
     width: 100%;
+    max-width: 100%;
     height: 100vh;
+    height: 100svh;
     overflow: hidden;
+    box-sizing: border-box;
+    z-index: 1;
 }
 
 .image-container.mosaic-wrap {
-    position: absolute;
-    top: 0;
-    left: 0;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    /* Важно: vh + gap давали высоту > 100vh и ломали геометрию анимации */
-    grid-template-rows: 34fr 32fr 34fr;
     gap: 0.75rem;
-    transform-origin: center center;
-    z-index: 3;
-    /* Ячейки, выходящие за границу при Phase 2, обрезаются */
+    overflow: hidden;
+}
+
+.mosaic-row {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0.75rem;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.mosaic-row--top,
+.mosaic-row--bottom {
+    flex: 34 1 0;
+}
+
+.mosaic-row--mid {
+    flex: 32 1 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* после фазы 2 средний ряд и img-1 заполняют весь pin-viewport */
+.mosaic-wrap.is-fullscreen .mosaic-row--mid,
+.mosaic-wrap.is-fullscreen .mosaic-cell.img-1 {
+    min-height: 100%;
+}
+
+.mosaic-row-spacer {
+    flex: 0 0 0;
+    width: 0;
+    min-width: 0;
     overflow: hidden;
 }
 
 .mosaic-cell {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    /* align-self:stretch (default) растягивает ячейку на высоту строки */
-    /* min-width/min-height:0 позволяет GSAP сжать ячейку до нуля */
-    min-width: 0;
-    min-height: 0;
-    will-change: transform, width;
+    transform: translateZ(0);
 }
 
-.img-wide {
-    grid-column: span 2;
+.mosaic-row--top .mosaic-cell {
+    flex: 1 1 0;
+}
+
+.mosaic-row--mid .mosaic-cell.img-5 {
+    flex: 1 1 0;
+}
+
+.mosaic-row--mid .mosaic-cell.img-1.img-wide {
+    flex: 2 1 0;
+}
+
+.mosaic-row--bottom .mosaic-cell.img-6.img-wide {
+    flex: 2 1 0;
+}
+
+.mosaic-row--bottom .mosaic-cell.img-7 {
+    flex: 1 1 0;
 }
 
 /* твои реальные кадры */
-.img-1 {
+.mosaic-cell.img-1 {
+    position: relative;
+    overflow: hidden;
     background-image: url("../images/img5.png");
+    background-size: 118%;
+    background-position: center;
 }
 
 .img-2 {
@@ -825,20 +881,7 @@ body {
 }
 
 
-/* Абсолютный блок поверх sticky-wrapper, раскрывается clip-path */
-.mosaic-cell-content {
-    position: absolute;
-    inset: 0;
-    background-image: url("../images/img5.png");
-    background-size: cover;
-    background-position: center;
-    z-index: 4;
-    /* начальное значение задаётся через JS после layout */
-    clip-path: inset(0% 0% 0% 0%);
-    will-change: clip-path;
-}
-
-.mosaic-cell-content__inner {
+.mosaic-cell.img-1 .mosaic-cell-content__inner {
     position: absolute;
     inset: 0;
     display: flex;
@@ -848,9 +891,10 @@ body {
     background: linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.1) 60%, transparent 100%);
     opacity: 0;
     will-change: opacity;
+    pointer-events: none;
 }
 
-.mosaic-cell-content__inner h2 {
+.mosaic-cell.img-1 .mosaic-cell-content__inner h2 {
     margin: 0 0 1.25rem;
     font-weight: 500;
     font-size: clamp(32px, 4vw, 56px);
@@ -859,7 +903,7 @@ body {
     max-width: 700px;
 }
 
-.mosaic-cell-content__inner p {
+.mosaic-cell.img-1 .mosaic-cell-content__inner p {
     margin: 0 0 0.75rem;
     font-weight: 400;
     font-size: clamp(14px, 1.1vw, 20px);
@@ -868,7 +912,7 @@ body {
     max-width: 600px;
 }
 
-.mosaic-cell-content__inner p:last-child {
+.mosaic-cell.img-1 .mosaic-cell-content__inner p:last-child {
     margin-bottom: 0;
 }
 

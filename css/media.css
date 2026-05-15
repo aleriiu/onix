@@ -208,6 +208,10 @@
         font-size: clamp(1.2rem, 3.8vw, 1rem);
     }
 
+    .main-gallery.scroll-section {
+        min-height: calc(92svh + 380svh);
+    }
+
     .main-gallery .sticky-wrapper {
         height: 92vh;
         height: 92svh;
