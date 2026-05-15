@@ -165,7 +165,7 @@ const galleryTl = gsap.timeline({
         trigger:             gallerySection,
         start:               "top top",
         end:                 "+=380%",
-        scrub:               1,
+        scrub:               0.3,
         refreshPriority:     -10,
         id:                  "main-gallery-scroll",
         invalidateOnRefresh: false,
