@@ -311,11 +311,12 @@ if (gallerySection && img1Cell && mosaicWrap && rowMid) {
         .to(img1Cell, {
             flex:       "1 1 100%",
             width:      "100%",
-            height:     "100%",
-            minHeight:  "100%",
-            duration:   0.36,
-            ease:       fadeEase
-        }, P2_IMG1);
+            height: () => getGalleryViewport().h,   // px вместо "100%"
+            minHeight: () => getGalleryViewport().h,
+            duration: 0.36,
+            ease: fadeEase,
+            immediateRender: false
+          }, P2_IMG1);
 
     // ── Фаза 3: текст ───────────────────────────────────────────────────────
     galleryTl.to(".main-gallery .mosaic-cell-content__inner", {
@@ -344,7 +345,8 @@ const boatData = {
         imageAlt: "ONIX 850 Cabin",
         length: "8,5",
         capacity: "8",
-        speed: "95"
+        speed: "95",
+        link: ""
     },
     day: {
         watermark: "850",
@@ -353,7 +355,8 @@ const boatData = {
         imageAlt: "ONIX 850 Day Cruiser",
         length: "8,5",
         capacity: "2",
-        speed: "95"
+        speed: "95",
+        link: ""
     },
     x12: {
         watermark: "12X",
@@ -362,7 +365,8 @@ const boatData = {
         imageAlt: "ONIX 12X",
         length: "12",
         capacity: "12",
-        speed: "120"
+        speed: "120",
+        link: "model.html"
     }
 };
 
@@ -376,6 +380,8 @@ const boatLength = document.getElementById("boatLength");
 const boatCapacity = document.getElementById("boatCapacity");
 const boatSpeed = document.getElementById("boatSpeed");
 const boatImageCurrent = document.getElementById("boatImageCurrent");
+const boatLinks = document.querySelectorAll(".boat-info-desc-text-btn");
+
 
 function preload(src) {
     return new Promise((resolve) => {
@@ -395,6 +401,7 @@ function applyBoatContent(modelKey) {
     boatLength.textContent = model.length;
     boatCapacity.textContent = model.capacity;
     boatSpeed.textContent = model.speed;
+    boatLinks.forEach((link) => link.href = model.link);
 }
 
 async function renderBoat(modelKey) {

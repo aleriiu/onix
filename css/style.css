@@ -650,6 +650,7 @@ button {
     padding: 1rem 2.5rem;
     color: #f3f2ef;
     border-radius: 6px;
+    text-align: center;
 }
 
 .boat-info-img-container {
@@ -1040,10 +1041,10 @@ body {
     justify-content: space-between;
 }
 
-.cards-section--tech .cards-section-description-header,
+/* .cards-section--tech .cards-section-description-header,
 .cards-section--tech .cards-section-description-text {
     width: 100%;
-}
+} */
 
 .tech-slider-nav {
     display: flex;
